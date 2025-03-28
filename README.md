@@ -1,33 +1,52 @@
-**BY DOWNLOADING OR USING THE LX SOFTWARE OR ANY PART THEREOF, YOU AGREE TO THE TERMS AND CONDITIONS OF THE [CHROMATIK / LX SOFTWARE LICENSE AND DISTRIBUTION AGREEMENT](http://chromatik.co/license/).**
+![Logo](media/Apotheneum-banner.jpg)
 
-Please note that LX is not open-source software. The license grants permission to use this software freely in non-commercial applications. Commercial use is subject to a total annual revenue limit of $25K on any and all projects associated with the software. If this licensing is obstructive to your needs or you are unclear as to whether your desired use case is compliant, contact me to discuss proprietary licensing: licensing@chromatik.co
+_Apo·then·eum_ (place of divine elevation) is a visual, sonic and haptic instrument designed to help contributing light and sound artists transport visitors through participatory immersion.
+
+This repository contains materials used to Apotheneum's animation engine in the [Chromatik](https://chromatik.co/) Digital Lighting Workstation.
 
 ---
 
-## LX Package
+### Getting Started
 
-This is a template repository used to demonstrate how to build a package for [Chromatik](https://chromatik.co/) using the [LX](https://github.com/heronarts/LX/) framework.
+This package currently requires macOS on an Apple Silicon machine. Windows instructions will be added in the future.
 
-### Package Structure
+#### Installing Chromatik
 
-- Metadata
-  - Define your packages metadata in the [`lx.package`](src/main/resources/lx.package) file, JSON format with three key fields
-     - `name`: Name of the package
-     - `author`: Name of the package author
-     - `mediaDir`: Subfolder name for package static resources in the `~/Chromatik/` user folder
-- Java Components
-  - Your package can contain custom patterns, effects, modulators, and plugins
-  - Java source code lives under [`src/main/java`](src/main/java) and may use the [LX](https://github.com/heronarts/LX/) API
-  - Chromatik will automatically import all public non-abstract classes
-- Static Resources
-  - Static resources like fixture definitions (`*.lxf`), model definitions (`*.lxm`), or project files (`*.lxp`) can be bundled with a package. These live in the [`src/main/resources`](src/main/resources) folder under the subfolders `fixtures`, `models`, `projects`.
-  - When the package is imported using the Chromatik UI, these static resources will be copied into the `~/Chromatik` user folder, in a sub-folder defined by the `mediaDir` property of the [`lx.package`](src/main/resources/lx.package) file.
+* Download the [Chromatik preview release for macOS](https://github.com/heronarts/Chromatik/releases/download/1.0.1-SNAPSHOT-2024-03-28/Chromatik-1.0.1-SNAPSHOT-MacOS-Apple-Silicon.zip)
+* Register a [Chromatik account](https://chromatik.co/login)
+* Authorize Chromatik with your free license
 
-### Building and Installation
+#### Apotheneum Assets
 
-Packages are distributed as a JAR file containing all of the above copmonents.
+* Clone this repository or [download a ZIP](https://github.com/Apotheneum/Apotheneum/archive/refs/heads/main.zip)
+* Double-click to run the Terminal script `bootstrap.command`
+* Launch Chromatik and open the project file `~/Chromatik/Projects/Apotheneum/Apotheneum.lxp`
 
-- Build with `mvn package`
-- Install via `mvn install`
+![Logo](media/Apotheneum-screenshot.jpg)
 
-_Note that `mvn install` does **not** automatically copy static files from [`src/main/resources`](src/main/resources) into your root `~/Chromatik` folder. You can either perform this step manually, or by importing the package using the Chromatik UI._
+Learn how to create animation content via the [Chromatik User Guide &rarr;](https://chromatik.co/guide/)
+
+---
+
+### Software Development
+
+Coding experience is neither required nor necessary to build animation content in Chromatik. But for those comfortable with basic Java coding, Chromatik offers an extensible framework for custom animation development.
+
+Install the following tools:
+
+* [Java 21 Temurin](https://adoptium.net/)
+* [Maven](https://maven.apache.org/)
+
+Maven can be installed using [Homebrew](https://brew.sh/) via the following command:
+
+```
+$ brew install maven
+````
+
+After developing new animation content, you may install it by running `update.command` or invoking Maven directly:
+
+```
+$ mvn install
+````
+
+A general overview of how content packages work is provided in the [LXPackage Template Repository &rarr;](https://github.com/heronarts/LXPackage)
