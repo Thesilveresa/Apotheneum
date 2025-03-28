@@ -2,6 +2,8 @@
 
 _Apo·then·eum_ (place of divine elevation) is a visual, sonic and haptic instrument designed to transport visitors through participatory immersion.
 
+Comprised of two nested chambers made of back-to-back LED nets (13,280 nodes in all), Apotheneum presents four independent canvases and an immersive sound system for collaborating visual and sound artists to play. Measuring 40&times;40&times;40 feet, Apotheneum's cubic antechamber envelops a thirty-foot cylindrical inner sanctum that opens to the sky and is anchored by a 24-foot pressure-sensing bed from which vantage point our three primary somatic senses are engaged.
+
 This repository contains materials used to Apotheneum's animation engine in the [Chromatik](https://chromatik.co/) Digital Lighting Workstation.
 
 ---
@@ -20,11 +22,11 @@ This package currently requires macOS on an Apple Silicon machine. Windows instr
 
 * Clone this repository or [download a ZIP](https://github.com/Apotheneum/Apotheneum/archive/refs/heads/main.zip)
 * Double-click to run the Terminal script `bootstrap.command`
-* Launch Chromatik and open the project file `~/Chromatik/Projects/Apotheneum/Apotheneum.lxp`
-
-![Logo](media/Apotheneum-screenshot.jpg)
+* Launch Chromatik, open the example project file `~/Chromatik/Projects/Apotheneum/Apotheneum.lxp`
 
 Learn how to create animation content via the [Chromatik User Guide &rarr;](https://chromatik.co/guide/)
+
+![Logo](media/Apotheneum-screenshot.jpg)
 
 ---
 
@@ -49,4 +51,6 @@ After developing new animation content, you may install it by running `update.co
 $ mvn install
 ````
 
-A general overview of how content packages work is provided in the [LXPackage Template Repository &rarr;](https://github.com/heronarts/LXPackage)
+An example animation routine is provided at [`StripePattern.java`](src/main/java/apotheneum/examples/StripePattern.java)
+
+A more general overview of the content package structure is provided in the [LXPackage Template Repository &rarr;](https://github.com/heronarts/LXPackage)
