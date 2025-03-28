@@ -1,0 +1,23 @@
+{
+  "label": "Apotheneum",
+  "tag": "Apotheneum",
+  
+  "parameters": {
+    "nodeSpacing": { "type": "float", "minValue": 1, "default": 9.375, "label": "Spacing", "description": "Spacing of nodes" },
+    "nodeInset": { "type": "float", "minValue": 1, "default": 11.125, "label": "Inset", "description": "Inset of side nets in inches" },
+    "cubeTop": { "type": "float", "minValue": 1, "default": 444, "label": "Top", "description": "Top of the cube LED nets in inches" },
+    "cubeSide": { "type": "float", "minValue": 1, "default": 491, "label": "Side", "description": "Side of the cube in inches" },
+    "cylinderRadius": { "type": "float", "minValue": 1, "default": 180, "label": "Radius", "description": "Radius of the cylinder in inches" }
+  },
+
+  "components": [
+    { "type": "strip", "tags": ["cube", "front"], "x": "$nodeInset + $instance * $nodeSpacing", "y": "$cubeTop", "z": 0, "numPoints": 45, "instances": 50, "direction": { "y": -1 }, "spacing": "$nodeSpacing" },
+    { "type": "strip", "tags": ["cube", "right"], "x": "$cubeSide", "y": "$cubeTop", "z": "$nodeInset + $instance * $nodeSpacing", "numPoints": 45, "instances": 50, "direction": { "y": -1 }, "spacing": "$nodeSpacing" },
+    { "type": "strip", "tags": ["cube", "back"], "x": "$cubeSide - $nodeInset - $instance * $nodeSpacing", "y": "$cubeTop", "z": "$cubeSide", "numPoints": 45, "instances": 50, "direction": { "y": -1 }, "spacing": "$nodeSpacing" },
+    { "type": "strip", "tags": ["cube", "left"], "x": 0, "y": "$cubeTop", "z": "$cubeSide - $nodeInset - $instance * $nodeSpacing", "numPoints": 45, "instances": 50, "direction": { "y": -1 }, "spacing": "$nodeSpacing" },
+    
+    { "type": "strip", "tag": "cylinder", "x": "$cubeSide * 0.5 + $cylinderRadius * cos($instance * 6.28318530718)", "y": "$cubeTop - 2*$nodeSpacing", "z": "$cubeSide * 0.5 + $cylinderRadius * sin($instance * 6.28318530718)", "numPoints": 43, "instances": 120, "direction": { "y": -1 }, "spacing": "$nodeSpacing" }
+    
+  ]
+  
+}
