@@ -1,6 +1,6 @@
 ![Logo](media/Apotheneum-banner.jpg)
 
-_Apo·then·eum_ (place of divine elevation) is a visual, sonic and haptic instrument designed to help contributing light and sound artists transport visitors through participatory immersion.
+_Apo·then·eum_ (place of divine elevation) is a visual, sonic and haptic instrument designed to transport visitors through participatory immersion.
 
 This repository contains materials used to Apotheneum's animation engine in the [Chromatik](https://chromatik.co/) Digital Lighting Workstation.
 
