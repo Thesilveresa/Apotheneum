@@ -1,6 +1,6 @@
 {
   "version": "1.0.1-SNAPSHOT",
-  "timestamp": 1743173321030,
+  "timestamp": 1743175006443,
   "model": {
     "id": 2,
     "class": "heronarts.lx.structure.LXStructure",
@@ -248,7 +248,7 @@
           "autoCycleMode": 0,
           "autoCycleMode/name": "NEXT",
           "autoCycleTimeSecs": 45.0,
-          "autoCycleCursor": 3,
+          "autoCycleCursor": 1,
           "triggerSwatchCycle": false,
           "expandedPerformance": true,
           "label1": "1",
@@ -267,7 +267,7 @@
               "modulationsExpanded": true
             },
             "parameters": {
-              "label": "Amber",
+              "label": "Deep",
               "recall": false,
               "autoCycleEligible": true
             },
@@ -287,8 +287,8 @@
                   "mode/name": "FIXED",
                   "period": 30.0,
                   "primary/brightness": 100.0,
-                  "primary/saturation": 36.201171875,
-                  "primary/hue": 0.0,
+                  "primary/saturation": 100.0,
+                  "primary/hue": 13.647058486938477,
                   "secondary/brightness": 100.0,
                   "secondary/saturation": 100.0,
                   "secondary/hue": 120.0
@@ -309,8 +309,8 @@
                   "mode/name": "FIXED",
                   "period": 30.0,
                   "primary/brightness": 100.0,
-                  "primary/saturation": 46.50716018676758,
-                  "primary/hue": 19.078125,
+                  "primary/saturation": 100.0,
+                  "primary/hue": 7.294116973876953,
                   "secondary/brightness": 100.0,
                   "secondary/saturation": 100.0,
                   "secondary/hue": 120.0
@@ -330,9 +330,9 @@
                   "mode": 0,
                   "mode/name": "FIXED",
                   "period": 30.0,
-                  "primary/brightness": 100.0,
-                  "primary/saturation": 56.32161331176758,
-                  "primary/hue": 0.0,
+                  "primary/brightness": 70.19608306884766,
+                  "primary/saturation": 84.3575439453125,
+                  "primary/hue": 331.3907165527344,
                   "secondary/brightness": 100.0,
                   "secondary/saturation": 100.0,
                   "secondary/hue": 120.0
@@ -752,11 +752,11 @@
           "timeBaseDefault": 1,
           "timeBaseDefault/name": "TEMPO",
           "clipSnapshotDefault": false,
-          "gridMode": 1,
-          "gridMode/name": "CLIPS",
+          "gridMode": 0,
+          "gridMode/name": "PATTERNS",
           "gridViewOffset": 0,
           "gridPatternOffset": 0,
-          "gridViewExpanded": true,
+          "gridViewExpanded": false,
           "clipInspectorExpanded": false,
           "scene-1": false,
           "pattern-1": false,
@@ -1477,7 +1477,7 @@
               "transitionEnabled": true,
               "transitionTimeSecs": 5.0,
               "transitionBlendMode": 0,
-              "focusedPattern": 4,
+              "focusedPattern": 1,
               "triggerPatternCycle": false,
               "launchPatternCycle": false
             },
@@ -1589,7 +1589,7 @@
               }
             ],
             "clips": [],
-            "patternIndex": 3,
+            "patternIndex": 1,
             "patterns": [
               {
                 "id": 1796,
@@ -1838,7 +1838,7 @@
                           "exp": 0.0
                         },
                         "children": {},
-                        "basis": 0.7950681968717914
+                        "basis": 0.7147349604743436
                       },
                       {
                         "id": 2642,
@@ -1877,7 +1877,7 @@
                           "exp": 0.0
                         },
                         "children": {},
-                        "basis": 0.6531393308802614
+                        "basis": 0.14466711239002897
                       }
                     ],
                     "modulations": [
@@ -2031,7 +2031,7 @@
                   "expanded": true,
                   "expandedCue": true,
                   "expandedAux": true,
-                  "modulationExpanded": true
+                  "modulationExpanded": false
                 },
                 "parameters": {
                   "label": "Planes",
@@ -2659,7 +2659,7 @@
                   "shearZ": 0.0,
                   "radius": 0.708828118556994,
                   "width": 0.027560705237424817,
-                  "fade": 0.0664138169657623,
+                  "fade": 0.12078632634973382,
                   "invert": 0.0,
                   "level": 1.0
                 },
@@ -2714,7 +2714,7 @@
                           "exp": 0.0
                         },
                         "children": {},
-                        "basis": 0.5386322666800352
+                        "basis": 0.42683088188748025
                       },
                       {
                         "id": 3484,
@@ -2781,7 +2781,7 @@
                           "exp": 0.4767968720116187
                         },
                         "children": {},
-                        "basis": 0.3839959131244974
+                        "basis": 0.3278061085582732
                       },
                       {
                         "id": 4616,
@@ -4340,7 +4340,7 @@
               "triggerOut": false
             },
             "children": {},
-            "basis": 0.42474687059600924
+            "basis": 0.45620678138974396
           },
           {
             "id": 11190,
@@ -4589,7 +4589,7 @@
   },
   "externals": {
     "ui": {
-      "leftPaneActiveSection": 1,
+      "leftPaneActiveSection": 2,
       "audioExpanded": true,
       "envelopExpanded": true,
       "reaperExpanded": true,
@@ -4607,9 +4607,9 @@
         "depth": 2.0,
         "camera": {
           "active": false,
-          "radius": 810.7797646662794,
-          "theta": 10.820546379545704,
-          "phi": 2.1302829645574093,
+          "radius": 868.2877371390373,
+          "theta": 22.74096084095072,
+          "phi": -2.054965267656371,
           "x": 245.5,
           "y": 237.75,
           "z": 245.5
@@ -4617,9 +4617,9 @@
         "cue": [
           {
             "active": false,
-            "radius": 810.7797646662794,
-            "theta": 10.820546379545704,
-            "phi": 2.1302829645574093,
+            "radius": 868.2877371390373,
+            "theta": 22.74096084095072,
+            "phi": -2.054965267656371,
             "x": 245.5,
             "y": 237.75,
             "z": 245.5
@@ -4676,7 +4676,7 @@
           "ledStyle/name": "LENS3",
           "pointSize": 11.0,
           "alphaRef": 8,
-          "feather": 0.75,
+          "feather": 0.7000000000000001,
           "sparkle": 1.0,
           "sparkleCurve": 2.0,
           "sparkleRotate": 127.30781380087137,
