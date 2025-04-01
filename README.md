@@ -20,9 +20,9 @@ This package currently requires macOS on an Apple Silicon machine. Windows instr
 
 #### Apotheneum Assets
 
-* Clone this repository or [download a ZIP](https://github.com/Apotheneum/Apotheneum/archive/refs/heads/main.zip)
-* Double-click to run the Terminal script `bootstrap.command`
-* Launch Chromatik, open the example project file `~/Chromatik/Projects/Apotheneum/Apotheneum.lxp`
+* Download the latest [Apotheneum release](https://github.com/Apotheneum/Apotheneum/releases/download/2025.04.01/apotheneum-0.0.1-SNAPSHOT.jar)
+* Drag-and-drop the JAR file onto Chromatik to import the content
+* In Chromatik, open the example project file `~/Chromatik/Projects/Apotheneum/Apotheneum.lxp`
 
 Learn how to create animation content via the [Chromatik User Guide &rarr;](https://chromatik.co/guide/)
 
