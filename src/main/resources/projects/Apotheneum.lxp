@@ -1,6 +1,6 @@
 {
   "version": "1.0.1-SNAPSHOT",
-  "timestamp": 1743175006443,
+  "timestamp": 1743516931222,
   "model": {
     "id": 2,
     "class": "heronarts.lx.structure.LXStructure",
@@ -248,7 +248,7 @@
           "autoCycleMode": 0,
           "autoCycleMode/name": "NEXT",
           "autoCycleTimeSecs": 45.0,
-          "autoCycleCursor": 1,
+          "autoCycleCursor": 3,
           "triggerSwatchCycle": false,
           "expandedPerformance": true,
           "label1": "1",
@@ -267,7 +267,7 @@
               "modulationsExpanded": true
             },
             "parameters": {
-              "label": "Deep",
+              "label": "Amber",
               "recall": false,
               "autoCycleEligible": true
             },
@@ -287,8 +287,8 @@
                   "mode/name": "FIXED",
                   "period": 30.0,
                   "primary/brightness": 100.0,
-                  "primary/saturation": 100.0,
-                  "primary/hue": 13.647058486938477,
+                  "primary/saturation": 36.201171875,
+                  "primary/hue": 0.0,
                   "secondary/brightness": 100.0,
                   "secondary/saturation": 100.0,
                   "secondary/hue": 120.0
@@ -309,8 +309,8 @@
                   "mode/name": "FIXED",
                   "period": 30.0,
                   "primary/brightness": 100.0,
-                  "primary/saturation": 100.0,
-                  "primary/hue": 7.294116973876953,
+                  "primary/saturation": 46.50716018676758,
+                  "primary/hue": 19.078125,
                   "secondary/brightness": 100.0,
                   "secondary/saturation": 100.0,
                   "secondary/hue": 120.0
@@ -330,9 +330,9 @@
                   "mode": 0,
                   "mode/name": "FIXED",
                   "period": 30.0,
-                  "primary/brightness": 70.19608306884766,
-                  "primary/saturation": 84.3575439453125,
-                  "primary/hue": 331.3907165527344,
+                  "primary/brightness": 100.0,
+                  "primary/saturation": 56.32161331176758,
+                  "primary/hue": 0.0,
                   "secondary/brightness": 100.0,
                   "secondary/saturation": 100.0,
                   "secondary/hue": 120.0
@@ -756,7 +756,7 @@
           "gridMode/name": "PATTERNS",
           "gridViewOffset": 0,
           "gridPatternOffset": 0,
-          "gridViewExpanded": false,
+          "gridViewExpanded": true,
           "clipInspectorExpanded": false,
           "scene-1": false,
           "pattern-1": false,
@@ -1589,7 +1589,7 @@
               }
             ],
             "clips": [],
-            "patternIndex": 1,
+            "patternIndex": 5,
             "patterns": [
               {
                 "id": 1796,
@@ -2714,7 +2714,7 @@
                           "exp": 0.0
                         },
                         "children": {},
-                        "basis": 0.42683088188748025
+                        "basis": 0.3580045819240542
                       },
                       {
                         "id": 3484,
@@ -2781,7 +2781,7 @@
                           "exp": 0.4767968720116187
                         },
                         "children": {},
-                        "basis": 0.3278061085582732
+                        "basis": 0.7931750072647162
                       },
                       {
                         "id": 4616,
@@ -4340,7 +4340,7 @@
               "triggerOut": false
             },
             "children": {},
-            "basis": 0.45620678138974396
+            "basis": 0.11591845663451616
           },
           {
             "id": 11190,
@@ -4577,7 +4577,7 @@
           "receiveActive": false,
           "transmitHost": "localhost",
           "transmitPort": 4040,
-          "transmitActive": false,
+          "transmitActive": true,
           "logInput": false,
           "logOutput": false
         },
