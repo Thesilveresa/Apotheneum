@@ -1,5 +1,15 @@
 {
   name: "Apotheneum",
   mediaDir: "Apotheneum",
-  author: "Mark C. Slee"
+  author: "Mark C. Slee",
+  url: "https://github.com/Apotheneum/Apotheneum",
+
+  build: {
+    name: "@project.name@",
+    version: "@project.version@",
+    groupId: "@project.groupId@",
+    artifactId: "@project.artifactId@",
+    lxVersion: "@lx.version@",
+    buildTimestamp: "@maven.build.timestamp@"
+  }
 }
