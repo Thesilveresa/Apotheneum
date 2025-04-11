@@ -26,7 +26,9 @@ This package currently requires macOS on an Apple Silicon machine. Windows instr
 * Open Chromatik, drag-and-drop the Apotheneum file `apotheneum-0.0.1-SNAPSHOT.jar` onto the application window
 * From Chromatik, open the example project file `~/Chromatik/Projects/Apotheneum/Apotheneum.lxp`
 
-Learn how to create animation content via the [Chromatik User Guide &rarr;](https://chromatik.co/guide/)
+Learn how to create animation content: [Chromatik User Guide &rarr;](https://chromatik.co/guide/)
+
+Remember the limitations of developing large-scale animation on a computer monitor: [Simulation Principles &rarr;](https://github.com/Apotheneum/Apotheneum/wiki/Simulation-Principles)
 
 ![Logo](media/Apotheneum-screenshot.jpg)
 
