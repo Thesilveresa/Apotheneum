@@ -3,21 +3,83 @@
   "tag": "Apotheneum",
   
   "parameters": {
+    "interiorEnabled": { "type": "boolean", "default": false, "label": "Interior", "description": "Whether distinct interior LEDs are enabled" },
     "nodeSpacing": { "type": "float", "minValue": 1, "default": 9.375, "label": "Spacing", "description": "Spacing of nodes" },
-    "nodeInset": { "type": "float", "minValue": 1, "default": 11.125, "label": "Inset", "description": "Inset of side nets in inches" },
+    "nodeInset": { "type": "float", "minValue": 1, "default": 15.8125, "label": "Inset", "description": "Inset of side nets in inches" },
     "cubeTop": { "type": "float", "minValue": 1, "default": 444, "label": "Top", "description": "Top of the cube LED nets in inches" },
     "cubeSide": { "type": "float", "minValue": 1, "default": 491, "label": "Side", "description": "Side of the cube in inches" },
-    "cylinderRadius": { "type": "float", "minValue": 1, "default": 180, "label": "Radius", "description": "Radius of the cylinder in inches" }
+    "cylinderRadius": { "type": "float", "minValue": 1, "default": 180, "label": "Radius", "description": "Radius of the cylinder in inches" },
+    "meshEnabled": { "type": "boolean", "default": true, "label": "Mesh UI", "description": "Whether the mesh is rendered" },
+    "meshInset": { "type": "float", "minValue": 1, "default": 1, "label": "Mesh Inset", "description": "Inset of the mesh behind nets" },
+    "meshWidth": { "type": "float", "minValue": 1, "default": 4, "label": "Mesh Width", "description": "Width of the mesh net" },
+    "trussWidth": { "type": "float", "minValue": 1, "default": 12, "label": "Truss Width", "description": "Truss column width" },
+    "trussTop": { "type": "float", "minValue": 1, "default": 480, "label": "Truss Top", "description": "Truss column height" }    
   },
 
   "components": [
-    { "type": "strip", "tags": ["cube", "front"], "x": "$nodeInset + $instance * $nodeSpacing", "y": "$cubeTop", "z": 0, "numPoints": 45, "instances": 50, "direction": { "y": -1 }, "spacing": "$nodeSpacing" },
-    { "type": "strip", "tags": ["cube", "right"], "x": "$cubeSide", "y": "$cubeTop", "z": "$nodeInset + $instance * $nodeSpacing", "numPoints": 45, "instances": 50, "direction": { "y": -1 }, "spacing": "$nodeSpacing" },
-    { "type": "strip", "tags": ["cube", "back"], "x": "$cubeSide - $nodeInset - $instance * $nodeSpacing", "y": "$cubeTop", "z": "$cubeSide", "numPoints": 45, "instances": 50, "direction": { "y": -1 }, "spacing": "$nodeSpacing" },
-    { "type": "strip", "tags": ["cube", "left"], "x": 0, "y": "$cubeTop", "z": "$cubeSide - $nodeInset - $instance * $nodeSpacing", "numPoints": 45, "instances": 50, "direction": { "y": -1 }, "spacing": "$nodeSpacing" },
+    { "type": "strip", "tags": ["cube", "front", "exterior"], "x": "$nodeInset + $instance * $nodeSpacing", "y": "$cubeTop", "z": 0, "numPoints": 45, "instances": 50, "direction": { "y": -1 }, "spacing": "$nodeSpacing" },
+    { "type": "strip", "tags": ["cube", "right", "exterior"], "x": "$cubeSide", "y": "$cubeTop", "z": "$nodeInset + $instance * $nodeSpacing", "numPoints": 45, "instances": 50, "direction": { "y": -1 }, "spacing": "$nodeSpacing" },
+    { "type": "strip", "tags": ["cube", "back", "exterior"], "x": "$cubeSide - $nodeInset - $instance * $nodeSpacing", "y": "$cubeTop", "z": "$cubeSide", "numPoints": 45, "instances": 50, "direction": { "y": -1 }, "spacing": "$nodeSpacing" },
+    { "type": "strip", "tags": ["cube", "left", "exterior"], "x": 0, "y": "$cubeTop", "z": "$cubeSide - $nodeInset - $instance * $nodeSpacing", "numPoints": 45, "instances": 50, "direction": { "y": -1 }, "spacing": "$nodeSpacing" },
     
-    { "type": "strip", "tag": "cylinder", "x": "$cubeSide * 0.5 + $cylinderRadius * cos($instance * 6.28318530718)", "y": "$cubeTop - 2*$nodeSpacing", "z": "$cubeSide * 0.5 + $cylinderRadius * sin($instance * 6.28318530718)", "numPoints": 43, "instances": 120, "direction": { "y": -1 }, "spacing": "$nodeSpacing" }
+    { "type": "strip", "tags": ["cube", "front", "interior"], "enabled": "$interiorEnabled", "x": "$nodeInset + $instance * $nodeSpacing", "y": "$cubeTop", "z": "2*$meshInset", "numPoints": 45, "instances": 50, "direction": { "y": -1 }, "spacing": "$nodeSpacing" },
+    { "type": "strip", "tags": ["cube", "right", "interior"], "enabled": "$interiorEnabled", "x": "$cubeSide - 2*$meshInset", "y": "$cubeTop", "z": "$nodeInset + $instance * $nodeSpacing", "numPoints": 45, "instances": 50, "direction": { "y": -1 }, "spacing": "$nodeSpacing" },
+    { "type": "strip", "tags": ["cube", "back", "interior"], "enabled": "$interiorEnabled", "x": "$cubeSide - $nodeInset - $instance * $nodeSpacing", "y": "$cubeTop", "z": "$cubeSide - 2*$meshInset", "numPoints": 45, "instances": 50, "direction": { "y": -1 }, "spacing": "$nodeSpacing" },
+    { "type": "strip", "tags": ["cube", "left", "interior"], "enabled": "$interiorEnabled", "x": "2*$meshInset", "y": "$cubeTop", "z": "$cubeSide - $nodeInset - $instance * $nodeSpacing", "numPoints": 45, "instances": 50, "direction": { "y": -1 }, "spacing": "$nodeSpacing" },
     
-  ]
+    { "type": "strip", "tags": ["cylinder", "exterior"], "x": "$cubeSide * 0.5 + $cylinderRadius * cos($instance * 6.28318530718)", "y": "$cubeTop - 2*$nodeSpacing", "z": "$cubeSide * 0.5 + $cylinderRadius * sin($instance * 6.28318530718)", "numPoints": 43, "instances": 120, "direction": { "y": -1 }, "spacing": "$nodeSpacing" },
+    { "type": "strip", "tags": ["cylinder", "interior"], "enabled": "$interiorEnabled", "x": "$cubeSide * 0.5 + ($cylinderRadius - 2*$meshInset) * cos($instance * 6.28318530718)", "y": "$cubeTop - 2*$nodeSpacing", "z": "$cubeSide * 0.5 + ($cylinderRadius - 2*$meshInset) * sin($instance * 6.28318530718)", "numPoints": 43, "instances": 120, "direction": { "y": -1 }, "spacing": "$nodeSpacing" }
+  ],
+  
+  "ui": {
+    "meshes": [
+      {
+        "enabled": "$meshEnabled",
+        "type": "uniformFill",
+        "color": "0xff000000",
+        "vertices": [
+          /* Front strips */
+          { "type": "rect", "instances": 50, "x": "$nodeInset + $instance * $nodeSpacing - 0.5*$meshWidth", "y": "0", "z": "$meshInset", "width": "$meshWidth", "height": "$cubeTop + $meshWidth" },
+          /* Right strip */
+          { "type": "rect", "instances": 50, "x": "$cubeSide - $meshInset", "y": "0", "z": "$nodeInset + $instance * $nodeSpacing - 0.5*$meshWidth", "width": "$meshWidth", "height": "$cubeTop + $meshWidth", "axis": "zy" },
+          /* Back strips */
+          { "type": "rect", "instances": 50, "x": "$cubeSide - $nodeInset - $instance * $nodeSpacing - 0.5*$meshWidth", "y": "0", "z": "$cubeSide - $meshInset", "width": "$meshWidth", "height": "$cubeTop + $meshWidth" },        
+          /* Left strips */
+          { "type": "rect", "instances": 50, "x": "$meshInset", "y": "0", "z": "$cubeSide - $nodeInset - $instance * $nodeSpacing - 0.5*$meshWidth", "width": "$meshWidth", "height": "$cubeTop + $meshWidth", "axis": "zy" }
+        ]
+      },
+      {
+        "enabled": "$meshEnabled",
+        "type": "uniformFill",
+        "color": "0xff333333",
+        "vertices": [
+          /* Front left column */
+          { "type": "cuboid", "x": "-0.5 * $trussWidth", "z": "-0.5 * $trussWidth", "width": "$trussWidth", "height": "$trussTop", "depth": "$trussWidth" },
+          
+          /* Front right column */
+          { "type": "cuboid", "x": "$cubeSide - 0.5 * $trussWidth", "z": "-0.5 * $trussWidth", "width": "$trussWidth", "height": "$trussTop", "depth": "$trussWidth" },
+          
+          /* Rear left column */
+          { "type": "cuboid", "x": "- 0.5 * $trussWidth", "z": "$cubeSide - 0.5 * $trussWidth", "width": "$trussWidth", "height": "$trussTop", "depth": "$trussWidth" },
+
+          /* Rear right column */
+          { "type": "cuboid", "x": "$cubeSide - 0.5 * $trussWidth", "z": "$cubeSide - 0.5 * $trussWidth", "width": "$trussWidth", "height": "$trussTop", "depth": "$trussWidth" },        
+          
+          /* Top front truss */
+          { "type": "cuboid", "x": "0.5 * $trussWidth", "y": "$trussTop - $trussWidth", "z": "-0.5 * $trussWidth", "width": "$cubeSide - $trussWidth", "height": "$trussWidth", "depth": "$trussWidth" },
+          
+          /* Top rear truss */
+          { "type": "cuboid", "x": "0.5 * $trussWidth", "y": "$trussTop - $trussWidth", "z": "$cubeSide - 0.5 * $trussWidth", "width": "$cubeSide - $trussWidth", "height": "$trussWidth", "depth": "$trussWidth" },
+          
+          /* Top left truss */
+          { "type": "cuboid", "x": "-0.5 * $trussWidth", "y": "$trussTop - $trussWidth", "z": "0.5 * $trussWidth", "depth": "$cubeSide - $trussWidth", "height": "$trussWidth", "width": "$trussWidth" },
+          
+          /* Top right truss */
+          { "type": "cuboid", "x": "$cubeSide - 0.5 * $trussWidth", "y": "$trussTop - $trussWidth", "z": "0.5 * $trussWidth", "depth": "$cubeSide - $trussWidth", "height": "$trussWidth", "width": "$trussWidth" }
+
+        ]
+      }
+    ]
+  }
   
 }
