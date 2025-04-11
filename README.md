@@ -22,7 +22,7 @@ This package currently requires macOS on an Apple Silicon machine. Windows instr
 
 #### Apotheneum Assets
 
-* Download the latest [Apotheneum release](https://github.com/Apotheneum/Apotheneum/releases/download/2025.04.01/apotheneum-0.0.1-SNAPSHOT.jar)
+* Download the latest [Apotheneum release](https://github.com/Apotheneum/Apotheneum/releases/download/2025.04.11/apotheneum-0.0.1-SNAPSHOT.jar)
 * Open Chromatik, drag-and-drop the Apotheneum file `apotheneum-0.0.1-SNAPSHOT.jar` onto the application window
 * From Chromatik, open the example project file `~/Chromatik/Projects/Apotheneum/Apotheneum.lxp`
 
