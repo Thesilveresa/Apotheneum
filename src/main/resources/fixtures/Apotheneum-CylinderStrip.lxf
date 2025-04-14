@@ -1,0 +1,29 @@
+{
+  "label": "Apotheneum-CylinderStrip",
+  "tag": "cylinderStrip",
+  
+  "parameters": {
+    "nodeSpacing": { "type": "float", "minValue": 1, "default": 9.375, "label": "Spacing", "description": "Spacing of nodes" },
+    "meshEnabled": { "type": "boolean", "default": false, "label": "Mesh UI", "description": "Whether the mesh is rendered" },
+    "meshInset": { "type": "float", "minValue": 1, "default": 1, "label": "Mesh Inset", "description": "Inset of the mesh behind nets" },
+    "meshWidth": { "type": "float", "minValue": 1, "default": 4, "label": "Mesh Width", "description": "Width of the mesh net" },
+    "cubeTop": { "type": "float", "minValue": 1, "default": 444, "label": "Top", "description": "Top of the cube LED nets in inches" }    
+  },
+  
+  "components": [
+    { "type": "strip", "numPoints": 43, "y": "$cubeTop - 2*$nodeSpacing", "direction": { "y": -1 }, "spacing": "$nodeSpacing" }
+  ],
+  
+  "ui": {
+    "meshes": [
+      {
+        "enabled": "$meshEnabled",
+        "type": "uniformFill",
+        "color": "0xff000000",
+        "vertices": [
+          { "type": "rect", "x": "-0.5*$meshWidth", "z": "$meshInset", "width": "$meshWidth", "height": "$cubeTop + $meshWidth" }
+        ]
+      }
+    ]
+  }
+}
