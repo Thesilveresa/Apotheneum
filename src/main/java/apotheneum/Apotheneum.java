@@ -73,9 +73,14 @@ public class Apotheneum {
       public final LXModel[] columns;
       public final Row[] rows;
 
+      public static int WIDTH = 0;
+      public static int HEIGHT = 0;
+
       private Face(LXModel face) {
         this.model = face;
         this.columns = face.children;
+        WIDTH = this.columns.length;
+        HEIGHT = this.columns[0].size;
         this.rows = new Row[this.columns[0].size];
         for (int i = 0; i < this.rows.length; ++i) {
           this.rows[i] = new Row(i, this.columns);

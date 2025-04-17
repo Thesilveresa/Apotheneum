@@ -9,7 +9,7 @@ import heronarts.lx.pattern.LXPattern;
 import heronarts.lx.transform.LXParameterizedMatrix;
 import heronarts.lx.utils.LXUtils;
 
-@LXCategory("Apotheneum")
+@LXCategory("Apotheneum/Examples")
 public class StripePattern extends LXPattern {
 
   public final CompoundParameter yaw =
