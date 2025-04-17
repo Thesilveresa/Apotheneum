@@ -24,6 +24,11 @@ import heronarts.lx.model.LXPoint;
 
 public class Apotheneum {
 
+  public static final int GRID_WIDTH = 50;
+  public static final int GRID_HEIGHT = 45;
+  public static final int CYLINDER_HEIGHT = 43;
+  public static final int RING_LENGTH = 120;
+
   public static class Cube {
 
     public static class Orientation {
@@ -73,15 +78,20 @@ public class Apotheneum {
       public final LXModel[] columns;
       public final Row[] rows;
 
-      public static int WIDTH = 0;
-      public static int HEIGHT = 0;
-
       private Face(LXModel face) {
         this.model = face;
         this.columns = face.children;
-        WIDTH = this.columns.length;
-        HEIGHT = this.columns[0].size;
-        this.rows = new Row[this.columns[0].size];
+        this.rows = new Row[GRID_HEIGHT];
+
+        if (this.columns.length != GRID_WIDTH) {
+          throw new IllegalStateException("Apotheneum face has wrong number of columns: " + this.columns.length);
+        }
+        for (LXModel column : this.columns) {
+          if (column.size != GRID_HEIGHT) {
+            throw new IllegalStateException("Apotheneum column has wrong length: " + column.size);
+          }
+        }
+
         for (int i = 0; i < this.rows.length; ++i) {
           this.rows[i] = new Row(i, this.columns);
         }
@@ -204,7 +214,6 @@ public class Apotheneum {
         exists = false;
         LX.error(x, "Error building Apotheneum helpers");
       }
-
     }
   }
 

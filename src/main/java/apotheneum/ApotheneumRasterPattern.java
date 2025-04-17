@@ -16,8 +16,8 @@ import heronarts.lx.studio.ui.device.UIDevice;
 
 public abstract class ApotheneumRasterPattern extends ApotheneumPattern {
 
-  protected static final int RASTER_WIDTH = 50;
-  protected static final int RASTER_HEIGHT = 45;
+  protected static final int RASTER_WIDTH = Apotheneum.GRID_WIDTH;
+  protected static final int RASTER_HEIGHT = Apotheneum.GRID_HEIGHT;
 
   private final BufferedImage raster;
   private final Graphics2D graphics;
