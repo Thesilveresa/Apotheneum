@@ -30,16 +30,6 @@
     },
     {
       "type": "Apotheneum-CubeFace",
-      "tags": ["cube", "front", "interior", "cubeFront", "cubeFrontInterior"],
-      
-      "enabled": "$interiorEnabled",
-      "nodeSpacing": "$nodeSpacing",
-      
-      "x": "$nodeInset",
-      "z": "2*$meshInset"
-    },
-    {
-      "type": "Apotheneum-CubeFace",
       "tags": ["cube", "right", "exterior", "cubeRight", "cubeRightExterior"],
       
       "nodeSpacing": "$nodeSpacing",
@@ -48,17 +38,6 @@
       "meshWidth": "$meshWidth",
       
       "x": "$cubeSide",
-      "z": "$nodeInset",
-      "yaw": -90
-    },
-    {
-      "type": "Apotheneum-CubeFace",
-      "tags": ["cube", "right", "interior", "cubeRight", "cubeRightInterior"],
-        
-      "enabled": "$interiorEnabled",
-      "nodeSpacing": "$nodeSpacing",
-      
-      "x": "$cubeSide - 2*$meshInset",
       "z": "$nodeInset",
       "yaw": -90
     },
@@ -77,17 +56,6 @@
     },
     {
       "type": "Apotheneum-CubeFace",
-      "tags": ["cube", "back", "interior", "cubeBack", "cubeBackInterior"],
-      
-      "enabled": "$interiorEnabled",
-      "nodeSpacing": "$nodeSpacing",
-      
-      "x": "$cubeSide - $nodeInset",
-      "z": "$cubeSide - 2*$meshInset",
-      "yaw": -180
-    },
-    {
-      "type": "Apotheneum-CubeFace",
       "tags": ["cube", "left", "exterior", "cubeLeft", "cubeLeftExterior"],
       
       "nodeSpacing": "$nodeSpacing",
@@ -98,6 +66,38 @@
       "x": 0,
       "z": "$cubeSide - $nodeInset",
       "yaw": -270
+    },
+    {
+      "type": "Apotheneum-CubeFace",
+      "tags": ["cube", "front", "interior", "cubeFront", "cubeFrontInterior"],
+      
+      "enabled": "$interiorEnabled",
+      "nodeSpacing": "$nodeSpacing",
+      
+      "x": "$nodeInset",
+      "z": "2*$meshInset"
+    },    
+    {
+      "type": "Apotheneum-CubeFace",
+      "tags": ["cube", "right", "interior", "cubeRight", "cubeRightInterior"],
+        
+      "enabled": "$interiorEnabled",
+      "nodeSpacing": "$nodeSpacing",
+      
+      "x": "$cubeSide - 2*$meshInset",
+      "z": "$nodeInset",
+      "yaw": -90
+    },
+    {
+      "type": "Apotheneum-CubeFace",
+      "tags": ["cube", "back", "interior", "cubeBack", "cubeBackInterior"],
+      
+      "enabled": "$interiorEnabled",
+      "nodeSpacing": "$nodeSpacing",
+      
+      "x": "$cubeSide - $nodeInset",
+      "z": "$cubeSide - 2*$meshInset",
+      "yaw": -180
     },
     {
       "type": "Apotheneum-CubeFace",
@@ -116,8 +116,8 @@
       "tags": ["cylinder", "exterior", "cylinderExterior"],
 
       "instances": 120,
-      "x": "$cubeSide * 0.5 + $cylinderRadius * cos($instance * 3)",
-      "z": "$cubeSide * 0.5 + $cylinderRadius * sin($instance * 3)",
+      "x": "$cubeSide * 0.5 + $cylinderRadius * sin($instance * 3)",
+      "z": "$cubeSide * 0.5 - $cylinderRadius * cos($instance * 3)",
       "yaw": "-$instance * 3",
 
       "meshEnabled": "$meshEnabled",
@@ -130,11 +130,10 @@
       "enabled": "$interiorEnabled",
       
       "instances": 120,
-      "x": "$cubeSide * 0.5 + ($cylinderRadius - 2*$meshInset) * cos($instance * 3)",
-      "z": "$cubeSide * 0.5 + ($cylinderRadius - 2*$meshInset) * sin($instance * 3)",
+      "x": "$cubeSide * 0.5 + ($cylinderRadius - 2*$meshInset) * sin($instance * 3)",
+      "z": "$cubeSide * 0.5 - ($cylinderRadius - 2*$meshInset) * cos($instance * 3)",
       "yaw": "-$instance * 3",
 
-      "meshEnabled": "$meshEnabled",
       "meshInset": "$meshInset",
       "meshWidth": "$meshWidth"
     }
