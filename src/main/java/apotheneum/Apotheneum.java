@@ -40,6 +40,8 @@ public class Apotheneum {
       public final Face back;
       public final Face left;
 
+      public final Face[] faces;
+
       public final LXModel[] columns;
       public final Ring[] rings;
 
@@ -48,6 +50,7 @@ public class Apotheneum {
         this.right = new Face(model.sub("cubeRight" + suffix).get(0));
         this.back = new Face(model.sub("cubeBack" + suffix).get(0));
         this.left = new Face(model.sub("cubeLeft" + suffix).get(0));
+        this.faces = new Face[] { this.front, this.right, this.back, this.left };
 
         this.columns = new LXModel[this.front.columns.length + this.right.columns.length + this.back.columns.length + this.left.columns.length];
         int cIndex = 0;
@@ -96,6 +99,7 @@ public class Apotheneum {
           this.rows[i] = new Row(i, this.columns);
         }
       }
+
     }
 
     public static class Row {
