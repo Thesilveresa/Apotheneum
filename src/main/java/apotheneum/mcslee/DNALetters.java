@@ -28,14 +28,14 @@ import heronarts.lx.LX;
 import heronarts.lx.LXCategory;
 import heronarts.lx.LXComponentName;
 import heronarts.lx.color.LXColor;
+import heronarts.lx.midi.MidiNoteOn;
 import heronarts.lx.parameter.CompoundDiscreteParameter;
 import heronarts.lx.parameter.TriggerParameter;
 import heronarts.lx.utils.LXUtils;
 
 @LXCategory("Apotheneum/mcslee")
 @LXComponentName("DNA Letters")
-public class DNALetters extends ApotheneumPattern {
-
+public class DNALetters extends ApotheneumPattern implements ApotheneumPattern.Midi {
 
   public static final int LETTER_SIZE = 5;
   public static final int WIDTH = Apotheneum.GRID_WIDTH / LETTER_SIZE;
@@ -138,6 +138,11 @@ public class DNALetters extends ApotheneumPattern {
     copy(Apotheneum.cube.exterior.front, Apotheneum.cube.exterior.left);
     copy(Apotheneum.cube.exterior.front, Apotheneum.cube.exterior.back);
     copyCubeExterior();
+  }
+
+  @Override
+  public void noteOnReceived(MidiNoteOn note) {
+    update();
   }
 
 }

@@ -27,6 +27,7 @@ import heronarts.lx.color.LXColor;
 import heronarts.lx.model.LXPoint;
 import heronarts.lx.modulator.SawLFO;
 import heronarts.lx.parameter.CompoundParameter;
+import heronarts.lx.parameter.FunctionalParameter;
 import heronarts.lx.utils.LXUtils;
 
 @LXCategory("Apotheneum/mcslee")
@@ -51,8 +52,32 @@ public class DNAHelix extends ApotheneumPattern {
     .setUnits(CompoundParameter.Units.PERCENT_NORMALIZED)
     .setDescription("Noise");
 
-  private final SawLFO noiseX = new SawLFO(0, 256, 256*3000);
-  private final SawLFO noiseY = new SawLFO(0, 256, 256*5000);
+  public final CompoundParameter noiseDepth =
+    new CompoundParameter("NsDepth", 0, -1, 3)
+    .setDescription("Noise Depth");
+
+  public final CompoundParameter noiseScale =
+    new CompoundParameter("NsScale", .5)
+    .setUnits(CompoundParameter.Units.PERCENT_NORMALIZED)
+    .setDescription("Noise Scale");
+
+  public final CompoundParameter noiseFall =
+    new CompoundParameter("NsFall", .1, 0, 1)
+    .setUnits(CompoundParameter.Units.HERTZ)
+    .setDescription("Speed of vertical noise motion");
+
+  public final CompoundParameter noiseMorph =
+    new CompoundParameter("NsMorph", .1, 0, 1)
+    .setUnits(CompoundParameter.Units.HERTZ)
+    .setDescription("Speed of noise morphing");
+
+  private final SawLFO noiseX = new SawLFO(0, 256, FunctionalParameter.create(() -> {
+    return 256000 / noiseMorph.getValue();
+  }));
+
+  private final SawLFO noiseY = new SawLFO(0, 256, FunctionalParameter.create(() -> {
+    return 256000 / noiseFall.getValue();
+  }));
 
   public DNAHelix(LX lx) {
     super(lx);
@@ -60,6 +85,10 @@ public class DNAHelix extends ApotheneumPattern {
     addParameter("winding", this.winding);
     addParameter("width", this.width);
     addParameter("noise", this.noise);
+    addParameter("noiseDepth", this.noiseDepth);
+    addParameter("noiseScale", this.noiseScale);
+    addParameter("noiseFall", this.noiseFall);
+    addParameter("noiseMorph", this.noiseMorph);
     startModulator(this.noiseX);
     startModulator(this.noiseY);
   }
@@ -84,20 +113,24 @@ public class DNAHelix extends ApotheneumPattern {
   protected void render(double deltaMs) {
     setColors(LXColor.BLACK);
 
+    final float noise = this.noise.getValuef();
     final float twist = this.twist.getValuef();
-    final float winding = this.winding.getValuef();
+    final float winding = LXUtils.lerpf(0, this.winding.getValuef(), (1-noise)*(1-noise));
     final float coeff = winding / Apotheneum.CYLINDER_HEIGHT;
     final float falloff = 100 / this.width.getValuef();
-    final float noise = this.noise.getValuef();
+
+    final float noiseDepth = this.noiseDepth.getValuef();
+    final float noiseScale = this.noiseScale.getValuef() * .1f;
     final float noiseX = this.noiseX.getValuef();
     final float noiseY = this.noiseY.getValuef();
 
     int ri = -Apotheneum.CYLINDER_HEIGHT / 2;
+    int ni = 0;
     for (Apotheneum.Cylinder.Ring ring : Apotheneum.cylinder.exterior.rings) {
       float basis =
         100 +
         (twist + ri * coeff) +
-        3 * noise * LXUtils.noise(noiseX, noiseY, ri * .1f);
+        noise * noiseDepth * LXUtils.noise(noiseX, 0, -noiseY + (ni * noiseScale));
       float pos = Apotheneum.RING_LENGTH * (basis % 1f);
       int pi = 0;
       for (LXPoint p : ring.points) {
@@ -106,8 +139,10 @@ public class DNAHelix extends ApotheneumPattern {
         colors[p.index] = LXColor.gray(LXUtils.max(0, 100 - falloff * dist));
       }
       ++ri;
+      ++ni;
     }
 
+    copy(Apotheneum.cylinder.exterior, Apotheneum.cylinder.interior);
   }
 
 }
