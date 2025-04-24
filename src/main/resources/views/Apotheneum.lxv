@@ -1,0 +1,185 @@
+{
+  "class": "heronarts.lx.structure.view.LXViewEngine",
+  "internal": {
+    "modulationColor": 0,
+    "modulationControlsExpanded": true,
+    "modulationsExpanded": true
+  },
+  "parameters": {
+    "label": "LX"
+  },
+  "children": {},
+  "views": [
+    {
+      "class": "heronarts.lx.structure.view.LXViewDefinition",
+      "internal": {
+        "modulationColor": 0,
+        "modulationControlsExpanded": true,
+        "modulationsExpanded": true
+      },
+      "parameters": {
+        "label": "Cube",
+        "enabled": true,
+        "selector": "cube",
+        "normalization": 0,
+        "normalization/name": "RELATIVE",
+        "orientation": 0,
+        "orientation/name": "GLOBAL",
+        "priority": true
+      },
+      "children": {}
+    },
+    {
+      "class": "heronarts.lx.structure.view.LXViewDefinition",
+      "internal": {
+        "modulationColor": 8,
+        "modulationControlsExpanded": true,
+        "modulationsExpanded": true
+      },
+      "parameters": {
+        "label": "Faces",
+        "enabled": true,
+        "selector": "cubeFace*",
+        "normalization": 0,
+        "normalization/name": "RELATIVE",
+        "orientation": 1,
+        "orientation/name": "GROUP",
+        "priority": true
+      },
+      "children": {}
+    },
+    {
+      "class": "heronarts.lx.structure.view.LXViewDefinition",
+      "internal": {
+        "modulationColor": 1,
+        "modulationControlsExpanded": true,
+        "modulationsExpanded": true
+      },
+      "parameters": {
+        "label": "Left",
+        "enabled": true,
+        "selector": "left",
+        "normalization": 0,
+        "normalization/name": "RELATIVE",
+        "orientation": 0,
+        "orientation/name": "GLOBAL",
+        "priority": true
+      },
+      "children": {}
+    },
+    {
+      "class": "heronarts.lx.structure.view.LXViewDefinition",
+      "internal": {
+        "modulationColor": 9,
+        "modulationControlsExpanded": true,
+        "modulationsExpanded": true
+      },
+      "parameters": {
+        "label": "Right",
+        "enabled": true,
+        "selector": "right",
+        "normalization": 0,
+        "normalization/name": "RELATIVE",
+        "orientation": 0,
+        "orientation/name": "GLOBAL",
+        "priority": true
+      },
+      "children": {}
+    },
+    {
+      "class": "heronarts.lx.structure.view.LXViewDefinition",
+      "internal": {
+        "modulationColor": 8,
+        "modulationControlsExpanded": true,
+        "modulationsExpanded": true
+      },
+      "parameters": {
+        "label": "Front",
+        "enabled": true,
+        "selector": "front",
+        "normalization": 0,
+        "normalization/name": "RELATIVE",
+        "orientation": 0,
+        "orientation/name": "GLOBAL",
+        "priority": true
+      },
+      "children": {}
+    },
+    {
+      "class": "heronarts.lx.structure.view.LXViewDefinition",
+      "internal": {
+        "modulationColor": 7,
+        "modulationControlsExpanded": true,
+        "modulationsExpanded": true
+      },
+      "parameters": {
+        "label": "Back",
+        "enabled": true,
+        "selector": "back",
+        "normalization": 0,
+        "normalization/name": "RELATIVE",
+        "orientation": 0,
+        "orientation/name": "GLOBAL",
+        "priority": true
+      },
+      "children": {}
+    },
+    {
+      "class": "heronarts.lx.structure.view.LXViewDefinition",
+      "internal": {
+        "modulationColor": 5,
+        "modulationControlsExpanded": true,
+        "modulationsExpanded": true
+      },
+      "parameters": {
+        "label": "Cylinder",
+        "enabled": true,
+        "selector": "cylinder",
+        "normalization": 0,
+        "normalization/name": "RELATIVE",
+        "orientation": 0,
+        "orientation/name": "GLOBAL",
+        "priority": true
+      },
+      "children": {}
+    },
+    {
+      "class": "heronarts.lx.structure.view.LXViewDefinition",
+      "internal": {
+        "modulationColor": 6,
+        "modulationControlsExpanded": true,
+        "modulationsExpanded": true
+      },
+      "parameters": {
+        "label": "Interior",
+        "enabled": true,
+        "selector": "interior",
+        "normalization": 0,
+        "normalization/name": "RELATIVE",
+        "orientation": 0,
+        "orientation/name": "GLOBAL",
+        "priority": true
+      },
+      "children": {}
+    },
+    {
+      "class": "heronarts.lx.structure.view.LXViewDefinition",
+      "internal": {
+        "modulationColor": 7,
+        "modulationControlsExpanded": true,
+        "modulationsExpanded": true
+      },
+      "parameters": {
+        "label": "Exterior",
+        "enabled": true,
+        "selector": "exterior",
+        "normalization": 0,
+        "normalization/name": "RELATIVE",
+        "orientation": 0,
+        "orientation/name": "GLOBAL",
+        "priority": true
+      },
+      "children": {}
+    }
+  ]
+}
