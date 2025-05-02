@@ -16,7 +16,9 @@ This package currently requires macOS on an Apple Silicon machine. Windows instr
 
 #### Installing Chromatik
 
-* Download the [Chromatik preview release for macOS](https://github.com/heronarts/Chromatik/releases/download/1.0.1-SNAPSHOT-2025-04-24/Chromatik-1.0.1-SNAPSHOT-MacOS-Apple-Silicon.zip)
+
+
+* Download the latest [Chromatik release](https://chromatik.co/download/)
 * Register a [Chromatik account](https://chromatik.co/login)
 * Authorize Chromatik with your free license
 
