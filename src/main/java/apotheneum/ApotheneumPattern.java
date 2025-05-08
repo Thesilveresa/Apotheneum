@@ -1,3 +1,21 @@
+/**
+ * Copyright 2025- Mark C. Slee, Heron Arts LLC
+ *
+ * This file is part of the LX Studio software library. By using
+ * LX, you agree to the terms of the LX Studio Software License
+ * and Distribution Agreement, available at: http://lx.studio/license
+ *
+ * Please note that the LX license is not open-source. The license
+ * allows for free, non-commercial use.
+ *
+ * HERON ARTS MAKES NO WARRANTY, EXPRESS, IMPLIED, STATUTORY, OR
+ * OTHERWISE, AND SPECIFICALLY DISCLAIMS ANY WARRANTY OF
+ * MERCHANTABILITY, NON-INFRINGEMENT, OR FITNESS FOR A PARTICULAR
+ * PURPOSE, WITH RESPECT TO THE SOFTWARE.
+ *
+ * @author Mark C. Slee <mark@heronarts.com>
+ */
+
 package apotheneum;
 
 import heronarts.lx.LX;
@@ -25,6 +43,23 @@ public abstract class ApotheneumPattern extends LXPattern {
     if (!Apotheneum.exists) {
       throw new IllegalStateException("Should not call ApothenumPattern utilities when no Apotheneum model loaded");
     }
+  }
+
+  private void _copyCubeFace(Apotheneum.Cube.Face from, Apotheneum.Cube.Face to) {
+    if (from != to) {
+      copy(from, to);
+    }
+  }
+
+  protected void copyCubeFace(Apotheneum.Cube.Face from) {
+    _copyCubeFace(from, Apotheneum.cube.exterior.front);
+    _copyCubeFace(from, Apotheneum.cube.exterior.right);
+    _copyCubeFace(from, Apotheneum.cube.exterior.back);
+    _copyCubeFace(from, Apotheneum.cube.exterior.left);
+    _copyCubeFace(from, Apotheneum.cube.interior.front);
+    _copyCubeFace(from, Apotheneum.cube.interior.right);
+    _copyCubeFace(from, Apotheneum.cube.interior.back);
+    _copyCubeFace(from, Apotheneum.cube.interior.left);
   }
 
   protected void copyCubeExterior() {

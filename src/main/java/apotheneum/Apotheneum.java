@@ -201,11 +201,15 @@ public class Apotheneum {
 
   private static class ModelListener implements LX.Listener {
     public void modelChanged(LX lx, LXModel model) {
+      LX.log("Apotheneum.modelChanged");
+
       cube = null;
       cylinder = null;
       exists = false;
       try {
-        if (!model.sub("Apotheneum").isEmpty()) {
+        if (model.sub("Apotheneum").isEmpty()) {
+          lx.pushError("Could not find Apotheneum model, check that fixture is loaded.");
+        } else {
           cube = new Cube(model);
           cylinder = new Cylinder(model);
           hasInterior = (cube.interior != null);
@@ -217,6 +221,7 @@ public class Apotheneum {
         cylinder = null;
         exists = false;
         LX.error(x, "Error building Apotheneum helpers");
+        lx.pushError(x, "Apotheneum model is out of date, you may need to update your fixture files.\n" + x.getMessage());;
       }
     }
   }
