@@ -18,6 +18,10 @@
 
 package apotheneum;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import heronarts.lx.LX;
 import heronarts.lx.model.LXModel;
 import heronarts.lx.model.LXPoint;
@@ -134,10 +138,16 @@ public class Apotheneum {
 
     public final Orientation exterior;
     public final Orientation interior;
+    public final Face[] faces;
 
     private Cube(LXModel model) {
       this.exterior = new Orientation(model, "Exterior");
       this.interior = model.sub("interior").isEmpty() ? null : new Orientation(model, "Interior");
+
+      final List<Face> faceList = new ArrayList<>();
+      faceList.addAll(Arrays.asList(this.exterior.faces));
+      faceList.addAll(Arrays.asList(this.interior.faces));
+      this.faces = faceList.toArray(new Face[0]);
     }
   }
 

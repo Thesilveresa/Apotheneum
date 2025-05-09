@@ -4,16 +4,17 @@
   
   "parameters": {
     "interiorEnabled": { "type": "boolean", "default": false, "label": "Interior", "description": "Whether distinct interior LEDs are enabled" },
-    "nodeSpacing": { "type": "float", "minValue": 1, "default": 9.375, "label": "Spacing", "description": "Spacing of nodes" },
-    "nodeInset": { "type": "float", "minValue": 1, "default": 15.8125, "label": "Inset", "description": "Inset of side nets in inches" },
-    "cubeTop": { "type": "float", "minValue": 1, "default": 444, "label": "Top", "description": "Top of the cube LED nets in inches" },
-    "cubeSide": { "type": "float", "minValue": 1, "default": 491, "label": "Side", "description": "Side of the cube in inches" },
-    "cylinderRadius": { "type": "float", "minValue": 1, "default": 180, "label": "Radius", "description": "Radius of the cylinder in inches" },
+    "nodeSpacing": { "type": "float", "min": 1, "default": 9.375, "label": "Spacing", "description": "Spacing of nodes" },
+    "nodeInset": { "type": "float", "min": 1, "default": 15.8125, "label": "Inset", "description": "Inset of side nets in inches" },
+    "cubeTop": { "type": "float", "min": 1, "default": 444, "label": "Top", "description": "Top of the cube LED nets in inches" },
+    "cubeSide": { "type": "float", "min": 1, "default": 491, "label": "Side", "description": "Side of the cube in inches" },
+    "cylinderRadius": { "type": "float", "min": 1, "default": 180, "label": "Radius", "description": "Radius of the cylinder in inches" },
     "meshEnabled": { "type": "boolean", "default": true, "label": "Mesh UI", "description": "Whether the mesh is rendered" },
-    "meshInset": { "type": "float", "minValue": 1, "default": 1, "label": "Mesh Inset", "description": "Inset of the mesh behind nets" },
-    "meshWidth": { "type": "float", "minValue": 1, "default": 4, "label": "Mesh Width", "description": "Width of the mesh net" },
-    "trussWidth": { "type": "float", "minValue": 1, "default": 12, "label": "Truss Width", "description": "Truss column width" },
-    "trussTop": { "type": "float", "minValue": 1, "default": 480, "label": "Truss Top", "description": "Truss column height" }    
+    "meshInset": { "type": "float", "min": 1, "default": 1, "label": "Mesh Inset", "description": "Inset of the mesh behind nets" },
+    "meshWidth": { "type": "float", "min": 0.1, "default": 1, "label": "Mesh Width", "description": "Width of the mesh net" },
+    "meshNodeSize": { "type": "float", "min": 1, "default": 5, "label": "Mesh Node Size", "description": "Width of the mesh nodes" },
+    "trussWidth": { "type": "float", "min": 1, "default": 12, "label": "Truss Width", "description": "Truss column width" },
+    "trussTop": { "type": "float", "min": 1, "default": 480, "label": "Truss Top", "description": "Truss column height" }    
   },
 
   "components": [
@@ -25,6 +26,7 @@
       "meshEnabled": "$meshEnabled",
       "meshInset": "$meshInset",
       "meshWidth": "$meshWidth",
+      "meshNodeSize": "$meshNodeSize",      
       
       "x": "$nodeInset"
     },
@@ -36,6 +38,7 @@
       "meshEnabled": "$meshEnabled",
       "meshInset": "$meshInset",
       "meshWidth": "$meshWidth",
+      "meshNodeSize": "$meshNodeSize",      
       
       "x": "$cubeSide",
       "z": "$nodeInset",
@@ -49,6 +52,7 @@
       "meshEnabled": "$meshEnabled",
       "meshInset": "$meshInset",
       "meshWidth": "$meshWidth",
+      "meshNodeSize": "$meshNodeSize",      
       
       "x": "$cubeSide - $nodeInset",
       "z": "$cubeSide",
@@ -62,6 +66,7 @@
       "meshEnabled": "$meshEnabled",
       "meshInset": "$meshInset",
       "meshWidth": "$meshWidth",
+      "meshNodeSize": "$meshNodeSize",
       
       "x": 0,
       "z": "$cubeSide - $nodeInset",
@@ -112,30 +117,34 @@
     },
     
     {
-      "type": "Apotheneum-CylinderStrip",
-      "tags": ["cylinder", "exterior", "cylinderExterior"],
+      "type": "Apotheneum-Strip",
+      "tags": ["cylinder", "exterior", "cylinderExterior" ],
 
       "instances": 120,
+      "numPoints": 43,      
       "x": "$cubeSide * 0.5 + $cylinderRadius * sin($instance * 3)",
       "z": "$cubeSide * 0.5 - $cylinderRadius * cos($instance * 3)",
       "yaw": "-$instance * 3",
 
       "meshEnabled": "$meshEnabled",
       "meshInset": "$meshInset",
-      "meshWidth": "$meshWidth"
+      "meshWidth": "$meshWidth",
+      "meshNodeSize": "$meshNodeSize"
     },
     {
-      "type": "Apotheneum-CylinderStrip",
-      "tags": ["cylinder", "interior", "cylinderInterior"],
+      "type": "Apotheneum-Strip",
+      "tags": [ "cylinder", "interior", "cylinderInterior" ],
       "enabled": "$interiorEnabled",
       
+      "numPoints": 43,
       "instances": 120,
       "x": "$cubeSide * 0.5 + ($cylinderRadius - 2*$meshInset) * sin($instance * 3)",
       "z": "$cubeSide * 0.5 - ($cylinderRadius - 2*$meshInset) * cos($instance * 3)",
       "yaw": "-$instance * 3",
 
       "meshInset": "$meshInset",
-      "meshWidth": "$meshWidth"
+      "meshWidth": "$meshWidth",
+      "meshNodeSize": "$meshNodeSize"
     }
 
   ],
