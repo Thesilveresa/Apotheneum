@@ -1,6 +1,6 @@
 {
   "version": "1.1.1-SNAPSHOT",
-  "timestamp": 1746781439554,
+  "timestamp": 1746785487094,
   "model": {
     "id": 2,
     "class": "heronarts.lx.structure.LXStructure",
@@ -265,8 +265,8 @@
           "cylinderRadius": 180.0,
           "meshEnabled": true,
           "meshInset": 1.0,
-          "meshWidth": 3.0,
-          "meshNodeSize": 5.0,
+          "meshWidth": 1.0,
+          "meshNodeSize": 3.0,
           "trussWidth": 12.0,
           "trussTop": 480.0
         },
@@ -336,7 +336,7 @@
           "autoCycleMode": 0,
           "autoCycleMode/name": "NEXT",
           "autoCycleTimeSecs": 45.0,
-          "autoCycleCursor": 3,
+          "autoCycleCursor": 0,
           "triggerSwatchCycle": false,
           "expandedPerformance": true,
           "label1": "1",
@@ -355,7 +355,7 @@
               "modulationsExpanded": true
             },
             "parameters": {
-              "label": "Amber",
+              "label": "Deep",
               "recall": false,
               "autoCycleEligible": true
             },
@@ -375,7 +375,7 @@
                   "mode/name": "FIXED",
                   "period": 30.0,
                   "primary/brightness": 100.0,
-                  "primary/saturation": 36.201171875,
+                  "primary/saturation": 100.0,
                   "primary/hue": 0.0,
                   "secondary/brightness": 100.0,
                   "secondary/saturation": 100.0,
@@ -397,8 +397,8 @@
                   "mode/name": "FIXED",
                   "period": 30.0,
                   "primary/brightness": 100.0,
-                  "primary/saturation": 46.50716018676758,
-                  "primary/hue": 19.078125,
+                  "primary/saturation": 100.0,
+                  "primary/hue": 25.242189407348633,
                   "secondary/brightness": 100.0,
                   "secondary/saturation": 100.0,
                   "secondary/hue": 120.0
@@ -419,8 +419,8 @@
                   "mode/name": "FIXED",
                   "period": 30.0,
                   "primary/brightness": 100.0,
-                  "primary/saturation": 56.32161331176758,
-                  "primary/hue": 0.0,
+                  "primary/saturation": 100.0,
+                  "primary/hue": 237.0703125,
                   "secondary/brightness": 100.0,
                   "secondary/saturation": 100.0,
                   "secondary/hue": 120.0
@@ -1464,7 +1464,7 @@
           "label": "Mixer",
           "crossfader": 0.5,
           "crossfaderBlendMode": 0,
-          "focusedChannel": 6,
+          "focusedChannel": 5,
           "focusedChannelAux": 5,
           "cueA": false,
           "cueB": false,
@@ -1491,7 +1491,7 @@
               "label": "Master",
               "fader": 1.0,
               "arm": false,
-              "selected": true,
+              "selected": false,
               "stopClips": false,
               "previewMode": 0,
               "previewMode/name": "PRE"
@@ -1522,7 +1522,7 @@
                   "modulationColor": 0,
                   "modulationControlsExpanded": true,
                   "modulationsExpanded": true,
-                  "expanded": true,
+                  "expanded": false,
                   "expandedCue": true,
                   "expandedAux": true,
                   "modulationExpanded": false
@@ -4077,7 +4077,7 @@
                           "exp": 0.0
                         },
                         "children": {},
-                        "basis": 0.1519912546994329
+                        "basis": 0.6222058935678149
                       },
                       {
                         "id": 33336,
@@ -4116,7 +4116,7 @@
                           "exp": 0.0
                         },
                         "children": {},
-                        "basis": 0.7543948753777218
+                        "basis": 0.6819788380438527
                       },
                       {
                         "id": 33337,
@@ -4155,7 +4155,7 @@
                           "exp": 0.0
                         },
                         "children": {},
-                        "basis": 0.4277744192550551
+                        "basis": 0.9296112463887755
                       }
                     ],
                     "modulations": [
@@ -6282,7 +6282,7 @@
               "label": "Faces",
               "fader": 0.0,
               "arm": false,
-              "selected": false,
+              "selected": true,
               "stopClips": false,
               "enabled": true,
               "cue": false,
@@ -6472,7 +6472,7 @@
               "triggerOut": false
             },
             "children": {},
-            "basis": 0.11335173384228255
+            "basis": 0.8622056786820449
           },
           {
             "id": 11190,
@@ -6739,9 +6739,9 @@
         "depth": 2.0,
         "camera": {
           "active": false,
-          "radius": 854.7103310503363,
-          "theta": 8.414096909458749,
-          "phi": 0.7947523773182184,
+          "radius": 800.871519940662,
+          "theta": 7.500911376671866,
+          "phi": 3.9635604695649818,
           "x": 245.5,
           "y": 237.75,
           "z": 245.5
@@ -6749,9 +6749,9 @@
         "cue": [
           {
             "active": false,
-            "radius": 854.7103310503363,
-            "theta": 8.414096909458749,
-            "phi": 0.7947523773182184,
+            "radius": 800.871519940662,
+            "theta": 7.500911376671866,
+            "phi": 3.9635604695649818,
             "x": 245.5,
             "y": 237.75,
             "z": 245.5

@@ -146,7 +146,9 @@ public class Apotheneum {
 
       final List<Face> faceList = new ArrayList<>();
       faceList.addAll(Arrays.asList(this.exterior.faces));
-      faceList.addAll(Arrays.asList(this.interior.faces));
+      if (this.interior != null) {
+        faceList.addAll(Arrays.asList(this.interior.faces));
+      }
       this.faces = faceList.toArray(new Face[0]);
     }
   }

@@ -9,24 +9,10 @@
     "meshInset": { "type": "float", "min": 1, "default": 1, "label": "Mesh Inset", "description": "Inset of the mesh behind nets" },
     "meshWidth": { "type": "float", "min": 0.1, "default": 1, "label": "Mesh Width", "description": "Width of the mesh net" },
     "meshNodeSize": { "type": "float", "min": 1, "default": 5, "label": "Mesh Node Size", "description": "Width of the mesh nodes" },    
-    "cubeTop": { "type": "float", "min": 1, "default": 444, "label": "Top", "description": "Top of the cube LED nets in inches" }    
+    "cubeTop": { "type": "float", "min": 1, "default": 444, "label": "Top", "description": "Top of the cube LED nets in inches" }
   },
   
   "components": [
     { "type": "strip", "numPoints": "$numPoints", "y": "$cubeTop - (45-$numPoints)*$nodeSpacing", "direction": { "y": -1 }, "spacing": "$nodeSpacing" }
-  ],
-  
-  "ui": {
-    "meshes": [
-      {
-        "enabled": "$meshEnabled",
-        "type": "uniformFill",
-        "color": "0xff000000",
-        "vertices": [
-          { "type": "rect", "x": "-0.5*$meshWidth", "z": "$meshInset", "width": "$meshWidth", "height": "$cubeTop + $meshWidth" },
-          { "type": "rect", "instances": 45, "x": "-0.5*$meshNodeSize", "y": "$cubeTop - (45-$numPoints)*$nodeSpacing - $instance*$nodeSpacing - 0.5*$meshNodeSize", "z": "$meshInset", "width": "$meshNodeSize", "height": "$meshNodeSize" }
-        ]
-      }
-    ]
-  }
+  ]
 }

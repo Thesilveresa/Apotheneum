@@ -67,10 +67,14 @@ public class ApotheneumDoors extends ApotheneumEffect {
       // Mute cylinder doors
       for (int cylinderColumn : CYLINDER_DOOR_START_COLUMNS) {
         final LXModel exterior = Apotheneum.cylinder.exterior.columns[cylinderColumn + c];
-        final LXModel interior = Apotheneum.cylinder.interior.columns[cylinderColumn + c];
         for (int i = CYLINDER_DOOR_START_PIXEL; i < exterior.points.length; ++i) {
           colors[exterior.points[i].index] = LXColor.BLACK;
-          colors[interior.points[i].index] = LXColor.BLACK;
+        }
+        if (Apotheneum.cylinder.interior != null) {
+          final LXModel interior = Apotheneum.cylinder.interior.columns[cylinderColumn + c];
+          for (int i = CYLINDER_DOOR_START_PIXEL; i < exterior.points.length; ++i) {
+            colors[interior.points[i].index] = LXColor.BLACK;
+          }
         }
       }
     }
