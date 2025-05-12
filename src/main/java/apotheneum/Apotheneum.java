@@ -219,9 +219,7 @@ public class Apotheneum {
       cylinder = null;
       exists = false;
       try {
-        if (model.sub("Apotheneum").isEmpty()) {
-          lx.pushError("Could not find Apotheneum model, check that fixture is loaded.");
-        } else {
+        if (!model.sub("Apotheneum").isEmpty()) {
           cube = new Cube(model);
           cylinder = new Cylinder(model);
           hasInterior = (cube.interior != null);
