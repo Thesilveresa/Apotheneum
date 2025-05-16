@@ -1,0 +1,94 @@
+{
+  "version": "1.1.1-SNAPSHOT",
+  "timestamp": 1747390635621,
+  "fixtures": [
+    {
+      "jsonFixtureType": "Apotheneum/Apotheneum",
+      "jsonParameters": {
+        "interiorEnabled": true,
+        "nodeSpacing": 9.375,
+        "nodeInset": 15.8125,
+        "cubeTop": 444.0,
+        "cubeSide": 491.0,
+        "cylinderRadius": 180.0,
+        "meshEnabled": true,
+        "meshInset": 1.0,
+        "meshWidth": 1.0,
+        "meshNodeSize": 3.0,
+        "trussWidth": 12.0,
+        "trussTop": 480.0,
+        "sandEnabled": true,
+        "sandScale": 80.0,
+        "peopleEnabled": true
+      },
+      "id": 14078,
+      "class": "heronarts.lx.structure.JsonFixture",
+      "internal": {
+        "modulationColor": 0,
+        "modulationControlsExpanded": true,
+        "modulationsExpanded": true
+      },
+      "parameters": {
+        "label": "Apotheneum",
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "yaw": 0.0,
+        "pitch": 0.0,
+        "roll": 0.0,
+        "scale": 1.0,
+        "selected": false,
+        "deactivate": false,
+        "enabled": true,
+        "brightness": 1.0,
+        "identify": false,
+        "mute": false,
+        "solo": false,
+        "tags": "",
+        "fixtureType": "Apotheneum/Apotheneum"
+      },
+      "children": {}
+    },
+    {
+      "jsonFixtureType": "Apotheneum/Apotheneum-Haptics",
+      "jsonParameters": {},
+      "id": 9818696,
+      "class": "heronarts.lx.structure.JsonFixture",
+      "internal": {
+        "modulationColor": 0,
+        "modulationControlsExpanded": true,
+        "modulationsExpanded": true
+      },
+      "parameters": {
+        "label": "Haptics",
+        "x": 245.5,
+        "y": 30.0,
+        "z": 245.5,
+        "yaw": 0.0,
+        "pitch": 0.0,
+        "roll": 0.0,
+        "scale": 1.0,
+        "selected": true,
+        "deactivate": false,
+        "enabled": false,
+        "brightness": 1.0,
+        "identify": false,
+        "mute": false,
+        "solo": false,
+        "tags": "",
+        "fixtureType": "Apotheneum/Apotheneum-Haptics"
+      },
+      "children": {}
+    }
+  ],
+  "normalization": {
+    "normalizationMode": 0,
+    "normalizationMode/name": "AUTOMATIC",
+    "normalizationX": 0.0,
+    "normalizationY": 0.0,
+    "normalizationZ": 0.0,
+    "normalizationWidth": 1000.0,
+    "normalizationHeight": 1000.0,
+    "normalizationDepth": 1000.0
+  }
+}

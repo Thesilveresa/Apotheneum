@@ -25,7 +25,8 @@
         "normalization/name": "RELATIVE",
         "orientation": 0,
         "orientation/name": "GLOBAL",
-        "priority": true
+        "priority": true,
+        "cueActive": false
       },
       "children": {}
     },
@@ -44,7 +45,8 @@
         "normalization/name": "RELATIVE",
         "orientation": 1,
         "orientation/name": "GROUP",
-        "priority": true
+        "priority": true,
+        "cueActive": false
       },
       "children": {}
     },
@@ -63,7 +65,8 @@
         "normalization/name": "RELATIVE",
         "orientation": 0,
         "orientation/name": "GLOBAL",
-        "priority": true
+        "priority": true,
+        "cueActive": false
       },
       "children": {}
     },
@@ -82,7 +85,8 @@
         "normalization/name": "RELATIVE",
         "orientation": 0,
         "orientation/name": "GLOBAL",
-        "priority": true
+        "priority": true,
+        "cueActive": false
       },
       "children": {}
     },
@@ -101,7 +105,8 @@
         "normalization/name": "RELATIVE",
         "orientation": 0,
         "orientation/name": "GLOBAL",
-        "priority": true
+        "priority": true,
+        "cueActive": false
       },
       "children": {}
     },
@@ -120,7 +125,8 @@
         "normalization/name": "RELATIVE",
         "orientation": 0,
         "orientation/name": "GLOBAL",
-        "priority": true
+        "priority": true,
+        "cueActive": false
       },
       "children": {}
     },
@@ -139,7 +145,8 @@
         "normalization/name": "RELATIVE",
         "orientation": 0,
         "orientation/name": "GLOBAL",
-        "priority": true
+        "priority": true,
+        "cueActive": false
       },
       "children": {}
     },
@@ -158,7 +165,8 @@
         "normalization/name": "RELATIVE",
         "orientation": 0,
         "orientation/name": "GLOBAL",
-        "priority": true
+        "priority": true,
+        "cueActive": false
       },
       "children": {}
     },
@@ -177,7 +185,28 @@
         "normalization/name": "RELATIVE",
         "orientation": 0,
         "orientation/name": "GLOBAL",
-        "priority": true
+        "priority": true,
+        "cueActive": false
+      },
+      "children": {}
+    },
+    {
+      "class": "heronarts.lx.structure.view.LXViewDefinition",
+      "internal": {
+        "modulationColor": 9,
+        "modulationControlsExpanded": true,
+        "modulationsExpanded": true
+      },
+      "parameters": {
+        "label": "Haptics",
+        "enabled": true,
+        "selector": "haptics",
+        "normalization": 0,
+        "normalization/name": "RELATIVE",
+        "orientation": 0,
+        "orientation/name": "GLOBAL",
+        "priority": true,
+        "cueActive": false
       },
       "children": {}
     }

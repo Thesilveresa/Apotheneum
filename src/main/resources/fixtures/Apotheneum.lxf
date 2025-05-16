@@ -14,7 +14,10 @@
     "meshWidth": { "type": "float", "min": 0.1, "default": 1, "label": "Mesh Width", "description": "Width of the mesh net" },
     "meshNodeSize": { "type": "float", "min": 1, "default": 5, "label": "Mesh Node Size", "description": "Width of the mesh nodes" },
     "trussWidth": { "type": "float", "min": 1, "default": 12, "label": "Truss Width", "description": "Truss column width" },
-    "trussTop": { "type": "float", "min": 1, "default": 480, "label": "Truss Top", "description": "Truss column height" }
+    "trussTop": { "type": "float", "min": 1, "default": 480, "label": "Truss Top", "description": "Truss column height" },
+    "sandEnabled": { "type": "boolean", "default": true, "label": "Sand UI", "description": "Whether the sand is rendered" },
+    "sandScale": { "type": "float", "min": 1, "default": 20, "label": "Sand Scale", "description": "Scale of sand texture" },
+    "peopleEnabled": { "type": "boolean", "default": true, "label": "People UI", "description": "Whether people are rendered" }
   },
 
   "components": [
@@ -125,23 +128,19 @@
     },
     
     {
-      "type": "Apotheneum-Strip",
+      "type": "strip",
       "tags": ["cylinder", "exterior", "cylinderExterior" ],
 
       "instances": 120,
       "numPoints": 43,      
       "x": "$cubeSide * 0.5 + $cylinderRadius * sin($instance * 3)",
       "z": "$cubeSide * 0.5 - $cylinderRadius * cos($instance * 3)",
-      "yaw": "-$instance * 3",
-
-      "cubeTop": "$cubeTop",
-      "meshEnabled": "$meshEnabled",
-      "meshInset": "$meshInset",
-      "meshWidth": "$meshWidth",
-      "meshNodeSize": "$meshNodeSize"
+      "y": "$cubeTop - 2*$nodeSpacing",
+      "direction": { "y": -1 },
+      "spacing": "$nodeSpacing"
     },
     {
-      "type": "Apotheneum-Strip",
+      "type": "strip",
       "tags": [ "cylinder", "interior", "cylinderInterior" ],
       "enabled": "$interiorEnabled",
       
@@ -149,9 +148,9 @@
       "instances": 120,
       "x": "$cubeSide * 0.5 + ($cylinderRadius - 2*$meshInset) * sin($instance * 3)",
       "z": "$cubeSide * 0.5 - ($cylinderRadius - 2*$meshInset) * cos($instance * 3)",
-      "yaw": "-$instance * 3",
-
-      "cubeTop": "$cubeTop"
+      "y": "$cubeTop - 2*$nodeSpacing",
+      "direction": { "y": -1 },
+      "spacing": "$nodeSpacing"
     },
     {
       "type": "Apotheneum-Mesh",
@@ -165,40 +164,72 @@
       "meshInset": "$meshInset",
       "meshWidth": "$meshWidth",
       "meshNodeSize": "$meshNodeSize"
-    }
+    },
+    {
+      "type": "Person",
+      "enabled": "$peopleEnabled",
+      "instances": 8,
+      "x": "$cubeSide*.5 + (350 + 80*sin($instance * 50) + $cubeSide*.5)*sin($instance * 77)",
+      "z": "$cubeSide*.5 + (350 + 80*sin($instance * 50) + $cubeSide*.5)*cos($instance * 77)",
+      "yaw": "-360 + ($instance * 77)",
+      "scale": 4
+    }  
   ],
   
   "ui": {
-    "mesh": {
-      "enabled": "$meshEnabled",
-      "type": "uniformFill",
-      "color": "0xff333333",
-      "vertices": [
-        // Front left column
-        { "type": "cuboid", "x": "-0.5 * $trussWidth", "z": "-0.5 * $trussWidth", "width": "$trussWidth", "height": "$trussTop", "depth": "$trussWidth" },
+    "meshes": [
+      {  
+        "enabled": "$meshEnabled",
+        "type": "uniformFill",
+        "color": "0xff191919",
+        "vertices": [
+          // Front left column
+          { "type": "cuboid", "x": "-0.5 * $trussWidth", "z": "-0.5 * $trussWidth", "width": "$trussWidth", "height": "$trussTop", "depth": "$trussWidth" },
         
-        // Front right column
-        { "type": "cuboid", "x": "$cubeSide - 0.5 * $trussWidth", "z": "-0.5 * $trussWidth", "width": "$trussWidth", "height": "$trussTop", "depth": "$trussWidth" },
+          // Front right column
+          { "type": "cuboid", "x": "$cubeSide - 0.5 * $trussWidth", "z": "-0.5 * $trussWidth", "width": "$trussWidth", "height": "$trussTop", "depth": "$trussWidth" },
         
-        // Rear left column
-        { "type": "cuboid", "x": "- 0.5 * $trussWidth", "z": "$cubeSide - 0.5 * $trussWidth", "width": "$trussWidth", "height": "$trussTop", "depth": "$trussWidth" },
+          // Rear left column
+          { "type": "cuboid", "x": "- 0.5 * $trussWidth", "z": "$cubeSide - 0.5 * $trussWidth", "width": "$trussWidth", "height": "$trussTop", "depth": "$trussWidth" },
 
-        // Rear right column
-        { "type": "cuboid", "x": "$cubeSide - 0.5 * $trussWidth", "z": "$cubeSide - 0.5 * $trussWidth", "width": "$trussWidth", "height": "$trussTop", "depth": "$trussWidth" },        
+          // Rear right column
+          { "type": "cuboid", "x": "$cubeSide - 0.5 * $trussWidth", "z": "$cubeSide - 0.5 * $trussWidth", "width": "$trussWidth", "height": "$trussTop", "depth": "$trussWidth" },        
         
-        // Top front truss
-        { "type": "cuboid", "x": "0.5 * $trussWidth", "y": "$trussTop - $trussWidth", "z": "-0.5 * $trussWidth", "width": "$cubeSide - $trussWidth", "height": "$trussWidth", "depth": "$trussWidth" },
+          // Top front truss
+          { "type": "cuboid", "x": "0.5 * $trussWidth", "y": "$trussTop - $trussWidth", "z": "-0.5 * $trussWidth", "width": "$cubeSide - $trussWidth", "height": "$trussWidth", "depth": "$trussWidth" },
         
-        // Top rear truss
-        { "type": "cuboid", "x": "0.5 * $trussWidth", "y": "$trussTop - $trussWidth", "z": "$cubeSide - 0.5 * $trussWidth", "width": "$cubeSide - $trussWidth", "height": "$trussWidth", "depth": "$trussWidth" },
+          // Top rear truss
+          { "type": "cuboid", "x": "0.5 * $trussWidth", "y": "$trussTop - $trussWidth", "z": "$cubeSide - 0.5 * $trussWidth", "width": "$cubeSide - $trussWidth", "height": "$trussWidth", "depth": "$trussWidth" },
         
-        // Top left truss
-        { "type": "cuboid", "x": "-0.5 * $trussWidth", "y": "$trussTop - $trussWidth", "z": "0.5 * $trussWidth", "depth": "$cubeSide - $trussWidth", "height": "$trussWidth", "width": "$trussWidth" },
+          // Top left truss
+          { "type": "cuboid", "x": "-0.5 * $trussWidth", "y": "$trussTop - $trussWidth", "z": "0.5 * $trussWidth", "depth": "$cubeSide - $trussWidth", "height": "$trussWidth", "width": "$trussWidth" },
         
-        // Top right truss
-        { "type": "cuboid", "x": "$cubeSide - 0.5 * $trussWidth", "y": "$trussTop - $trussWidth", "z": "0.5 * $trussWidth", "depth": "$cubeSide - $trussWidth", "height": "$trussWidth", "width": "$trussWidth" }
-      ]
-    }
+          // Top right truss
+          { "type": "cuboid", "x": "$cubeSide - 0.5 * $trussWidth", "y": "$trussTop - $trussWidth", "z": "0.5 * $trussWidth", "depth": "$cubeSide - $trussWidth", "height": "$trussWidth", "width": "$trussWidth" }
+        ]
+      },
+      {
+        "enabled": "$sandEnabled",
+        "type": "texture2d",
+        "texture": "sand.jpg",
+        "vertices": [
+          { "x": -10000, "z": -10000, "u": 0, "v": 0 },
+          { "x": 10000, "z": -10000, "u": "$sandScale", "v": 0 },
+          { "x": -10000, "z": 10000, "u": 0, "v": "$sandScale" },
+          { "x": -10000, "z": 10000, "u": 0, "v": "$sandScale" },
+          { "x": 10000, "z": -10000, "u": "$sandScale", "v": 0 },
+          { "x": 10000, "z": 10000, "u": "$sandScale", "v": "$sandScale" }
+        ]
+      },
+      // Sky
+      {
+        "enabled": "$sandEnabled",
+        "type": "texture2d",
+        "texture": "nightsky.png",
+        "vertices": [
+          { "type": "cuboid", "y": -1, "x": -10000, "z": -10000, "width": 20000, "depth": 20000, "height": 10000 }
+        ]
+      }
+    ]
   }
-  
 }

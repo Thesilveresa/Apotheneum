@@ -1,6 +1,6 @@
 {
   "version": "1.1.1-SNAPSHOT",
-  "timestamp": 1747139584131,
+  "timestamp": 1747390075040,
   "model": {
     "id": 2,
     "class": "heronarts.lx.structure.LXStructure",
@@ -12,7 +12,7 @@
     },
     "parameters": {
       "label": "LX",
-      "syncModelFile": false,
+      "syncModelFile": true,
       "allWhite": false,
       "mute": false,
       "normalizationMode": 0,
@@ -226,6 +226,27 @@
               "cueActive": false
             },
             "children": {}
+          },
+          {
+            "id": 9818716,
+            "class": "heronarts.lx.structure.view.LXViewDefinition",
+            "internal": {
+              "modulationColor": 9,
+              "modulationControlsExpanded": true,
+              "modulationsExpanded": true
+            },
+            "parameters": {
+              "label": "Haptics",
+              "enabled": true,
+              "selector": "haptics",
+              "normalization": 0,
+              "normalization/name": "RELATIVE",
+              "orientation": 0,
+              "orientation/name": "GLOBAL",
+              "priority": true,
+              "cueActive": false
+            },
+            "children": {}
           }
         ]
       }
@@ -270,7 +291,8 @@
           "trussWidth": 12.0,
           "trussTop": 480.0,
           "sandEnabled": true,
-          "sandScale": 80.0
+          "sandScale": 80.0,
+          "peopleEnabled": true
         },
         "id": 14078,
         "class": "heronarts.lx.structure.JsonFixture",
@@ -288,7 +310,7 @@
           "pitch": 0.0,
           "roll": 0.0,
           "scale": 1.0,
-          "selected": false,
+          "selected": true,
           "deactivate": false,
           "enabled": true,
           "brightness": 1.0,
@@ -301,9 +323,9 @@
         "children": {}
       },
       {
-        "jsonFixtureType": "Apotheneum/Person",
+        "jsonFixtureType": "Apotheneum/Apotheneum-Haptics",
         "jsonParameters": {},
-        "id": 257180,
+        "id": 9818696,
         "class": "heronarts.lx.structure.JsonFixture",
         "internal": {
           "modulationColor": 0,
@@ -311,45 +333,14 @@
           "modulationsExpanded": true
         },
         "parameters": {
-          "label": "Person",
-          "x": -160.0,
-          "y": 0.0,
-          "z": -136.0,
-          "yaw": -154.0,
+          "label": "Haptics",
+          "x": 245.5,
+          "y": 30.0,
+          "z": 245.5,
+          "yaw": 0.0,
           "pitch": 0.0,
           "roll": 0.0,
-          "scale": 4.0,
-          "selected": true,
-          "deactivate": false,
-          "enabled": false,
-          "brightness": 1.0,
-          "identify": false,
-          "mute": false,
-          "solo": false,
-          "tags": "",
-          "fixtureType": "Apotheneum/Person"
-        },
-        "children": {}
-      },
-      {
-        "jsonFixtureType": "Apotheneum/Person",
-        "jsonParameters": {},
-        "id": 257199,
-        "class": "heronarts.lx.structure.JsonFixture",
-        "internal": {
-          "modulationColor": 0,
-          "modulationControlsExpanded": true,
-          "modulationsExpanded": true
-        },
-        "parameters": {
-          "label": "Person",
-          "x": 681.0,
-          "y": 0.0,
-          "z": -287.0,
-          "yaw": -219.0,
-          "pitch": 0.0,
-          "roll": 0.0,
-          "scale": 4.0,
+          "scale": 1.0,
           "selected": false,
           "deactivate": false,
           "enabled": false,
@@ -358,104 +349,12 @@
           "mute": false,
           "solo": false,
           "tags": "",
-          "fixtureType": "Apotheneum/Person"
-        },
-        "children": {}
-      },
-      {
-        "jsonFixtureType": "Apotheneum/Person",
-        "jsonParameters": {},
-        "id": 257237,
-        "class": "heronarts.lx.structure.JsonFixture",
-        "internal": {
-          "modulationColor": 0,
-          "modulationControlsExpanded": true,
-          "modulationsExpanded": true
-        },
-        "parameters": {
-          "label": "Person",
-          "x": 697.0,
-          "y": 0.0,
-          "z": 800.0,
-          "yaw": 59.0,
-          "pitch": 0.0,
-          "roll": 0.0,
-          "scale": 4.0,
-          "selected": false,
-          "deactivate": false,
-          "enabled": false,
-          "brightness": 1.0,
-          "identify": false,
-          "mute": false,
-          "solo": false,
-          "tags": "",
-          "fixtureType": "Apotheneum/Person"
-        },
-        "children": {}
-      },
-      {
-        "jsonFixtureType": "Apotheneum/Person",
-        "jsonParameters": {},
-        "id": 259008,
-        "class": "heronarts.lx.structure.JsonFixture",
-        "internal": {
-          "modulationColor": 0,
-          "modulationControlsExpanded": true,
-          "modulationsExpanded": true
-        },
-        "parameters": {
-          "label": "Person",
-          "x": 953.0,
-          "y": 0.0,
-          "z": 296.0,
-          "yaw": 90.0,
-          "pitch": 0.0,
-          "roll": 0.0,
-          "scale": 4.0,
-          "selected": false,
-          "deactivate": false,
-          "enabled": false,
-          "brightness": 1.0,
-          "identify": false,
-          "mute": false,
-          "solo": false,
-          "tags": "",
-          "fixtureType": "Apotheneum/Person"
-        },
-        "children": {}
-      },
-      {
-        "jsonFixtureType": "Apotheneum/Person",
-        "jsonParameters": {},
-        "id": 259009,
-        "class": "heronarts.lx.structure.JsonFixture",
-        "internal": {
-          "modulationColor": 0,
-          "modulationControlsExpanded": true,
-          "modulationsExpanded": true
-        },
-        "parameters": {
-          "label": "Person",
-          "x": -450.0,
-          "y": 10.0,
-          "z": 600.0,
-          "yaw": -45.0,
-          "pitch": 0.0,
-          "roll": 0.0,
-          "scale": 4.0,
-          "selected": false,
-          "deactivate": false,
-          "enabled": false,
-          "brightness": 1.0,
-          "identify": false,
-          "mute": false,
-          "solo": false,
-          "tags": "",
-          "fixtureType": "Apotheneum/Person"
+          "fixtureType": "Apotheneum/Apotheneum-Haptics"
         },
         "children": {}
       }
-    ]
+    ],
+    "file": "Apotheneum/Apotheneum.lxm"
   },
   "engine": {
     "id": 1,
@@ -493,7 +392,7 @@
           "autoCycleMode": 0,
           "autoCycleMode/name": "NEXT",
           "autoCycleTimeSecs": 45.0,
-          "autoCycleCursor": 0,
+          "autoCycleCursor": 3,
           "triggerSwatchCycle": false,
           "expandedPerformance": true,
           "label1": "1",
@@ -512,7 +411,7 @@
               "modulationsExpanded": true
             },
             "parameters": {
-              "label": "Deep",
+              "label": "Amber",
               "recall": false,
               "autoCycleEligible": true
             },
@@ -532,7 +431,7 @@
                   "mode/name": "FIXED",
                   "period": 30.0,
                   "primary/brightness": 100.0,
-                  "primary/saturation": 100.0,
+                  "primary/saturation": 36.201171875,
                   "primary/hue": 0.0,
                   "secondary/brightness": 100.0,
                   "secondary/saturation": 100.0,
@@ -554,8 +453,8 @@
                   "mode/name": "FIXED",
                   "period": 30.0,
                   "primary/brightness": 100.0,
-                  "primary/saturation": 100.0,
-                  "primary/hue": 25.242189407348633,
+                  "primary/saturation": 46.50716018676758,
+                  "primary/hue": 19.078125,
                   "secondary/brightness": 100.0,
                   "secondary/saturation": 100.0,
                   "secondary/hue": 120.0
@@ -576,8 +475,8 @@
                   "mode/name": "FIXED",
                   "period": 30.0,
                   "primary/brightness": 100.0,
-                  "primary/saturation": 100.0,
-                  "primary/hue": 237.0703125,
+                  "primary/saturation": 56.32161331176758,
+                  "primary/hue": 0.0,
                   "secondary/brightness": 100.0,
                   "secondary/saturation": 100.0,
                   "secondary/hue": 120.0
@@ -1826,6 +1725,8 @@
                   "compositeLevel": 1.0,
                   "hasCustomCycleTime": false,
                   "customCycleTimeSecs": 60.0,
+                  "cueActive": false,
+                  "auxActive": false,
                   "yaw": 0.0,
                   "pitch": 0.0,
                   "roll": 0.0
@@ -2195,6 +2096,8 @@
                   "compositeLevel": 0.0,
                   "hasCustomCycleTime": false,
                   "customCycleTimeSecs": 60.0,
+                  "cueActive": false,
+                  "auxActive": false,
                   "midpoint": 73.26562515227124,
                   "contrast": 406.3253440767666,
                   "minLevel": 0.0,
@@ -2345,6 +2248,8 @@
                   "compositeLevel": 1.0,
                   "hasCustomCycleTime": false,
                   "customCycleTimeSecs": 60.0,
+                  "cueActive": false,
+                  "auxActive": false,
                   "density": 1.165669070975523,
                   "speed": 0.04910714318975806,
                   "variation": 10.0,
@@ -2527,6 +2432,8 @@
                   "compositeLevel": 1.0,
                   "hasCustomCycleTime": false,
                   "customCycleTimeSecs": 60.0,
+                  "cueActive": false,
+                  "auxActive": false,
                   "sparkle": false,
                   "perTrig": 1,
                   "maxHeight": 0.0,
@@ -2641,6 +2548,8 @@
                   "compositeLevel": 0.0,
                   "hasCustomCycleTime": false,
                   "customCycleTimeSecs": 60.0,
+                  "cueActive": false,
+                  "auxActive": false,
                   "x": 0.5,
                   "y": 0.5,
                   "z": 0.0,
@@ -2905,6 +2814,8 @@
                   "compositeLevel": 0.0,
                   "hasCustomCycleTime": false,
                   "customCycleTimeSecs": 60.0,
+                  "cueActive": false,
+                  "auxActive": false,
                   "xAmount": 0.0,
                   "yAmount": -1.0,
                   "zAmount": 0.0,
@@ -3102,6 +3013,8 @@
                   "compositeLevel": 0.0,
                   "hasCustomCycleTime": false,
                   "customCycleTimeSecs": 60.0,
+                  "cueActive": false,
+                  "auxActive": false,
                   "update": false,
                   "numUpdate": 9
                 },
@@ -3156,6 +3069,8 @@
                   "compositeLevel": 1.0,
                   "hasCustomCycleTime": false,
                   "customCycleTimeSecs": 60.0,
+                  "cueActive": false,
+                  "auxActive": false,
                   "midpoint": 100.0,
                   "contrast": 157.89565738003438,
                   "minLevel": 0.0,
@@ -3241,6 +3156,8 @@
                   "compositeLevel": 1.0,
                   "hasCustomCycleTime": false,
                   "customCycleTimeSecs": 60.0,
+                  "cueActive": false,
+                  "auxActive": false,
                   "twist": 0.0,
                   "winding": 2.0,
                   "width": 28.77187551552197,
@@ -3496,6 +3413,8 @@
                   "compositeLevel": 0.0,
                   "hasCustomCycleTime": false,
                   "customCycleTimeSecs": 60.0,
+                  "cueActive": false,
+                  "auxActive": false,
                   "x": 0.5,
                   "y": 1.0,
                   "z": 0.0,
@@ -3626,6 +3545,8 @@
                   "compositeLevel": 0.0,
                   "hasCustomCycleTime": false,
                   "customCycleTimeSecs": 60.0,
+                  "cueActive": false,
+                  "auxActive": false,
                   "density": 5.3439235535203755,
                   "speed": 0.5,
                   "variation": 25.0,
@@ -3689,6 +3610,8 @@
                   "compositeLevel": 0.0,
                   "hasCustomCycleTime": false,
                   "customCycleTimeSecs": 60.0,
+                  "cueActive": false,
+                  "auxActive": false,
                   "radius": 0.5987890624906868,
                   "width": 0.5214062514642137,
                   "contrast": 0.5,
@@ -4044,6 +3967,8 @@
                   "compositeLevel": 1.0,
                   "hasCustomCycleTime": false,
                   "customCycleTimeSecs": 60.0,
+                  "cueActive": false,
+                  "auxActive": false,
                   "radius": 0.6183983926894143,
                   "width": 0.14330726978369057,
                   "contrast": 0.9007421865244396,
@@ -4984,6 +4909,8 @@
                   "compositeLevel": 0.0,
                   "hasCustomCycleTime": false,
                   "customCycleTimeSecs": 60.0,
+                  "cueActive": false,
+                  "auxActive": false,
                   "shape1": 1,
                   "shape1/name": "BOX",
                   "shape2": 2,
@@ -5174,6 +5101,8 @@
                   "compositeLevel": 0.0,
                   "hasCustomCycleTime": false,
                   "customCycleTimeSecs": 60.0,
+                  "cueActive": false,
+                  "auxActive": false,
                   "x": 0.5,
                   "y": 0.0,
                   "z": 0.5,
@@ -5356,7 +5285,7 @@
                           "exp": 0.0
                         },
                         "children": {},
-                        "basis": 0.5674148460969533
+                        "basis": 0.20563953335746146
                       },
                       {
                         "id": 247092,
@@ -5750,6 +5679,8 @@
                   "compositeLevel": 0.33168247574940324,
                   "hasCustomCycleTime": false,
                   "customCycleTimeSecs": 60.0,
+                  "cueActive": false,
+                  "auxActive": false,
                   "sparkle": false,
                   "perTrig": 3,
                   "maxHeight": 0.21785156335681677,
@@ -7471,7 +7402,7 @@
   },
   "externals": {
     "ui": {
-      "leftPaneActiveSection": 2,
+      "leftPaneActiveSection": 1,
       "audioExpanded": true,
       "envelopExpanded": true,
       "reaperExpanded": true,
@@ -7489,12 +7420,12 @@
         "depth": 2.0,
         "camera": {
           "active": true,
-          "radius": 1177.9920480316835,
-          "theta": 43.11861267044361,
-          "phi": 4.82358236611158,
-          "x": 265.63074644062294,
-          "y": 227.54202365561645,
-          "z": 222.32162504123164
+          "radius": 982.0,
+          "theta": 14.782393847812557,
+          "phi": 9.936842443188652,
+          "x": 245.5,
+          "y": 237.0,
+          "z": 245.5
         },
         "cue": [
           {
@@ -7508,12 +7439,12 @@
           },
           {
             "active": true,
-            "radius": 1177.9920480316835,
-            "theta": 43.11861267044361,
-            "phi": 4.82358236611158,
-            "x": 265.63074644062294,
-            "y": 227.54202365561645,
-            "z": 222.32162504123164
+            "radius": 982.0,
+            "theta": 14.782393847812557,
+            "phi": 9.936842443188652,
+            "x": 245.5,
+            "y": 237.0,
+            "z": 245.5
           },
           {
             "active": true,
@@ -7590,11 +7521,11 @@
         "depth": 2.0,
         "camera": {
           "active": false,
-          "radius": 239.38910246421003,
+          "radius": 982.0,
           "theta": 359.61278495471925,
           "phi": -89.0,
           "x": 245.5,
-          "y": 237.75,
+          "y": 237.0,
           "z": 245.5
         },
         "cue": [

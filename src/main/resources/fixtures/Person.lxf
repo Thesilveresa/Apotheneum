@@ -1,0 +1,11 @@
+{
+  "label": "Person",
+  "tag": "peron",
+  "ui": {
+    "mesh": {
+      "type": "uniformFill",
+      "color": "0xff222222",
+      "file": "Person.obj"
+    }
+  }
+}

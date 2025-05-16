@@ -13,18 +13,13 @@
   
   "components": [
     { 
-      "type": "Apotheneum-Strip",
+      "type": "strip",
       "instances": 50,
-
-      "numPoints": 45,      
-      "cubeTop": "$cubeTop",
-      "nodeSpacing": "$nodeSpacing",
-      "meshEnabled": "$meshEnabled",
-      "meshInset": "$meshInset",
-      "meshWidth": "$meshWidth",
-      "meshNodeSize": "$meshNodeSize",
-
-      "x": "$instance * $nodeSpacing"
+      "numPoints": 45,
+      "x": "$instance * $nodeSpacing",
+      "y": "$cubeTop",
+      "direction": { "y": -1 },
+      "spacing": "$nodeSpacing"
     }
   ]
 }
