@@ -34,6 +34,7 @@ public class CylinderRings extends ApotheneumPattern {
 
   public final CompoundParameter pos =
     new CompoundParameter("Pos", 0, 360)
+    .setWrappable(true)
     .setUnits(CompoundParameter.Units.DEGREES)
     .setDescription("Base ring position");
 
