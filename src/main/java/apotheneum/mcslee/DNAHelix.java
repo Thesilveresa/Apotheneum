@@ -37,6 +37,7 @@ public class DNAHelix extends ApotheneumPattern {
   public final CompoundParameter twist =
     new CompoundParameter("Twist", 0)
     .setUnits(CompoundParameter.Units.PERCENT_NORMALIZED)
+    .setWrappable(true)
     .setDescription("Twist");
 
   public final CompoundParameter winding =
