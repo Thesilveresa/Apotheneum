@@ -32,7 +32,8 @@ Need more help?<br />
 [Installation Guide &rarr;](https://github.com/Apotheneum/Apotheneum/wiki/Installation-Guide)
 
 Learn how to create animation content.<br />
-[Chromatik User Guide &rarr;](https://chromatik.co/guide/)
+[Chromatik User Guide &rarr;](https://chromatik.co/guide/)<br />
+[Chromatik Developer Guide &rarr;](https://chromatik.co/develop/)
 
 Know the limitations of developing large-scale animation on a computer monitor.<br />
 [Simulation Principles &rarr;](https://github.com/Apotheneum/Apotheneum/wiki/Simulation-Principles)
