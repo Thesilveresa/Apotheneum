@@ -62,7 +62,7 @@ for ($a = 0; $a < 120; ++$a) {
   $yb = $isDoor ? '($cubeTop - '.($pixels-1).'* $nodeSpacing)' : 0;
   
   $xb = '($cubeSide * 0.5 + ($cylinderRadius - $meshInset) * '.$sin.')';
-  $zb = '($cubeSide * 0.5 + ($cylinderRadius - $meshInset) * '.$cos.')';
+  $zb = '($cubeSide * 0.5 - ($cylinderRadius - $meshInset) * '.$cos.')';
   
   $xo = '(-'.$cos.' * 0.5 * $meshWidth)';
   $zo = '('.$sin.' * 0.5 * $meshWidth)';  
