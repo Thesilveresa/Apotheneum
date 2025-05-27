@@ -1,6 +1,6 @@
 {
   "version": "1.1.1-SNAPSHOT",
-  "timestamp": 1747390635621,
+  "timestamp": 1748350836604,
   "fixtures": [
     {
       "jsonFixtureType": "Apotheneum/Apotheneum",
@@ -37,7 +37,7 @@
         "pitch": 0.0,
         "roll": 0.0,
         "scale": 1.0,
-        "selected": false,
+        "selected": true,
         "deactivate": false,
         "enabled": true,
         "brightness": 1.0,
@@ -65,10 +65,10 @@
         "y": 30.0,
         "z": 245.5,
         "yaw": 0.0,
-        "pitch": 0.0,
+        "pitch": 90.0,
         "roll": 0.0,
         "scale": 1.0,
-        "selected": true,
+        "selected": false,
         "deactivate": false,
         "enabled": false,
         "brightness": 1.0,

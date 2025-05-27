@@ -4,11 +4,9 @@
   
   "parameters": {
     "nodeSpacing": { "type": "float", "min": 1, "default": 9.375, "label": "Spacing", "description": "Spacing of nodes" },
-    "meshEnabled": { "type": "boolean", "default": false, "label": "Mesh UI", "description": "Whether the mesh is rendered" },
-    "meshInset": { "type": "float", "min": 1, "default": 1, "label": "Mesh Inset", "description": "Inset of the mesh behind nets" },
-    "meshWidth": { "type": "float", "min": 0.1, "default": 1, "label": "Mesh Width", "description": "Width of the mesh net" },
-    "meshNodeSize": { "type": "float", "min": 1, "default": 5, "label": "Mesh Node Size", "description": "Width of the mesh nodes" },
-    "cubeTop": { "type": "float", "min": 1, "default": 444, "label": "Top", "description": "Top of the cube LED nets in inches" }    
+    "cubeTop": { "type": "float", "min": 1, "default": 444, "label": "Top", "description": "Top of the cube LED nets in inches" },
+    "stripYaw": { "type": "float", "default": 0 },
+    "stripRoll": { "type": "float", "default": 0 }
   },
   
   "components": [
@@ -18,7 +16,8 @@
       "numPoints": 45,
       "x": "$instance * $nodeSpacing",
       "y": "$cubeTop",
-      "direction": { "y": -1 },
+      "yaw": "$stripYaw",
+      "roll": "$stripRoll",
       "spacing": "$nodeSpacing"
     }
   ]

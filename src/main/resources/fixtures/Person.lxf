@@ -3,9 +3,18 @@
   "tag": "peron",
   "ui": {
     "mesh": {
-      "type": "uniformFill",
+      "type": "phong",
       "color": "0xff222222",
-      "file": "Person.obj"
+      "file": "Person.obj",
+      "invertNormals": true,
+      "lighting": {
+        "ambient": 0.2,
+        "diffuse": 0.4,
+        "specular": 0.1,
+        "shininess": 4,
+        "color": "0xff666666",
+        "direction": { "x": 0.2, "y": -3, "z": -0.3 }
+      }
     }
   }
 }

@@ -30,7 +30,9 @@
       "meshEnabled": "$meshEnabled",
       "meshInset": "$meshInset",
       "meshWidth": "$meshWidth",
-      "meshNodeSize": "$meshNodeSize",      
+      "meshNodeSize": "$meshNodeSize",
+      "stripYaw": 0,
+      "stripRoll": -90,    
       
       "x": "$nodeInset"
     },
@@ -40,10 +42,8 @@
       
       "cubeTop": "$cubeTop",
       "nodeSpacing": "$nodeSpacing",
-      "meshEnabled": "$meshEnabled",
-      "meshInset": "$meshInset",
-      "meshWidth": "$meshWidth",
-      "meshNodeSize": "$meshNodeSize",      
+      "stripYaw": 0,
+      "stripRoll": -90,
       
       "x": "$cubeSide",
       "z": "$nodeInset",
@@ -55,10 +55,8 @@
       
       "cubeTop": "$cubeTop",
       "nodeSpacing": "$nodeSpacing",
-      "meshEnabled": "$meshEnabled",
-      "meshInset": "$meshInset",
-      "meshWidth": "$meshWidth",
-      "meshNodeSize": "$meshNodeSize",      
+      "stripYaw": 0,
+      "stripRoll": -90,
       
       "x": "$cubeSide - $nodeInset",
       "z": "$cubeSide",
@@ -70,10 +68,8 @@
       
       "cubeTop": "$cubeTop",
       "nodeSpacing": "$nodeSpacing",
-      "meshEnabled": "$meshEnabled",
-      "meshInset": "$meshInset",
-      "meshWidth": "$meshWidth",
-      "meshNodeSize": "$meshNodeSize",
+      "stripYaw": 0,
+      "stripRoll": -90,
       
       "x": 0,
       "z": "$cubeSide - $nodeInset",
@@ -86,6 +82,8 @@
       "cubeTop": "$cubeTop",
       "enabled": "$interiorEnabled",
       "nodeSpacing": "$nodeSpacing",
+      "stripYaw": 180,
+      "stripRoll": -90,
       
       "x": "$nodeInset",
       "z": "2*$meshInset"
@@ -97,6 +95,8 @@
       "cubeTop": "$cubeTop",
       "enabled": "$interiorEnabled",
       "nodeSpacing": "$nodeSpacing",
+      "stripYaw": 180,
+      "stripRoll": -90,
       
       "x": "$cubeSide - 2*$meshInset",
       "z": "$nodeInset",
@@ -109,6 +109,8 @@
       "cubeTop": "$cubeTop",
       "enabled": "$interiorEnabled",
       "nodeSpacing": "$nodeSpacing",
+      "stripYaw": 180,
+      "stripRoll": -90,
       
       "x": "$cubeSide - $nodeInset",
       "z": "$cubeSide - 2*$meshInset",
@@ -121,6 +123,8 @@
       "cubeTop": "$cubeTop",
       "enabled": "$interiorEnabled",
       "nodeSpacing": "$nodeSpacing",
+      "stripYaw": 180,
+      "stripRoll": -90,
       
       "x": "2*$meshInset",
       "z": "$cubeSide - $nodeInset",
@@ -136,7 +140,8 @@
       "x": "$cubeSide * 0.5 + $cylinderRadius * sin($instance * 3)",
       "z": "$cubeSide * 0.5 - $cylinderRadius * cos($instance * 3)",
       "y": "$cubeTop - 2*$nodeSpacing",
-      "direction": { "y": -1 },
+      "yaw": "-3 * $instance",
+      "roll": -90,
       "spacing": "$nodeSpacing"
     },
     {
@@ -149,21 +154,9 @@
       "x": "$cubeSide * 0.5 + ($cylinderRadius - 2*$meshInset) * sin($instance * 3)",
       "z": "$cubeSide * 0.5 - ($cylinderRadius - 2*$meshInset) * cos($instance * 3)",
       "y": "$cubeTop - 2*$nodeSpacing",
-      "direction": { "y": -1 },
+      "yaw": "180 - 3*$instance",
+      "roll": -90,
       "spacing": "$nodeSpacing"
-    },
-    {
-      "type": "Apotheneum-Mesh",
-      "enabled": "$meshEnabled",
-
-      "nodeInset": "$nodeInset",
-      "nodeSpacing": "$nodeSpacing",
-      "cubeTop": "$cubeTop",
-      "cubeSide": "$cubeSide",
-      "cylinderRadius": "$cylinderRadius",
-      "meshInset": "$meshInset",
-      "meshWidth": "$meshWidth",
-      "meshNodeSize": "$meshNodeSize"
     },
     {
       "type": "Person",
@@ -181,6 +174,12 @@
       {  
         "enabled": "$meshEnabled",
         "type": "uniformFill",
+        "color": "0xff000000",
+        "file": "Apotheneum-Mesh.obj"
+      },
+      {  
+        "enabled": "$meshEnabled",
+        "type": "phong",
         "color": "0xff191919",
         "vertices": [
           // Front left column
@@ -206,7 +205,15 @@
         
           // Top right truss
           { "type": "cuboid", "x": "$cubeSide - 0.5 * $trussWidth", "y": "$trussTop - $trussWidth", "z": "0.5 * $trussWidth", "depth": "$cubeSide - $trussWidth", "height": "$trussWidth", "width": "$trussWidth" }
-        ]
+        ],
+        "lighting": {
+          "ambient": 0.1,
+          "diffuse": 0.1,
+          "specular": 0.1,
+          "shininess": 4,
+          "color": "0xff999999",
+          "direction": { "x": .2, "y": .4, "z": .3 }
+        }
       },
       {
         "enabled": "$sandEnabled",
