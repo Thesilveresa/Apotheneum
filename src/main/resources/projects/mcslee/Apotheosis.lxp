@@ -1,6 +1,6 @@
 {
   "version": "1.1.1-SNAPSHOT",
-  "timestamp": 1747840368542,
+  "timestamp": 1747917096632,
   "model": {
     "id": 2,
     "class": "heronarts.lx.structure.LXStructure",
@@ -308,7 +308,7 @@
           "meshEnabled": true,
           "meshInset": 1.0,
           "meshWidth": 1.0,
-          "meshNodeSize": 3.0,
+          "meshNodeSize": 2.0,
           "trussWidth": 12.0,
           "trussTop": 480.0,
           "sandEnabled": true,
@@ -331,7 +331,7 @@
           "pitch": 0.0,
           "roll": 0.0,
           "scale": 1.0,
-          "selected": false,
+          "selected": true,
           "deactivate": false,
           "enabled": true,
           "brightness": 1.0,
@@ -362,7 +362,7 @@
           "pitch": 0.0,
           "roll": 0.0,
           "scale": 1.0,
-          "selected": true,
+          "selected": false,
           "deactivate": false,
           "enabled": false,
           "brightness": 1.0,
@@ -9243,12 +9243,12 @@
         "depth": 2.0,
         "camera": {
           "active": true,
-          "radius": 1292.0373470627096,
-          "theta": 359.4417812850908,
-          "phi": -5.051171461179544,
-          "x": 241.63844485193806,
-          "y": 235.22794923542568,
-          "z": 274.8823487008717
+          "radius": 746.8013740265101,
+          "theta": 15.57725084676639,
+          "phi": 9.512241910211742,
+          "x": 245.5,
+          "y": 237.0,
+          "z": 245.5
         },
         "cue": [
           {
@@ -9280,12 +9280,12 @@
           },
           {
             "active": true,
-            "radius": 1344.601451509637,
-            "theta": 0.18451772602224992,
-            "phi": -6.8299791138409205,
-            "x": 240.7135732698214,
-            "y": 237.66336926738197,
-            "z": 277.33800589003613
+            "radius": 746.8013740265101,
+            "theta": 15.57725084676639,
+            "phi": 9.512241910211742,
+            "x": 245.5,
+            "y": 237.0,
+            "z": 245.5
           },
           {
             "active": false,
@@ -9310,12 +9310,18 @@
         "pointCloud": {
           "ledStyle": 2,
           "ledStyle/name": "LENS3",
-          "pointSize": 6.0,
+          "pointSize": 7.0,
           "alphaRef": 0,
-          "feather": 0.7000000000000001,
+          "feather": 0.8400000000000002,
           "sparkle": 1.0,
-          "sparkleCurve": 2.0,
+          "sparkleCurve": 4.0,
           "sparkleRotate": 127.30781380087137,
+          "directional": 1,
+          "directional/name": "DIRECTED",
+          "directionalDispersion": 180.0,
+          "directionalContrast": 0.75,
+          "directionalShowNormals": false,
+          "directionalShowNormalsLength": 4.0,
           "contrast": 1.5,
           "depthTest": true,
           "useCustomParams": false
@@ -9417,6 +9423,12 @@
           "sparkle": 1.0,
           "sparkleCurve": 2.0,
           "sparkleRotate": 45.0,
+          "directional": 0,
+          "directional/name": "OMNI",
+          "directionalDispersion": 180.0,
+          "directionalContrast": 0.0,
+          "directionalShowNormals": false,
+          "directionalShowNormalsLength": 1.0,
           "contrast": 1.0,
           "depthTest": true,
           "useCustomParams": true
