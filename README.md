@@ -67,4 +67,4 @@ An example animation routine is provided at [`StripePattern.java`](src/main/java
 
 A more general overview of the content package structure is provided in the [LXPackage Template Repository &rarr;](https://github.com/heronarts/LXPackage)
 
-Learn more by reading the [Chromatik Developer Guide](https://chromatik.co/develop/)
+Learn more by reading the [Chromatik Developer Guide &rarr;](https://chromatik.co/develop/)
