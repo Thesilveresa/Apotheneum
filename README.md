@@ -18,7 +18,9 @@ This package currently requires macOS on an Apple Silicon machine. Windows instr
 
 
 
-* Download the latest [Chromatik release](https://chromatik.co/download/)
+* Download the latest [Chromatik pre-release](https://github.com/heronarts/Chromatik/releases/tag/1.1.1-SNAPSHOT-2025-05-27)
+  * [MacOS Build](https://github.com/heronarts/Chromatik/releases/download/1.1.1-SNAPSHOT-2025-05-27/Chromatik-1.1.1-SNAPSHOT-MacOS-Apple-Silicon.zip)
+  * [Windows Build](https://github.com/heronarts/Chromatik/releases/download/1.1.1-SNAPSHOT-2025-05-27/Chromatik-1.1.1-SNAPSHOT-Win64-Installer.msi)
 * Register a [Chromatik account](https://chromatik.co/login)
 * Authorize Chromatik with your free license
 
@@ -46,6 +48,8 @@ Know the limitations of developing large-scale animation on a computer monitor.<
 
 Coding experience is neither required nor necessary to build animation content in Chromatik. But for those comfortable with basic Java coding, Chromatik offers an extensible framework for custom animation development.
 
+Learn more by reading the [Chromatik Developer Guide &rarr;](https://chromatik.co/develop/)
+
 Install the following tools:
 
 * [Java 21 Temurin](https://adoptium.net/)
@@ -66,5 +70,3 @@ $ mvn install
 An example animation routine is provided at [`StripePattern.java`](src/main/java/apotheneum/examples/StripePattern.java)
 
 A more general overview of the content package structure is provided in the [LXPackage Template Repository &rarr;](https://github.com/heronarts/LXPackage)
-
-Learn more by reading the [Chromatik Developer Guide &rarr;](https://chromatik.co/develop/)
