@@ -66,3 +66,5 @@ $ mvn install
 An example animation routine is provided at [`StripePattern.java`](src/main/java/apotheneum/examples/StripePattern.java)
 
 A more general overview of the content package structure is provided in the [LXPackage Template Repository &rarr;](https://github.com/heronarts/LXPackage)
+
+Learn more by reading the [Chromatik Developer Guide](https://chromatik.co/develop/)
