@@ -19,6 +19,7 @@
 package apotheneum.mcslee;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,6 +27,7 @@ import apotheneum.Apotheneum;
 import apotheneum.ApotheneumPattern;
 import heronarts.lx.LX;
 import heronarts.lx.LXCategory;
+import heronarts.lx.LXComponent;
 import heronarts.lx.LXComponentName;
 import heronarts.lx.color.LXColor;
 import heronarts.lx.midi.MidiNoteOn;
@@ -35,6 +37,7 @@ import heronarts.lx.utils.LXUtils;
 
 @LXCategory("Apotheneum/mcslee")
 @LXComponentName("DNA Letters")
+@LXComponent.Description("ACTG base pair letters on the cube faces")
 public class DNALetters extends ApotheneumPattern implements ApotheneumPattern.Midi {
 
   public static final int LETTER_SIZE = 5;
@@ -75,7 +78,13 @@ public class DNALetters extends ApotheneumPattern implements ApotheneumPattern.M
 
   public final int[][] LETTERS = { A, C, T, G };
 
+  private final boolean[] active = new boolean[WIDTH * HEIGHT];
+  private final double[] level = new double[WIDTH * HEIGHT];
   private final int[] state = new int[WIDTH * HEIGHT];
+
+  public final TriggerParameter reset =
+    new TriggerParameter("Reset", this::reset)
+    .setDescription("Resets the letters");
 
   public final TriggerParameter update =
     new TriggerParameter("Update", this::update)
@@ -89,12 +98,17 @@ public class DNALetters extends ApotheneumPattern implements ApotheneumPattern.M
 
   public DNALetters(LX lx) {
     super(lx);
+    addParameter("reset", this.reset);
     addParameter("update", this.update);
     addParameter("numUpdate", this.numUpdate);
     randomize();
     for (int i = 0; i < this.state.length; ++i) {
       this.shuffle.add(i);
     }
+  }
+
+  private void reset() {
+    Arrays.fill(this.active, false);
   }
 
   private void randomize() {
@@ -105,20 +119,22 @@ public class DNALetters extends ApotheneumPattern implements ApotheneumPattern.M
 
   private void update() {
     Collections.shuffle(this.shuffle);
-    int numUpdate = this.numUpdate.getValuei();
+    final int numUpdate = this.numUpdate.getValuei();
     for (int i = 0; i < numUpdate; ++i) {
       int idx = this.shuffle.get(i);
+      this.active[idx] = true;
       this.state[idx] = (this.state[idx] + LXUtils.randomi(LETTERS.length-2)) % LETTERS.length;
     }
   }
 
-  private void renderLetter(int[] letters, int x, int y, Apotheneum.Cube.Face face) {
+  private void renderLetter(double level, int[] letter, int x, int y, Apotheneum.Cube.Face face) {
     int z = 0;
+    final int color = LXColor.grayn(level);
     for (int j = 0; j < LETTER_SIZE; ++j) {
       for (int i = 0; i < LETTER_SIZE; ++i) {
-        if (letters[z++] > 0) {
+        if (letter[z++] > 0) {
           int idx = (x+i) * Apotheneum.GRID_HEIGHT + (y+j);
-          colors[face.model.points[idx].index] = LXColor.WHITE;
+          colors[face.model.points[idx].index] = color;
         }
       }
     }
@@ -127,9 +143,25 @@ public class DNALetters extends ApotheneumPattern implements ApotheneumPattern.M
   @Override
   protected void render(double deltaMs) {
     setColors(LXColor.BLACK);
+
+    for (int i = 0; i < this.level.length; ++i) {
+      if (this.active[i]) {
+        this.level[i] = LXUtils.min(1, this.level[i] + deltaMs / 500.);
+      }
+    }
+
     for (int x = 0; x < WIDTH; ++x) {
       for (int y = 0; y < HEIGHT; ++y) {
-        renderLetter(LETTERS[this.state[x * HEIGHT + y]], x * LETTER_SIZE, y * LETTER_SIZE, Apotheneum.cube.exterior.front);
+        final int idx = x * HEIGHT + y;
+        if (this.active[idx]) {
+          renderLetter(
+            this.level[idx],
+            LETTERS[this.state[idx]],
+            x * LETTER_SIZE,
+            y * LETTER_SIZE,
+            Apotheneum.cube.exterior.front
+          );
+        }
       }
     }
 
@@ -142,7 +174,11 @@ public class DNALetters extends ApotheneumPattern implements ApotheneumPattern.M
 
   @Override
   public void noteOnReceived(MidiNoteOn note) {
-    update();
+    if (note.getPitch() == 0) {
+      reset();
+    } else {
+      update();
+    }
   }
 
 }

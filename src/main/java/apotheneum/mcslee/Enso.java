@@ -23,6 +23,7 @@ import apotheneum.ApotheneumPattern;
 import heronarts.glx.ui.UI2dContainer;
 import heronarts.lx.LX;
 import heronarts.lx.LXCategory;
+import heronarts.lx.LXComponent;
 import heronarts.lx.color.LXColor;
 import heronarts.lx.midi.MidiNote;
 import heronarts.lx.midi.MidiNoteOn;
@@ -35,6 +36,7 @@ import heronarts.lx.studio.ui.device.UIDeviceControls;
 import heronarts.lx.utils.LXUtils;
 
 @LXCategory("Apotheneum/mcslee")
+@LXComponent.Description("Distorted and multiplying circles on cube faces")
 public class Enso extends ApotheneumPattern implements UIDeviceControls<Enso>, ApotheneumPattern.Midi {
 
   public final CompoundParameter radius =
