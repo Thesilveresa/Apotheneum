@@ -33,6 +33,46 @@
     {
       "class": "heronarts.lx.structure.view.LXViewDefinition",
       "internal": {
+        "modulationColor": 1,
+        "modulationControlsExpanded": true,
+        "modulationsExpanded": true
+      },
+      "parameters": {
+        "label": "Cube Interior",
+        "enabled": true,
+        "selector": "cube \u0026 interior",
+        "normalization": 0,
+        "normalization/name": "RELATIVE",
+        "orientation": 0,
+        "orientation/name": "GLOBAL",
+        "priority": true,
+        "cueActive": false
+      },
+      "children": {}
+    },
+    {
+      "class": "heronarts.lx.structure.view.LXViewDefinition",
+      "internal": {
+        "modulationColor": 2,
+        "modulationControlsExpanded": true,
+        "modulationsExpanded": true
+      },
+      "parameters": {
+        "label": "Cube Exterior",
+        "enabled": true,
+        "selector": "cube \u0026 exterior",
+        "normalization": 0,
+        "normalization/name": "RELATIVE",
+        "orientation": 0,
+        "orientation/name": "GLOBAL",
+        "priority": true,
+        "cueActive": false
+      },
+      "children": {}
+    },
+    {
+      "class": "heronarts.lx.structure.view.LXViewDefinition",
+      "internal": {
         "modulationColor": 8,
         "modulationControlsExpanded": true,
         "modulationsExpanded": true
@@ -41,6 +81,46 @@
         "label": "Faces",
         "enabled": true,
         "selector": "cubeFace*",
+        "normalization": 0,
+        "normalization/name": "RELATIVE",
+        "orientation": 1,
+        "orientation/name": "GROUP",
+        "priority": true,
+        "cueActive": false
+      },
+      "children": {}
+    },
+    {
+      "class": "heronarts.lx.structure.view.LXViewDefinition",
+      "internal": {
+        "modulationColor": 8,
+        "modulationControlsExpanded": true,
+        "modulationsExpanded": true
+      },
+      "parameters": {
+        "label": "Faces Interior",
+        "enabled": true,
+        "selector": "interior \u0026 cubeFace*",
+        "normalization": 0,
+        "normalization/name": "RELATIVE",
+        "orientation": 1,
+        "orientation/name": "GROUP",
+        "priority": true,
+        "cueActive": false
+      },
+      "children": {}
+    },
+    {
+      "class": "heronarts.lx.structure.view.LXViewDefinition",
+      "internal": {
+        "modulationColor": 8,
+        "modulationControlsExpanded": true,
+        "modulationsExpanded": true
+      },
+      "parameters": {
+        "label": "Faces Exterior",
+        "enabled": true,
+        "selector": "exterior \u0026 cubeFace*",
         "normalization": 0,
         "normalization/name": "RELATIVE",
         "orientation": 1,
@@ -153,6 +233,46 @@
     {
       "class": "heronarts.lx.structure.view.LXViewDefinition",
       "internal": {
+        "modulationColor": 4,
+        "modulationControlsExpanded": true,
+        "modulationsExpanded": true
+      },
+      "parameters": {
+        "label": "Cylinder Interior",
+        "enabled": true,
+        "selector": "cylinder \u0026 interior",
+        "normalization": 0,
+        "normalization/name": "RELATIVE",
+        "orientation": 0,
+        "orientation/name": "GLOBAL",
+        "priority": true,
+        "cueActive": false
+      },
+      "children": {}
+    },
+    {
+      "class": "heronarts.lx.structure.view.LXViewDefinition",
+      "internal": {
+        "modulationColor": 3,
+        "modulationControlsExpanded": true,
+        "modulationsExpanded": true
+      },
+      "parameters": {
+        "label": "Cylinder Exterior",
+        "enabled": true,
+        "selector": "cylinder \u0026 exterior",
+        "normalization": 0,
+        "normalization/name": "RELATIVE",
+        "orientation": 0,
+        "orientation/name": "GLOBAL",
+        "priority": true,
+        "cueActive": false
+      },
+      "children": {}
+    },
+    {
+      "class": "heronarts.lx.structure.view.LXViewDefinition",
+      "internal": {
         "modulationColor": 6,
         "modulationControlsExpanded": true,
         "modulationsExpanded": true
@@ -181,6 +301,26 @@
         "label": "Exterior",
         "enabled": true,
         "selector": "exterior",
+        "normalization": 0,
+        "normalization/name": "RELATIVE",
+        "orientation": 0,
+        "orientation/name": "GLOBAL",
+        "priority": true,
+        "cueActive": false
+      },
+      "children": {}
+    },
+    {
+      "class": "heronarts.lx.structure.view.LXViewDefinition",
+      "internal": {
+        "modulationColor": 16,
+        "modulationControlsExpanded": true,
+        "modulationsExpanded": true
+      },
+      "parameters": {
+        "label": "Lights",
+        "enabled": true,
+        "selector": "cube, cylinder",
         "normalization": 0,
         "normalization/name": "RELATIVE",
         "orientation": 0,

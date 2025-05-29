@@ -1,6 +1,6 @@
 {
   "version": "1.1.1-SNAPSHOT",
-  "timestamp": 1748354413440,
+  "timestamp": 1748530510922,
   "model": {
     "id": 2,
     "class": "heronarts.lx.structure.LXStructure",
@@ -60,6 +60,48 @@
             "children": {}
           },
           {
+            "id": 9839998,
+            "class": "heronarts.lx.structure.view.LXViewDefinition",
+            "internal": {
+              "modulationColor": 1,
+              "modulationControlsExpanded": true,
+              "modulationsExpanded": true
+            },
+            "parameters": {
+              "label": "Cube Interior",
+              "enabled": true,
+              "selector": "cube \u0026 interior",
+              "normalization": 0,
+              "normalization/name": "RELATIVE",
+              "orientation": 0,
+              "orientation/name": "GLOBAL",
+              "priority": true,
+              "cueActive": false
+            },
+            "children": {}
+          },
+          {
+            "id": 9839999,
+            "class": "heronarts.lx.structure.view.LXViewDefinition",
+            "internal": {
+              "modulationColor": 2,
+              "modulationControlsExpanded": true,
+              "modulationsExpanded": true
+            },
+            "parameters": {
+              "label": "Cube Exterior",
+              "enabled": true,
+              "selector": "cube \u0026 exterior",
+              "normalization": 0,
+              "normalization/name": "RELATIVE",
+              "orientation": 0,
+              "orientation/name": "GLOBAL",
+              "priority": true,
+              "cueActive": false
+            },
+            "children": {}
+          },
+          {
             "id": 37644,
             "class": "heronarts.lx.structure.view.LXViewDefinition",
             "internal": {
@@ -71,6 +113,48 @@
               "label": "Faces",
               "enabled": true,
               "selector": "cubeFace*",
+              "normalization": 0,
+              "normalization/name": "RELATIVE",
+              "orientation": 1,
+              "orientation/name": "GROUP",
+              "priority": true,
+              "cueActive": false
+            },
+            "children": {}
+          },
+          {
+            "id": 9840001,
+            "class": "heronarts.lx.structure.view.LXViewDefinition",
+            "internal": {
+              "modulationColor": 8,
+              "modulationControlsExpanded": true,
+              "modulationsExpanded": true
+            },
+            "parameters": {
+              "label": "Faces Interior",
+              "enabled": true,
+              "selector": "interior \u0026 cubeFace*",
+              "normalization": 0,
+              "normalization/name": "RELATIVE",
+              "orientation": 1,
+              "orientation/name": "GROUP",
+              "priority": true,
+              "cueActive": false
+            },
+            "children": {}
+          },
+          {
+            "id": 9840020,
+            "class": "heronarts.lx.structure.view.LXViewDefinition",
+            "internal": {
+              "modulationColor": 8,
+              "modulationControlsExpanded": true,
+              "modulationsExpanded": true
+            },
+            "parameters": {
+              "label": "Faces Exterior",
+              "enabled": true,
+              "selector": "exterior \u0026 cubeFace*",
               "normalization": 0,
               "normalization/name": "RELATIVE",
               "orientation": 1,
@@ -186,6 +270,48 @@
             "children": {}
           },
           {
+            "id": 9839978,
+            "class": "heronarts.lx.structure.view.LXViewDefinition",
+            "internal": {
+              "modulationColor": 4,
+              "modulationControlsExpanded": true,
+              "modulationsExpanded": true
+            },
+            "parameters": {
+              "label": "Cylinder Interior",
+              "enabled": true,
+              "selector": "cylinder \u0026 interior",
+              "normalization": 0,
+              "normalization/name": "RELATIVE",
+              "orientation": 0,
+              "orientation/name": "GLOBAL",
+              "priority": true,
+              "cueActive": false
+            },
+            "children": {}
+          },
+          {
+            "id": 9839979,
+            "class": "heronarts.lx.structure.view.LXViewDefinition",
+            "internal": {
+              "modulationColor": 3,
+              "modulationControlsExpanded": true,
+              "modulationsExpanded": true
+            },
+            "parameters": {
+              "label": "Cylinder Exterior",
+              "enabled": true,
+              "selector": "cylinder \u0026 exterior",
+              "normalization": 0,
+              "normalization/name": "RELATIVE",
+              "orientation": 0,
+              "orientation/name": "GLOBAL",
+              "priority": true,
+              "cueActive": false
+            },
+            "children": {}
+          },
+          {
             "id": 32540,
             "class": "heronarts.lx.structure.view.LXViewDefinition",
             "internal": {
@@ -218,6 +344,27 @@
               "label": "Exterior",
               "enabled": true,
               "selector": "exterior",
+              "normalization": 0,
+              "normalization/name": "RELATIVE",
+              "orientation": 0,
+              "orientation/name": "GLOBAL",
+              "priority": true,
+              "cueActive": false
+            },
+            "children": {}
+          },
+          {
+            "id": 9840039,
+            "class": "heronarts.lx.structure.view.LXViewDefinition",
+            "internal": {
+              "modulationColor": 16,
+              "modulationControlsExpanded": true,
+              "modulationsExpanded": true
+            },
+            "parameters": {
+              "label": "Lights",
+              "enabled": true,
+              "selector": "cube, cylinder",
               "normalization": 0,
               "normalization/name": "RELATIVE",
               "orientation": 0,
@@ -292,6 +439,7 @@
           "trussTop": 480.0,
           "sandEnabled": true,
           "sandScale": 80.0,
+          "starsEnabled": true,
           "peopleEnabled": true
         },
         "id": 14078,
@@ -367,7 +515,7 @@
     "parameters": {
       "label": "Engine",
       "multithreaded": true,
-      "channelMultithreaded": false,
+      "compositorMultithreaded": false,
       "networkMultithreaded": false,
       "framesPerSecond": 60.0,
       "speed": 1.0,
@@ -392,7 +540,7 @@
           "autoCycleMode": 0,
           "autoCycleMode/name": "NEXT",
           "autoCycleTimeSecs": 45.0,
-          "autoCycleCursor": 0,
+          "autoCycleCursor": 3,
           "triggerSwatchCycle": false,
           "expandedPerformance": true,
           "label1": "1",
@@ -411,7 +559,7 @@
               "modulationsExpanded": true
             },
             "parameters": {
-              "label": "Deep",
+              "label": "Amber",
               "recall": false,
               "autoCycleEligible": true
             },
@@ -431,7 +579,7 @@
                   "mode/name": "FIXED",
                   "period": 30.0,
                   "primary/brightness": 100.0,
-                  "primary/saturation": 100.0,
+                  "primary/saturation": 36.201171875,
                   "primary/hue": 0.0,
                   "secondary/brightness": 100.0,
                   "secondary/saturation": 100.0,
@@ -453,8 +601,8 @@
                   "mode/name": "FIXED",
                   "period": 30.0,
                   "primary/brightness": 100.0,
-                  "primary/saturation": 100.0,
-                  "primary/hue": 25.242189407348633,
+                  "primary/saturation": 46.50716018676758,
+                  "primary/hue": 19.078125,
                   "secondary/brightness": 100.0,
                   "secondary/saturation": 100.0,
                   "secondary/hue": 120.0
@@ -475,8 +623,8 @@
                   "mode/name": "FIXED",
                   "period": 30.0,
                   "primary/brightness": 100.0,
-                  "primary/saturation": 100.0,
-                  "primary/hue": 237.0703125,
+                  "primary/saturation": 56.32161331176758,
+                  "primary/hue": 0.0,
                   "secondary/brightness": 100.0,
                   "secondary/saturation": 100.0,
                   "secondary/hue": 120.0
@@ -857,6 +1005,7 @@
               "label": "LENV",
               "running": false,
               "trigger": false,
+              "reset": false,
               "midiSource/index": 0,
               "midiFilter/enabled": true,
               "midiFilter/channel": 16,
@@ -1293,7 +1442,8 @@
             "parameters": {
               "label": "Envelop",
               "running": false,
-              "trigger": false
+              "trigger": false,
+              "reset": false
             },
             "children": {
               "source": {
@@ -1308,6 +1458,7 @@
                   "label": "Source",
                   "running": true,
                   "trigger": false,
+                  "reset": false,
                   "gain": 0.0,
                   "range": 24.0,
                   "attack": 0.0,
@@ -1359,6 +1510,7 @@
                   "label": "Decode",
                   "running": true,
                   "trigger": false,
+                  "reset": false,
                   "gain": 0.0,
                   "range": 24.0,
                   "attack": 0.0,
@@ -1389,6 +1541,7 @@
               "label": "Reaper",
               "running": false,
               "trigger": false,
+              "reset": false,
               "meterAttack": 0.0,
               "meterRelease": 0.0,
               "foldMode": 1,
@@ -1474,6 +1627,7 @@
               "label": "Meter",
               "running": false,
               "trigger": false,
+              "reset": false,
               "midiSource/index": 0,
               "midiFilter/enabled": true,
               "midiFilter/channel": 16,
@@ -1658,7 +1812,7 @@
               "midiFilter/noteRange": 128,
               "midiFilter/minVelocity": 1,
               "midiFilter/velocityRange": 127,
-              "view": 9,
+              "view": 15,
               "compositeMode": 0,
               "compositeMode/name": "PLAYLIST",
               "compositeDampingEnabled": true,
@@ -1930,6 +2084,7 @@
                           "label": "LFO",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -1969,6 +2124,7 @@
                           "label": "LFO",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -2206,6 +2362,7 @@
                           "label": "LFO",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -2245,6 +2402,7 @@
                           "label": "LFO",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -2284,6 +2442,7 @@
                           "label": "LFO 3",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -2818,6 +2977,7 @@
                           "label": "LFO",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -2857,6 +3017,7 @@
                           "label": "Cycle",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -2885,6 +3046,7 @@
                           "label": "LFO 2",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -2924,6 +3086,7 @@
                           "label": "Cycle",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -3119,6 +3282,7 @@
                           "label": "Yaw",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -3156,6 +3320,7 @@
                           "label": "Pitch",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -3193,6 +3358,7 @@
                           "label": "Roll",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -3230,6 +3396,7 @@
                           "label": "Center",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -3267,6 +3434,7 @@
                           "label": "Widh",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -3525,7 +3693,7 @@
               "midiFilter/noteRange": 128,
               "midiFilter/minVelocity": 1,
               "midiFilter/velocityRange": 127,
-              "view": 8,
+              "view": 14,
               "compositeMode": 0,
               "compositeMode/name": "PLAYLIST",
               "compositeDampingEnabled": true,
@@ -3623,6 +3791,7 @@
                       "label": "Interval",
                       "running": false,
                       "trigger": false,
+                      "reset": false,
                       "midiSource/index": 0,
                       "midiFilter/enabled": true,
                       "midiFilter/channel": 16,
@@ -3885,6 +4054,7 @@
                           "label": "LFO",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -3910,7 +4080,7 @@
                           "exp": 0.0
                         },
                         "children": {},
-                        "basis": 0.7919314671679891
+                        "basis": 0.04040930194939106
                       },
                       {
                         "id": 33298,
@@ -3924,6 +4094,7 @@
                           "label": "LFO",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -3949,7 +4120,7 @@
                           "exp": 0.0
                         },
                         "children": {},
-                        "basis": 0.1859257825705142
+                        "basis": 0.9221167232532422
                       }
                     ],
                     "modulations": [
@@ -4161,6 +4332,7 @@
                           "label": "LFO",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -4200,6 +4372,7 @@
                           "label": "LFO",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -4239,6 +4412,7 @@
                           "label": "LFO 3",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -4773,6 +4947,7 @@
                           "label": "LFO",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -4812,6 +4987,7 @@
                           "label": "Cycle",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -4840,6 +5016,7 @@
                           "label": "LFO 2",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -4879,6 +5056,7 @@
                           "label": "Cycle",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -5074,6 +5252,7 @@
                           "label": "Yaw",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -5111,6 +5290,7 @@
                           "label": "Pitch",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -5148,6 +5328,7 @@
                           "label": "Roll",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -5185,6 +5366,7 @@
                           "label": "Center",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -5222,6 +5404,7 @@
                           "label": "Widh",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -5556,6 +5739,7 @@
                           "label": "Cycle",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -5690,6 +5874,7 @@
                           "label": "Cycle",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -5787,7 +5972,10 @@
                       "primaryHue": 0.0,
                       "primarySaturation": 0.0,
                       "primaryBrightness": 0.0,
-                      "amount": 1.0
+                      "amount": 1.0,
+                      "filterThreshold": 0.0,
+                      "filterMode": 0,
+                      "filterMode/name": "LEAVE"
                     },
                     "children": {
                       "modulation": {
@@ -5946,7 +6134,10 @@
                       "primaryHue": 0.0,
                       "primarySaturation": 0.0,
                       "primaryBrightness": 0.0,
-                      "amount": 1.0
+                      "amount": 1.0,
+                      "filterThreshold": 0.0,
+                      "filterMode": 0,
+                      "filterMode/name": "LEAVE"
                     },
                     "children": {
                       "modulation": {
@@ -6006,7 +6197,7 @@
               "midiFilter/noteRange": 128,
               "midiFilter/minVelocity": 1,
               "midiFilter/velocityRange": 127,
-              "view": 7,
+              "view": 11,
               "compositeMode": 0,
               "compositeMode/name": "PLAYLIST",
               "compositeDampingEnabled": true,
@@ -6353,6 +6544,7 @@
                           "label": "Cycle",
                           "running": true,
                           "trigger": false,
+                          "reset": false,
                           "midiSource/index": 0,
                           "midiFilter/enabled": true,
                           "midiFilter/channel": 16,
@@ -6440,7 +6632,7 @@
               "midiFilter/noteRange": 128,
               "midiFilter/minVelocity": 1,
               "midiFilter/velocityRange": 127,
-              "view": 2,
+              "view": 4,
               "compositeMode": 0,
               "compositeMode/name": "PLAYLIST",
               "compositeDampingEnabled": true,
@@ -6605,7 +6797,7 @@
               "midiFilter/noteRange": 128,
               "midiFilter/minVelocity": 1,
               "midiFilter/velocityRange": 127,
-              "view": 10,
+              "view": 17,
               "compositeMode": 0,
               "compositeMode/name": "PLAYLIST",
               "compositeDampingEnabled": true,
@@ -6901,6 +7093,7 @@
               "label": "Sparkle Timer",
               "running": true,
               "trigger": false,
+              "reset": false,
               "midiSource/index": 0,
               "midiFilter/enabled": true,
               "midiFilter/channel": 16,
@@ -6920,7 +7113,7 @@
               "triggerOut": false
             },
             "children": {},
-            "basis": 0.3542992461885646
+            "basis": 0.12945321058726023
           },
           {
             "id": 11190,
@@ -6934,6 +7127,7 @@
               "label": "Sparkle Env",
               "running": true,
               "trigger": false,
+              "reset": false,
               "midiSource/index": 0,
               "midiFilter/enabled": true,
               "midiFilter/channel": 16,
@@ -7186,10 +7380,10 @@
         "perspective": 60.0,
         "depth": 2.0,
         "camera": {
-          "active": false,
+          "active": true,
           "radius": 819.9618728803007,
-          "theta": 14.702156947460026,
-          "phi": 4.4690748227294534,
+          "theta": 17.553492521401495,
+          "phi": 31.22666088468395,
           "x": 245.5,
           "y": 237.0,
           "z": 245.5
@@ -7198,8 +7392,8 @@
           {
             "active": true,
             "radius": 819.9618728803007,
-            "theta": 14.702156947460026,
-            "phi": 4.4690748227294534,
+            "theta": 17.553492521401495,
+            "phi": 31.22666088468395,
             "x": 245.5,
             "y": 237.0,
             "z": 245.5
