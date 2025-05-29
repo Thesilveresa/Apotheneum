@@ -17,6 +17,7 @@
     "trussTop": { "type": "float", "min": 1, "default": 480, "label": "Truss Top", "description": "Truss column height" },
     "sandEnabled": { "type": "boolean", "default": true, "label": "Sand UI", "description": "Whether the sand is rendered" },
     "sandScale": { "type": "float", "min": 1, "default": 20, "label": "Sand Scale", "description": "Scale of sand texture" },
+    "starsEnabled": { "type": "boolean", "default": true, "label": "Stars UI", "description": "Whether the stars are rendered" },
     "peopleEnabled": { "type": "boolean", "default": true, "label": "People UI", "description": "Whether people are rendered" }
   },
 
@@ -230,7 +231,7 @@
       },
       // Sky
       {
-        "enabled": "$sandEnabled",
+        "enabled": "$starsEnabled",
         "type": "texture2d",
         "texture": "nightsky.png",
         "vertices": [
