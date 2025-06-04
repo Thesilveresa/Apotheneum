@@ -30,6 +30,7 @@ import heronarts.lx.model.LXModel;
 import heronarts.lx.model.LXPoint;
 import heronarts.lx.osc.LXOscEngine;
 import heronarts.lx.osc.OscMessage;
+import heronarts.lx.parameter.BooleanParameter;
 import heronarts.lx.parameter.CompoundParameter;
 import heronarts.lx.parameter.TriggerParameter;
 import heronarts.lx.utils.LXUtils;
@@ -57,6 +58,10 @@ public class Overtones extends ApotheneumPattern {
     .setUnits(CompoundParameter.Units.PERCENT_NORMALIZED)
     .setDescription("Offset through cycle");
 
+  public final BooleanParameter outputTriggers =
+    new BooleanParameter("Outputs", false)
+    .setDescription("Whether output triggers are fired");
+
   public final TriggerParameter peak =
     new TriggerParameter("Peak", this::peak);
 
@@ -76,6 +81,7 @@ public class Overtones extends ApotheneumPattern {
     addParameter("offset", this.offset);
     addParameter("peak", this.peak);
     addParameter("floor", this.floor);
+    addParameter("outputTriggers", this.outputTriggers);
 
     LXOscEngine.Transmitter oscTransmitter = null;
     try {
@@ -138,12 +144,15 @@ public class Overtones extends ApotheneumPattern {
     }
     copyCylinderExterior();
 
-    if (peaked) {
-      this.peak.trigger();
+    if (this.outputTriggers.isOn()) {
+      if (peaked) {
+        this.peak.trigger();
+      }
+      if (floored) {
+        this.floor.trigger();
+      }
     }
-    if (floored) {
-      this.floor.trigger();
-    }
+
 
   }
 

@@ -1,6 +1,6 @@
 {
   "version": "1.1.1-SNAPSHOT",
-  "timestamp": 1748529502212,
+  "timestamp": 1748529746012,
   "model": {
     "id": 2,
     "class": "heronarts.lx.structure.LXStructure",
@@ -415,7 +415,7 @@
           "autoCycleMode": 0,
           "autoCycleMode/name": "NEXT",
           "autoCycleTimeSecs": 45.0,
-          "autoCycleCursor": 2,
+          "autoCycleCursor": 3,
           "triggerSwatchCycle": false,
           "expandedPerformance": true,
           "label1": "1",
@@ -434,7 +434,7 @@
               "modulationsExpanded": true
             },
             "parameters": {
-              "label": "Cool",
+              "label": "Amber",
               "recall": false,
               "autoCycleEligible": true
             },
@@ -454,8 +454,8 @@
                   "mode/name": "FIXED",
                   "period": 30.0,
                   "primary/brightness": 100.0,
-                  "primary/saturation": 100.0,
-                  "primary/hue": 175.96875,
+                  "primary/saturation": 36.201171875,
+                  "primary/hue": 0.0,
                   "secondary/brightness": 100.0,
                   "secondary/saturation": 100.0,
                   "secondary/hue": 120.0
@@ -476,8 +476,8 @@
                   "mode/name": "FIXED",
                   "period": 30.0,
                   "primary/brightness": 100.0,
-                  "primary/saturation": 100.0,
-                  "primary/hue": 107.015625,
+                  "primary/saturation": 46.50716018676758,
+                  "primary/hue": 19.078125,
                   "secondary/brightness": 100.0,
                   "secondary/saturation": 100.0,
                   "secondary/hue": 120.0
@@ -498,8 +498,8 @@
                   "mode/name": "FIXED",
                   "period": 30.0,
                   "primary/brightness": 100.0,
-                  "primary/saturation": 100.0,
-                  "primary/hue": 229.921875,
+                  "primary/saturation": 56.32161331176758,
+                  "primary/hue": 0.0,
                   "secondary/brightness": 100.0,
                   "secondary/saturation": 100.0,
                   "secondary/hue": 120.0
@@ -6613,7 +6613,7 @@
                           "exp": 0.0
                         },
                         "children": {},
-                        "basis": 0.717238607941197
+                        "basis": 0.432468606474945
                       },
                       {
                         "id": 9825274,
@@ -7309,7 +7309,7 @@
                   "modulationColor": 0,
                   "modulationControlsExpanded": true,
                   "modulationsExpanded": true,
-                  "expanded": true,
+                  "expanded": false,
                   "expandedCue": true,
                   "expandedAux": true,
                   "modulationExpanded": true
@@ -7396,7 +7396,7 @@
                         },
                         "parameters": {
                           "label": "Damper 1",
-                          "running": true,
+                          "running": false,
                           "trigger": false,
                           "reset": false,
                           "midiSource/index": 0,
@@ -7407,7 +7407,7 @@
                           "midiFilter/noteRange": 128,
                           "midiFilter/minVelocity": 1,
                           "midiFilter/velocityRange": 127,
-                          "toggle": true,
+                          "toggle": false,
                           "triggerEngage": false,
                           "triggerRelease": false,
                           "periodMs": 30000.0,
@@ -7437,7 +7437,7 @@
                         },
                         "parameters": {
                           "label": "Damper 2",
-                          "running": true,
+                          "running": false,
                           "trigger": false,
                           "reset": false,
                           "midiSource/index": 0,
@@ -7448,7 +7448,7 @@
                           "midiFilter/noteRange": 128,
                           "midiFilter/minVelocity": 1,
                           "midiFilter/velocityRange": 127,
-                          "toggle": true,
+                          "toggle": false,
                           "triggerEngage": false,
                           "triggerRelease": false,
                           "periodMs": 30000.0,
@@ -7478,7 +7478,7 @@
                         },
                         "parameters": {
                           "label": "Damper 3",
-                          "running": true,
+                          "running": false,
                           "trigger": false,
                           "reset": false,
                           "midiSource/index": 0,
@@ -7489,7 +7489,7 @@
                           "midiFilter/noteRange": 128,
                           "midiFilter/minVelocity": 1,
                           "midiFilter/velocityRange": 127,
-                          "toggle": true,
+                          "toggle": false,
                           "triggerEngage": false,
                           "triggerRelease": false,
                           "periodMs": 30000.0,
@@ -7519,7 +7519,7 @@
                         },
                         "parameters": {
                           "label": "Damper 4",
-                          "running": true,
+                          "running": false,
                           "trigger": false,
                           "reset": false,
                           "midiSource/index": 0,
@@ -7530,7 +7530,7 @@
                           "midiFilter/noteRange": 128,
                           "midiFilter/minVelocity": 1,
                           "midiFilter/velocityRange": 127,
-                          "toggle": true,
+                          "toggle": false,
                           "triggerEngage": false,
                           "triggerRelease": false,
                           "periodMs": 30000.0,
@@ -8094,7 +8094,7 @@
                           "exp": 0.0
                         },
                         "children": {},
-                        "basis": 0.27253043789193354
+                        "basis": 0.8558744274261655
                       },
                       {
                         "id": 9837351,
@@ -10830,12 +10830,12 @@
         "depth": 2.0,
         "camera": {
           "active": true,
-          "radius": 763.4872634811992,
-          "theta": 355.1053821254284,
-          "phi": -7.327862449062479,
-          "x": 235.47363959373504,
-          "y": 241.16794782052213,
-          "z": 265.7811242843886
+          "radius": 806.4705110339544,
+          "theta": 0.5496497587994327,
+          "phi": -7.4882937802024685,
+          "x": 254.5330635153648,
+          "y": 186.09885554681,
+          "z": 281.7826980872919
         },
         "cue": [
           {
@@ -10858,12 +10858,12 @@
           },
           {
             "active": true,
-            "radius": 763.4872634811992,
-            "theta": 355.1053821254284,
-            "phi": -7.327862449062479,
-            "x": 235.47363959373504,
-            "y": 241.16794782052213,
-            "z": 265.7811242843886
+            "radius": 806.4705110339544,
+            "theta": 0.5496497587994327,
+            "phi": -7.4882937802024685,
+            "x": 254.5330635153648,
+            "y": 186.09885554681,
+            "z": 281.7826980872919
           },
           {
             "active": true,

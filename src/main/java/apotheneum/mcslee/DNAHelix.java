@@ -119,22 +119,6 @@ public class DNAHelix extends ApotheneumPattern {
     startModulator(this.noiseY);
   }
 
-  private float wraplerpf(float v1, float v2, float lerp, float wrap) {
-    if (v1 < v2) {
-      if (v2 - v1 < .5f * wrap) {
-        return LXUtils.lerpf(v1, v2, lerp);
-      } else {
-        return LXUtils.lerpf(v1+wrap, v2, lerp) % wrap;
-      }
-    } else {
-      if (v1 - v2 < .5f * wrap) {
-        return LXUtils.lerpf(v1, v2, lerp);
-      } else {
-        return LXUtils.lerpf(v1, v2+wrap, lerp) % wrap;
-      }
-    }
-  }
-
   @Override
   protected void render(double deltaMs) {
     setColors(LXColor.BLACK);
