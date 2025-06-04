@@ -255,14 +255,14 @@ public class Enso extends ApotheneumPattern implements UIDeviceControls<Enso>, A
 
     addColumn(uiDevice,
       "Dup",
-      newButton(enso.dup[0]),
-      newButton(enso.dup[1]),
-      newButton(enso.dup[2]),
-      newButton(enso.dup[3]),
-      newButton(enso.trip[0]),
-      newButton(enso.trip[1]),
-      newButton(enso.trip[2]),
-      newButton(enso.trip[3])
+      newButton(enso.dup[0]).setTriggerable(true),
+      newButton(enso.dup[1]).setTriggerable(true),
+      newButton(enso.dup[2]).setTriggerable(true),
+      newButton(enso.dup[3]).setTriggerable(true),
+      newButton(enso.trip[0]).setTriggerable(true),
+      newButton(enso.trip[1]).setTriggerable(true),
+      newButton(enso.trip[2]).setTriggerable(true),
+      newButton(enso.trip[3]).setTriggerable(true)
     )
     .setChildSpacing(2)
     .setLeftMargin(4);
