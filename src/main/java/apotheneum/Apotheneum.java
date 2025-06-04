@@ -31,7 +31,7 @@ public class Apotheneum {
   public static final int GRID_WIDTH = 50;
   public static final int GRID_HEIGHT = 45;
   public static final int CYLINDER_HEIGHT = 43;
-  public static final int RING_LENGTH = 120;
+  public static final int RING_LENGTH = Cylinder.Ring.LENGTH;
 
   public static class Cube {
 
@@ -123,6 +123,8 @@ public class Apotheneum {
 
     public static class Ring {
 
+      public static final int LENGTH = 200;
+
       public final int index;
       public final LXPoint[] points;
 
@@ -171,6 +173,8 @@ public class Apotheneum {
     }
 
     public static class Ring {
+
+      public static final int LENGTH = 120;
 
       public final int index;
       public final LXPoint[] points;

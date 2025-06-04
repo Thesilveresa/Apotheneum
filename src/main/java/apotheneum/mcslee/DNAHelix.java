@@ -27,6 +27,7 @@ import heronarts.lx.LXComponentName;
 import heronarts.lx.color.LXColor;
 import heronarts.lx.model.LXPoint;
 import heronarts.lx.modulator.SawLFO;
+import heronarts.lx.parameter.BooleanParameter;
 import heronarts.lx.parameter.CompoundParameter;
 import heronarts.lx.parameter.FunctionalParameter;
 import heronarts.lx.utils.LXUtils;
@@ -74,6 +75,24 @@ public class DNAHelix extends ApotheneumPattern {
     .setUnits(CompoundParameter.Units.HERTZ)
     .setDescription("Speed of noise morphing");
 
+  public final BooleanParameter cylinder =
+    new BooleanParameter("Cylinder", true)
+    .setDescription("Whether cylinder rendering is on");
+
+  public final BooleanParameter cube =
+    new BooleanParameter("Cube", false)
+    .setDescription("Whether cube rendering is on");
+
+  public final BooleanParameter alternate =
+    new BooleanParameter("Alternate", false)
+    .setDescription("Whether cube twists in the alternate direction");
+
+  public final CompoundParameter offset =
+    new CompoundParameter("Offset", 0)
+    .setUnits(CompoundParameter.Units.PERCENT_NORMALIZED)
+    .setWrappable(true)
+    .setDescription("Phase offset between cylinder and cube");
+
   private final SawLFO noiseX = new SawLFO(0, 256, FunctionalParameter.create(() -> {
     return 256000 / noiseMorph.getValue();
   }));
@@ -92,6 +111,10 @@ public class DNAHelix extends ApotheneumPattern {
     addParameter("noiseScale", this.noiseScale);
     addParameter("noiseFall", this.noiseFall);
     addParameter("noiseMorph", this.noiseMorph);
+    addParameter("cylinder", this.cylinder);
+    addParameter("cube", this.cube);
+    addParameter("alternate", this.alternate);
+    addParameter("offset", this.offset);
     startModulator(this.noiseX);
     startModulator(this.noiseY);
   }
@@ -127,25 +150,50 @@ public class DNAHelix extends ApotheneumPattern {
     final float noiseX = this.noiseX.getValuef();
     final float noiseY = this.noiseY.getValuef();
 
-    int ri = -Apotheneum.CYLINDER_HEIGHT / 2;
-    int ni = 0;
-    for (Apotheneum.Cylinder.Ring ring : Apotheneum.cylinder.exterior.rings) {
-      float basis =
-        100 +
-        (twist + ri * coeff) +
-        noise * noiseDepth * LXUtils.noise(noiseX, 0, -noiseY + (ni * noiseScale));
-      float pos = Apotheneum.RING_LENGTH * (basis % 1f);
-      int pi = 0;
-      for (LXPoint p : ring.points) {
-        float dist = LXUtils.wrapdistf((2 * pi) % ring.points.length, pos, ring.points.length);
-        ++pi;
-        colors[p.index] = LXColor.gray(LXUtils.max(0, 100 - falloff * dist));
+    if (this.cylinder.isOn()) {
+      int ri = -Apotheneum.CYLINDER_HEIGHT / 2;
+      int ni = 0;
+      for (Apotheneum.Cylinder.Ring ring : Apotheneum.cylinder.exterior.rings) {
+        float basis =
+          100 +
+          (twist + ri * coeff) +
+          noise * noiseDepth * LXUtils.noise(noiseX, 0, -noiseY + (ni * noiseScale));
+        float pos = Apotheneum.Cylinder.Ring.LENGTH * (basis % 1f);
+        int pi = 0;
+        for (LXPoint p : ring.points) {
+          float dist = LXUtils.wrapdistf((2 * pi) % ring.points.length, pos, ring.points.length);
+          ++pi;
+          colors[p.index] = LXColor.gray(LXUtils.max(0, 100 - falloff * dist));
+        }
+        ++ri;
+        ++ni;
       }
-      ++ri;
-      ++ni;
+      copy(Apotheneum.cylinder.exterior, Apotheneum.cylinder.interior);
     }
 
-    copy(Apotheneum.cylinder.exterior, Apotheneum.cylinder.interior);
+    if (this.cube.isOn()) {
+      final int alternate = this.alternate.isOn() ? -1 : 1;
+      final float offset  = this.offset.getValuef();
+      int ri = -Apotheneum.GRID_HEIGHT / 2;
+      int ni = 0;
+      for (Apotheneum.Cube.Ring ring : Apotheneum.cube.exterior.rings) {
+        float basis =
+          100 + offset + alternate * (
+            (twist + ri * coeff) +
+            noise * noiseDepth * LXUtils.noise(noiseX, 0, -noiseY + (ni * noiseScale))
+          );
+        float pos = Apotheneum.Cube.Ring.LENGTH * (basis % 1f);
+        int pi = 0;
+        for (LXPoint p : ring.points) {
+          float dist = LXUtils.wrapdistf((2 * pi) % ring.points.length, pos, ring.points.length);
+          ++pi;
+          colors[p.index] = LXColor.gray(LXUtils.max(0, 100 - falloff * dist));
+        }
+        ++ri;
+        ++ni;
+      }
+      copyCubeExterior();
+    }
   }
 
 }
