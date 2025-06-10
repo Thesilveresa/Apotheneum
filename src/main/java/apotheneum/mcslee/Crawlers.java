@@ -188,8 +188,8 @@ public class Crawlers extends ApotheneumPattern implements UIDeviceControls<Craw
         p1.getValue(),
         p2.getValue(),
         (b < 0.5) ?
-          Math.pow(rnd, LXUtils.lerp(3, 1, 2*b)) :
-          1 - Math.pow(1-rnd, LXUtils.lerp(1, 3, 2 * (b-.5f)))
+          Math.pow(rnd, LXUtils.lerp(4, 1, 2*b)) :
+          1 - Math.pow(1-rnd, LXUtils.lerp(1, 4, 2 * (b-.5f)))
       );
     }
 
