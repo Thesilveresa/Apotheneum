@@ -33,9 +33,72 @@ public class Apotheneum {
   public static final int CYLINDER_HEIGHT = 43;
   public static final int RING_LENGTH = Cylinder.Ring.LENGTH;
 
-  public static class Cube {
+  public abstract static class Component {
+    public abstract Orientation[] orientations();
 
-    public static class Orientation {
+    public Orientation exterior() {
+      return orientation(Orientation.EXTERIOR);
+    }
+
+    public Orientation interior() {
+      return orientation(Orientation.INTERIOR);
+    }
+
+    public Orientation orientation(int index) {
+      return orientations()[index];
+    }
+
+    public int width() {
+      return exterior().width();
+    }
+
+    public int height() {
+      return orientations()[0].height();
+    }
+  }
+
+  public abstract static class Orientation {
+
+    public static final int EXTERIOR = 0;
+    public static final int INTERIOR = 1;
+
+    public abstract LXModel[] columns();
+
+    public LXPoint point(int x, int y) {
+      return column(x).points[y];
+    }
+
+    public LXModel column(int index) {
+      return columns()[index];
+    }
+
+    public int width() {
+      return columns().length;
+    }
+
+    public int height() {
+      return columns()[0].points.length;
+    }
+  }
+
+  public static class Ring {
+
+    public final int index;
+    public final LXPoint[] points;
+
+    private Ring(int index, LXModel[] columns) {
+      this.index = index;
+      this.points = new LXPoint[columns.length];
+      int i = 0;
+      for (LXModel column : columns) {
+        this.points[i++] = column.points[index];
+      }
+    }
+  }
+
+  public static class Cube extends Component {
+
+    public static class Orientation extends Apotheneum.Orientation {
 
       public final int size;
 
@@ -76,6 +139,11 @@ public class Apotheneum {
           this.right.model.size +
           this.back.model.size +
           this.left.model.size;
+      }
+
+      @Override
+      public LXModel[] columns() {
+        return this.columns;
       }
 
     }
@@ -121,30 +189,24 @@ public class Apotheneum {
       }
     }
 
-    public static class Ring {
+    public static class Ring extends Apotheneum.Ring {
 
       public static final int LENGTH = 200;
 
-      public final int index;
-      public final LXPoint[] points;
-
       private Ring(int index, LXModel[] columns) {
-        this.index = index;
-        this.points = new LXPoint[columns.length];
-        int i = 0;
-        for (LXModel column : columns) {
-          this.points[i++] = column.points[index];
-        }
+        super(index, columns);
       }
     }
 
     public final Orientation exterior;
     public final Orientation interior;
+    public final Orientation[] orientations;
     public final Face[] faces;
 
     private Cube(LXModel model) {
       this.exterior = new Orientation(model, "Exterior");
       this.interior = model.sub("interior").isEmpty() ? null : new Orientation(model, "Interior");
+      this.orientations = new Orientation[] { this.exterior, this.interior };
 
       final List<Face> faceList = new ArrayList<>();
       faceList.addAll(Arrays.asList(this.exterior.faces));
@@ -153,11 +215,16 @@ public class Apotheneum {
       }
       this.faces = faceList.toArray(new Face[0]);
     }
+
+    @Override
+    public Orientation[] orientations() {
+      return this.orientations;
+    }
   }
 
-  public static class Cylinder {
+  public static class Cylinder extends Component {
 
-    public static class Orientation {
+    public static class Orientation extends Apotheneum.Orientation {
       public final int size;
       public final LXModel[] columns;
       public final Ring[] rings;
@@ -170,31 +237,35 @@ public class Apotheneum {
         }
         this.size = this.columns.length * this.columns[0].size;
       }
-    }
 
-    public static class Ring {
-
-      public static final int LENGTH = 120;
-
-      public final int index;
-      public final LXPoint[] points;
-
-      private Ring(int index, LXModel[] columns) {
-        this.index = index;
-        this.points = new LXPoint[columns.length];
-        int i = 0;
-        for (LXModel column : columns) {
-          this.points[i++] = column.points[index];
-        }
+      @Override
+      public LXModel[] columns() {
+        return this.columns;
       }
     }
 
-    public Orientation exterior;
-    public Orientation interior;
+    public static class Ring extends Apotheneum.Ring {
+
+      public static final int LENGTH = 120;
+
+      private Ring(int index, LXModel[] columns) {
+        super(index, columns);
+      }
+    }
+
+    public final Orientation exterior;
+    public final Orientation interior;
+    public final Orientation[] orientations;
 
     private Cylinder(LXModel model) {
       this.exterior = new Orientation(model, "Exterior");
       this.interior = model.sub("interior").isEmpty() ? null : new Orientation(model, "Interior");
+      this.orientations = new Orientation[] { this.exterior, this.interior };
+    }
+
+    @Override
+    public Orientation[] orientations() {
+      return this.orientations;
     }
   }
 
