@@ -26,6 +26,7 @@ import heronarts.lx.LXCategory;
 import heronarts.lx.LXComponent;
 import heronarts.lx.LXComponentName;
 import heronarts.lx.parameter.LXParameter;
+import heronarts.lx.parameter.TriggerParameter;
 import heronarts.lx.utils.LXUtils;
 import heronarts.lx.color.LXColor;
 import heronarts.lx.parameter.CompoundDiscreteParameter;
@@ -40,23 +41,34 @@ import heronarts.lx.studio.ui.device.UIDeviceControls;
 @LXComponent.Description("Snake-like objects crawling around the surfaces")
 public class Crawlers extends ApotheneumPattern implements UIDeviceControls<Crawlers> {
 
+  public static double bias(LXParameter p1, LXParameter p2, LXParameter bias, double rnd) {
+    final double b = bias.getValue();
+    return LXUtils.lerp(
+      p1.getValue(),
+      p2.getValue(),
+      (b < 0.5) ?
+        Math.pow(rnd, LXUtils.lerp(4, 1, 2*b)) :
+        1 - Math.pow(1-rnd, LXUtils.lerp(1, 4, 2 * (b-.5f)))
+    );
+  }
+
   private static final int MAX_CRAWLERS = 240;
   private static final int MAX_LENGTH = 240;
 
-  public final DiscreteParameter numCube =
-    new DiscreteParameter("Num Cube", 64, 0, MAX_CRAWLERS + 1)
+  public final CompoundDiscreteParameter numCube =
+    new CompoundDiscreteParameter("Num Cube", 64, 0, MAX_CRAWLERS + 1)
     .setDescription("Number of active cube crawlers");
 
-  public final DiscreteParameter numCylinder =
-    new DiscreteParameter("Num Cylinder", 64, 0, MAX_CRAWLERS + 1)
+  public final CompoundDiscreteParameter numCylinder =
+    new CompoundDiscreteParameter("Num Cylinder", 64, 0, MAX_CRAWLERS + 1)
     .setDescription("Number of active cube crawlers");
 
-  public final CompoundDiscreteParameter minLength =
-    new CompoundDiscreteParameter("Min Length", 16, 1, 64)
+  public final CompoundParameter minLength =
+    new CompoundParameter("Min Length", 16, 1, 64)
     .setDescription("Minimum crawler length");
 
-  public final CompoundDiscreteParameter maxLength =
-    new CompoundDiscreteParameter("Max Length", 32, 1, 129)
+  public final CompoundParameter maxLength =
+    new CompoundParameter("Max Length", 32, 1, 128)
     .setDescription("Maximum crawler length");
 
   public final CompoundParameter biasLength =
@@ -88,8 +100,25 @@ public class Crawlers extends ApotheneumPattern implements UIDeviceControls<Craw
     new DiscreteParameter("Turn Gate", 0, 64)
     .setDescription("Require a certain number of steps between turns");
 
+  public final TriggerParameter trigHorizontal =
+    new TriggerParameter("Trig-H", this::trigHorizontal)
+    .setDescription("Set all to move horizontally");
+
+  public final TriggerParameter trigVertical =
+    new TriggerParameter("Trig-V", this::trigVertical)
+    .setDescription("Set all to move vertically");
+
+  public final CompoundParameter fadeHead =
+    new CompoundParameter("Fade Head", 1, 1, 5)
+    .setDescription("How many pixels to fade in at the front");
+
+  public final CompoundParameter fadeTail =
+    new CompoundParameter("Fade Tail", 1, 0, 10)
+    .setDescription("How many pixels to fade at the tail");
+
   private final Crawler[] cubeCrawlers = new Crawler[MAX_CRAWLERS];
   private final Crawler[] cylinderCrawlers = new Crawler[MAX_CRAWLERS];
+  private final Crawler[] allCrawlers = new Crawler[2*MAX_CRAWLERS];
 
   public Crawlers(LX lx) {
     super(lx);
@@ -103,10 +132,30 @@ public class Crawlers extends ApotheneumPattern implements UIDeviceControls<Craw
     addParameter("biasSpeed", this.biasSpeed);
     addParameter("turnProbability", this.turnProbability);
     addParameter("turnGate", this.turnGate);
+    addParameter("trigHorizontal", this.trigHorizontal);
+    addParameter("trigVertical", this.trigVertical);
+    addParameter("fadeHead", this.fadeHead);
+    addParameter("fadeTail", this.fadeTail);
 
     for (int i = 0; i < MAX_CRAWLERS; ++i) {
-      this.cubeCrawlers[i] = new Crawler(Apotheneum.cube.exterior);
-      this.cylinderCrawlers[i] = new Crawler(Apotheneum.cylinder.exterior);
+      this.cubeCrawlers[i] = new Crawler(Apotheneum.cube.exterior, i, this.numCube);
+      this.cylinderCrawlers[i] = new Crawler(Apotheneum.cylinder.exterior, i, this.numCylinder);
+      this.allCrawlers[i] = this.cubeCrawlers[i];
+      this.allCrawlers[MAX_CRAWLERS + i] = this.cylinderCrawlers[i];
+    }
+  }
+
+  private void trigHorizontal() {
+    trigTurn(Crawler.TURN_HORIZONTAL);
+  }
+
+  private void trigVertical() {
+    trigTurn(Crawler.TURN_VERTICAL);
+  }
+
+  private void trigTurn(int turn) {
+    for (Crawler crawler : this.allCrawlers) {
+      crawler.flagTurn = turn;
     }
   }
 
@@ -134,11 +183,22 @@ public class Crawlers extends ApotheneumPattern implements UIDeviceControls<Craw
         this.x = x;
         this.y = y;
       }
+
+      private boolean isHorizontal() {
+        return this.x != 0;
+      }
+
+      private boolean isVertical() {
+        return !isHorizontal();
+      }
     }
 
     private final Apotheneum.Orientation orientation;
 
     private final double rnd = Math.random();
+
+    private final int index;
+    private final DiscreteParameter num;
 
     private double basis = 0;
     private int length = 0;
@@ -146,8 +206,15 @@ public class Crawlers extends ApotheneumPattern implements UIDeviceControls<Craw
     private int head = 0;
     private Direction direction;
     private int turnCount = 0;
+    private int flagTurn = 0;
+    private double level = 0;
 
-    private Crawler(Apotheneum.Orientation orientation) {
+    private static final int TURN_HORIZONTAL = 1;
+    private static final int TURN_VERTICAL = 2;
+
+    private Crawler(Apotheneum.Orientation orientation, int index, DiscreteParameter num) {
+      this.index = index;
+      this.num = num;
       this.orientation = orientation;
       for (int i = 0; i < MAX_LENGTH; ++i) {
         this.coords[i] = new Coord();
@@ -166,7 +233,19 @@ public class Crawlers extends ApotheneumPattern implements UIDeviceControls<Craw
 
       final Coord current = getCoord(0);
       final Coord next = getCoord(1);
-      if ((this.turnCount >= turnGate.getValuei()) && Math.random() < turnProbability.getValue()) {
+      if (this.flagTurn == TURN_HORIZONTAL) {
+        if (!this.direction.isHorizontal()) {
+          this.turnCount = 0;
+          this.direction = (Math.random() < .5) ? Direction.LEFT : Direction.RIGHT;
+        }
+        this.flagTurn = 0;
+      } else if (this.flagTurn == TURN_VERTICAL) {
+        if (!this.direction.isVertical()) {
+          this.turnCount = 0;
+          this.direction = (Math.random() < .5) ? Direction.UP : Direction.DOWN;
+        }
+        this.flagTurn = 0;
+      } else if ((this.turnCount >= turnGate.getValuei()) && Math.random() < turnProbability.getValue()) {
         this.turnCount = 0;
         if (this.direction.x == 0) {
           this.direction = (Math.random() < .5) ? Direction.LEFT : Direction.RIGHT;
@@ -182,31 +261,36 @@ public class Crawlers extends ApotheneumPattern implements UIDeviceControls<Craw
       this.length = LXUtils.min(MAX_LENGTH, this.length+1);
     }
 
-    private double bias(LXParameter p1, LXParameter p2, LXParameter bias, double rnd) {
-      final double b = bias.getValue();
-      return LXUtils.lerp(
-        p1.getValue(),
-        p2.getValue(),
-        (b < 0.5) ?
-          Math.pow(rnd, LXUtils.lerp(4, 1, 2*b)) :
-          1 - Math.pow(1-rnd, LXUtils.lerp(1, 4, 2 * (b-.5f)))
-      );
-    }
-
     private void advance(double deltaMs) {
+      final boolean active = this.index < this.num.getValuei();
+      this.level = LXUtils.constrain(this.level + (active ? 1 : -1) * deltaMs / 1000, 0, 1);
+
       this.basis += deltaMs * bias(minSpeed, maxSpeed, biasSpeed, this.rnd) / 1000;
       if (this.basis > 1.) {
         step();
         this.basis = this.basis % 1.;
       }
-      final int length = (int) bias(minLength, maxLength, biasLength, this.rnd);
-      final int limit = LXUtils.min(length, this.length);
+
+      if (this.level == 0) {
+        return;
+      }
+
+      final double length = bias(minLength, maxLength, biasLength, this.rnd);
+      final float limit = (int) LXUtils.min(length, this.length);
+      final double head = fadeHead.getValue();
+      final double tail = LXUtils.min(length - head - 1, fadeTail.getValue());
+
       for (int i = 0; i < limit; ++i) {
         final Coord coord = getCoord(-i);
-        double b = (i == 0) ? basis : (i == length-1) ? (1-basis) : 1;
+        double b = 1;
+        if (i < head) {
+          b = LXUtils.min(1, LXUtils.lerp(0, 1/head, i + this.basis));
+        } else if (i >= length - 1 - tail) {
+          b = LXUtils.max(0, LXUtils.lerp(1, 1-1/tail, i - (length - tail - 1) + this.basis));
+        }
         if (b > 0) {
           final int idx = this.orientation.point(coord.x, coord.y).index;
-          colors[idx] = LXColor.lightest(colors[idx], LXColor.grayn(b));
+          colors[idx] = LXColor.lightest(colors[idx], LXColor.grayn(this.level * b));
         }
       }
     }
@@ -217,7 +301,6 @@ public class Crawlers extends ApotheneumPattern implements UIDeviceControls<Craw
 
     private void render(double deltaMs) {
       advance(deltaMs);
-
     }
   }
 
@@ -226,21 +309,11 @@ public class Crawlers extends ApotheneumPattern implements UIDeviceControls<Craw
   protected void render(double deltaMs) {
     setColors(LXColor.BLACK);
 
-    final int numCube = this.numCube.getValuei();
-    if (numCube > 0) {
-      for (int i = 0; i < numCube; ++i) {
-        this.cubeCrawlers[i].render(deltaMs);
-      }
-      copyCubeExterior();
+    for (Crawler crawler : this.allCrawlers) {
+      crawler.render(deltaMs);
     }
-
-    final int numCylinder = this.numCylinder.getValuei();
-    if (numCylinder > 0) {
-      for (int i = 0; i < numCylinder; ++i) {
-        this.cylinderCrawlers[i].render(deltaMs);
-      }
-      copyCylinderExterior();
-    }
+    copyCubeExterior();
+    copyCylinderExterior();
 
   }
 
@@ -266,9 +339,16 @@ public class Crawlers extends ApotheneumPattern implements UIDeviceControls<Craw
       newKnob(crawlers.biasLength, 0)
     ).setChildSpacing(6);
     addVerticalBreak(ui, uiDevice);
-    addColumn(uiDevice, UIKnob.WIDTH, "Turning",
-      newKnob(crawlers.turnGate, 0),
-      newKnob(crawlers.turnProbability, 0)
+    addColumn(uiDevice, UIKnob.WIDTH, "Fade",
+      newKnob(crawlers.fadeHead, 0),
+      newKnob(crawlers.fadeTail, 0)
+    ).setChildSpacing(6);
+    addVerticalBreak(ui, uiDevice);
+    addColumn(uiDevice, "Turning",
+      newKnob(crawlers.turnGate),
+      newKnob(crawlers.turnProbability),
+      newButton(crawlers.trigHorizontal).setTriggerable(true),
+      newButton(crawlers.trigVertical).setTriggerable(true)
     ).setChildSpacing(6);
   }
 

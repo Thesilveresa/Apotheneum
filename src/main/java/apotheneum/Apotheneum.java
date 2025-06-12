@@ -72,6 +72,12 @@ public class Apotheneum {
       return columns()[index];
     }
 
+    public abstract Ring[] rings();
+
+    public Ring ring(int index) {
+      return rings()[index];
+    }
+
     public int width() {
       return columns().length;
     }
@@ -144,6 +150,11 @@ public class Apotheneum {
       @Override
       public LXModel[] columns() {
         return this.columns;
+      }
+
+      @Override
+      public Ring[] rings() {
+        return this.rings;
       }
 
     }
@@ -241,6 +252,11 @@ public class Apotheneum {
       @Override
       public LXModel[] columns() {
         return this.columns;
+      }
+
+      @Override
+      public Ring[] rings() {
+        return this.rings;
       }
     }
 

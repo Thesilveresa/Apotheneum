@@ -1,6 +1,6 @@
 {
   "version": "1.1.1-SNAPSHOT",
-  "timestamp": 1748530510922,
+  "timestamp": 1749324567828,
   "model": {
     "id": 2,
     "class": "heronarts.lx.structure.LXStructure",
@@ -439,6 +439,8 @@
           "trussTop": 480.0,
           "sandEnabled": true,
           "sandScale": 80.0,
+          "haloEnabled": true,
+          "haloScale": 3200.0,
           "starsEnabled": true,
           "peopleEnabled": true
         },
@@ -458,6 +460,8 @@
           "pitch": 0.0,
           "roll": 0.0,
           "scale": 1.0,
+          "hasCustomPointSize": false,
+          "pointSize": 5.0,
           "selected": false,
           "deactivate": false,
           "enabled": true,
@@ -489,9 +493,11 @@
           "pitch": 90.0,
           "roll": 0.0,
           "scale": 1.0,
+          "hasCustomPointSize": true,
+          "pointSize": 15.0,
           "selected": true,
           "deactivate": false,
-          "enabled": false,
+          "enabled": true,
           "brightness": 1.0,
           "identify": false,
           "mute": false,
@@ -514,7 +520,6 @@
     },
     "parameters": {
       "label": "Engine",
-      "multithreaded": true,
       "compositorMultithreaded": false,
       "networkMultithreaded": false,
       "framesPerSecond": 60.0,
@@ -4080,7 +4085,7 @@
                           "exp": 0.0
                         },
                         "children": {},
-                        "basis": 0.04040930194939106
+                        "basis": 0.12969011142283507
                       },
                       {
                         "id": 33298,
@@ -4120,7 +4125,7 @@
                           "exp": 0.0
                         },
                         "children": {},
-                        "basis": 0.9221167232532422
+                        "basis": 0.9698340051521491
                       }
                     ],
                     "modulations": [
@@ -7113,7 +7118,7 @@
               "triggerOut": false
             },
             "children": {},
-            "basis": 0.12945321058726023
+            "basis": 0.24289463581153603
           },
           {
             "id": 11190,
@@ -7381,22 +7386,22 @@
         "depth": 2.0,
         "camera": {
           "active": true,
-          "radius": 819.9618728803007,
-          "theta": 17.553492521401495,
-          "phi": 31.22666088468395,
-          "x": 245.5,
-          "y": 237.0,
-          "z": 245.5
+          "radius": 409.98159046346814,
+          "theta": 356.6240304308012,
+          "phi": 15.164987303083763,
+          "x": 21.18841651082039,
+          "y": 379.9344934336841,
+          "z": 297.54016785882413
         },
         "cue": [
           {
             "active": true,
-            "radius": 819.9618728803007,
-            "theta": 17.553492521401495,
-            "phi": 31.22666088468395,
-            "x": 245.5,
-            "y": 237.0,
-            "z": 245.5
+            "radius": 409.98159046346814,
+            "theta": 356.6240304308012,
+            "phi": 15.164987303083763,
+            "x": 21.18841651082039,
+            "y": 379.9344934336841,
+            "z": 297.54016785882413
           },
           {
             "active": false,
@@ -7444,6 +7449,27 @@
             "z": 0.0
           }
         ],
+        "autopilot": {
+          "enabled": false,
+          "radiusPeriod": 15.0,
+          "radiusMin": 120.0,
+          "radiusMax": 120.0,
+          "radiusContrast": 0.0,
+          "radiusMotion": 2,
+          "radiusMotion/name": "NOISE",
+          "thetaPeriod": 60.0,
+          "thetaMin": 0.0,
+          "thetaMax": 360.0,
+          "thetaContrast": 0.0,
+          "thetaMotion": 1,
+          "thetaMotion/name": "CYCLE",
+          "phiPeriod": 15.0,
+          "phiMin": 0.0,
+          "phiMax": 30.0,
+          "phiContrast": 0.0,
+          "phiMotion": 2,
+          "phiMotion/name": "NOISE"
+        },
         "focus": 0,
         "pointCloud": {
           "ledStyle": 2,
@@ -7551,6 +7577,27 @@
             "z": 0.0
           }
         ],
+        "autopilot": {
+          "enabled": false,
+          "radiusPeriod": 15.0,
+          "radiusMin": 120.0,
+          "radiusMax": 120.0,
+          "radiusContrast": 0.0,
+          "radiusMotion": 2,
+          "radiusMotion/name": "NOISE",
+          "thetaPeriod": 60.0,
+          "thetaMin": 0.0,
+          "thetaMax": 360.0,
+          "thetaContrast": 0.0,
+          "thetaMotion": 1,
+          "thetaMotion/name": "CYCLE",
+          "phiPeriod": 15.0,
+          "phiMin": 0.0,
+          "phiMax": 30.0,
+          "phiContrast": 0.0,
+          "phiMotion": 2,
+          "phiMotion/name": "NOISE"
+        },
         "focus": 0,
         "pointCloud": {
           "ledStyle": 0,
