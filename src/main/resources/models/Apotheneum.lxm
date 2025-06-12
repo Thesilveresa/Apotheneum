@@ -1,6 +1,6 @@
 {
   "version": "1.1.1-SNAPSHOT",
-  "timestamp": 1748350836604,
+  "timestamp": 1749743472555,
   "fixtures": [
     {
       "jsonFixtureType": "Apotheneum/Apotheneum",
@@ -19,6 +19,9 @@
         "trussTop": 480.0,
         "sandEnabled": true,
         "sandScale": 80.0,
+        "haloEnabled": true,
+        "haloScale": 3200.0,
+        "starsEnabled": true,
         "peopleEnabled": true
       },
       "id": 14078,
@@ -37,7 +40,9 @@
         "pitch": 0.0,
         "roll": 0.0,
         "scale": 1.0,
-        "selected": true,
+        "hasCustomPointSize": false,
+        "pointSize": 5.0,
+        "selected": false,
         "deactivate": false,
         "enabled": true,
         "brightness": 1.0,
@@ -68,9 +73,11 @@
         "pitch": 90.0,
         "roll": 0.0,
         "scale": 1.0,
-        "selected": false,
+        "hasCustomPointSize": true,
+        "pointSize": 15.0,
+        "selected": true,
         "deactivate": false,
-        "enabled": false,
+        "enabled": true,
         "brightness": 1.0,
         "identify": false,
         "mute": false,
@@ -90,5 +97,21 @@
     "normalizationWidth": 1000.0,
     "normalizationHeight": 1000.0,
     "normalizationDepth": 1000.0
+  },
+  "labelConfig": {
+    "showFixtureLabels": false,
+    "fixtureLabelHorizontalAlignment": 1,
+    "fixtureLabelHorizontalAlignment/name": "CENTER",
+    "fixtureLabelVerticalAlignment": 1,
+    "fixtureLabelVerticalAlignment/name": "MIDDLE",
+    "fixtureLabelPositionX": 3,
+    "fixtureLabelPositionX/name": "CENTER",
+    "fixtureLabelPositionY": 0,
+    "fixtureLabelPositionY/name": "POSITION",
+    "fixtureLabelPositionZ": 0,
+    "fixtureLabelPositionZ/name": "POSITION",
+    "fixtureLabelOffsetX": 0.0,
+    "fixtureLabelOffsetY": 0.0,
+    "fixtureLabelOffsetZ": -3.0
   }
 }

@@ -17,6 +17,8 @@
     "trussTop": { "type": "float", "min": 1, "default": 480, "label": "Truss Top", "description": "Truss column height" },
     "sandEnabled": { "type": "boolean", "default": true, "label": "Sand UI", "description": "Whether the sand is rendered" },
     "sandScale": { "type": "float", "min": 1, "default": 20, "label": "Sand Scale", "description": "Scale of sand texture" },
+    "haloEnabled": { "type": "boolean", "default": true, "label": "Halo UI", "description": "Whether a ground halo is rendered" },
+    "haloScale": { "type": "float", "min": 1, "default": 3200, "label": "Halo Scale", "description": "Size of light halo on groud" },
     "starsEnabled": { "type": "boolean", "default": true, "label": "Stars UI", "description": "Whether the stars are rendered" },
     "peopleEnabled": { "type": "boolean", "default": true, "label": "People UI", "description": "Whether people are rendered" }
   },
@@ -33,7 +35,7 @@
       "meshWidth": "$meshWidth",
       "meshNodeSize": "$meshNodeSize",
       "stripYaw": 0,
-      "stripRoll": -90,    
+      "stripRoll": -90,
       
       "x": "$nodeInset"
     },
@@ -227,6 +229,15 @@
           { "x": -10000, "z": 10000, "u": 0, "v": "$sandScale" },
           { "x": 10000, "z": -10000, "u": "$sandScale", "v": 0 },
           { "x": 10000, "z": 10000, "u": "$sandScale", "v": "$sandScale" }
+        ]
+      },
+      // Ground halo
+      {
+        "enabled": "$haloEnabled",
+        "type": "texture2d",
+        "texture": "gradient.png",
+        "vertices": [
+          { "type": "rect", "axis": "xz", "x": "($cubeSide-$haloScale)*.5", "y": 0.1, "z": "($cubeSide-$haloScale)*.5", "width": "$haloScale", "height": "$haloScale" }
         ]
       },
       // Sky
