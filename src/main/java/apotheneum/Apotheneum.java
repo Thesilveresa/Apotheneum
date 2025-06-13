@@ -159,7 +159,7 @@ public class Apotheneum {
 
     }
 
-    public static class Face extends Apotheneum.Face {
+    public static class Face {
       public final LXModel model;
       public final LXModel[] columns;
       public final Row[] rows;

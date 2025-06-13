@@ -1,6 +1,6 @@
 {
   "version": "1.1.1-SNAPSHOT",
-  "timestamp": 1749743472555,
+  "timestamp": 1749757658930,
   "model": {
     "id": 2,
     "class": "heronarts.lx.structure.LXStructure",
@@ -9,20 +9,7 @@
       "modulationControlsExpanded": true,
       "modulationsExpanded": true,
       "showNormalizationBounds": false,
-      "showFixtureLabels": false,
-      "fixtureLabelHorizontalAlignment": 1,
-      "fixtureLabelHorizontalAlignment/name": "CENTER",
-      "fixtureLabelVerticalAlignment": 1,
-      "fixtureLabelVerticalAlignment/name": "MIDDLE",
-      "fixtureLabelPositionX": 3,
-      "fixtureLabelPositionX/name": "CENTER",
-      "fixtureLabelPositionY": 0,
-      "fixtureLabelPositionY/name": "POSITION",
-      "fixtureLabelPositionZ": 0,
-      "fixtureLabelPositionZ/name": "POSITION",
-      "fixtureLabelOffsetX": 0.0,
-      "fixtureLabelOffsetY": 0.0,
-      "fixtureLabelOffsetZ": -3.0
+      "showFixtureLabels": false
     },
     "parameters": {
       "label": "LX",
@@ -8124,7 +8111,7 @@
                           "exp": 0.0
                         },
                         "children": {},
-                        "basis": 0.4845896433276007
+                        "basis": 0.5909155451065741
                       },
                       {
                         "id": 9837351,
@@ -8241,7 +8228,7 @@
               "viewPatternLabel": false
             },
             "parameters": {
-              "label": "Quilts",
+              "label": "Tapestry",
               "fader": 0.0,
               "arm": false,
               "selected": true,
@@ -8608,7 +8595,7 @@
                               "exp": 0.0
                             },
                             "children": {},
-                            "basis": 0.370421710966511
+                            "basis": 0.8722115688558658
                           },
                           {
                             "id": 9887819,
@@ -9016,7 +9003,7 @@
                           "exp": 0.0
                         },
                         "children": {},
-                        "basis": 0.5160970523174814
+                        "basis": 0.04427855839162105
                       }
                     ],
                     "modulations": [
@@ -9512,7 +9499,7 @@
                           "exp": 0.0
                         },
                         "children": {},
-                        "basis": 0.6378047807926699
+                        "basis": 0.3730702803036589
                       }
                     ],
                     "modulations": [
@@ -10039,14 +10026,14 @@
               "midiFilter/noteRange": 128,
               "midiFilter/minVelocity": 1,
               "midiFilter/velocityRange": 127,
-              "macro1": 0.33592963218688965,
+              "macro1": 0.0,
               "macro2": 0.0,
-              "macro3": 5.79231302253902E-4,
+              "macro3": 0.0,
               "macro4": 0.0,
               "macro5": 1.0,
               "macro6": 0.0,
               "macro7": 0.0,
-              "macro8": 0.33592963218688965,
+              "macro8": 0.0,
               "label1": "Wid",
               "label2": "Spd",
               "label3": "Amp",
@@ -10122,11 +10109,11 @@
               "midiFilter/minVelocity": 1,
               "midiFilter/velocityRange": 127,
               "macro1": 1.0,
-              "macro2": 0.39844223856925964,
+              "macro2": 1.0,
               "macro3": 0.0,
-              "macro4": 0.0,
+              "macro4": 0.0022509086411446333,
               "macro5": 0.0,
-              "macro6": 0.0,
+              "macro6": 0.9055117964744568,
               "macro7": 0.0,
               "macro8": 1.0,
               "label1": "Crawlers",
@@ -10162,8 +10149,8 @@
               "midiFilter/noteRange": 128,
               "midiFilter/minVelocity": 1,
               "midiFilter/velocityRange": 127,
-              "macro1": 0.0,
-              "macro2": 0.0,
+              "macro1": 1.0,
+              "macro2": 1.0,
               "macro3": 0.0,
               "macro4": 0.0,
               "macro5": 0.0,
@@ -13128,9 +13115,9 @@
         "depth": 2.0,
         "camera": {
           "active": true,
-          "radius": 798.2195408718649,
-          "theta": 150.24341374621963,
-          "phi": 31.795609998620094,
+          "radius": 1101.817964138463,
+          "theta": 43.48799999999949,
+          "phi": 0.5534508330457841,
           "x": 254.5330635153648,
           "y": 186.09885554681,
           "z": 281.7826980872919
@@ -13156,9 +13143,9 @@
           },
           {
             "active": true,
-            "radius": 927.2072895084045,
-            "theta": 178.3994684723965,
-            "phi": 1.6796979413853883,
+            "radius": 900.2769230719423,
+            "theta": 192.72141374617036,
+            "phi": 18.472360293931118,
             "x": 254.5330635153648,
             "y": 186.09885554681,
             "z": 281.7826980872919
@@ -13252,26 +13239,26 @@
         "animation": false,
         "animationTime": 1000.0,
         "projection": 0,
-        "perspective": 110.0,
+        "perspective": 108.71466394554115,
         "depth": 2.0,
         "camera": {
           "active": false,
-          "radius": 206.58063502809108,
-          "theta": 359.2381490691332,
-          "phi": -42.76873931323644,
-          "x": 247.55651271792567,
-          "y": 175.54808141291142,
-          "z": 279.0007434617728
+          "radius": 228.54099948257533,
+          "theta": 334.71703628695104,
+          "phi": -10.243009213008918,
+          "x": 259.2350809979948,
+          "y": 112.7252203784883,
+          "z": 306.6276658551069
         },
         "cue": [
           {
             "active": false,
-            "radius": 206.58063502809108,
-            "theta": 359.2381490691332,
-            "phi": -42.76873931323644,
-            "x": 247.55651271792567,
-            "y": 175.54808141291142,
-            "z": 279.0007434617728
+            "radius": 228.54099948257533,
+            "theta": 334.71703628695104,
+            "phi": -10.243009213008918,
+            "x": 259.2350809979948,
+            "y": 112.7252203784883,
+            "z": 306.6276658551069
           },
           {
             "active": false,
