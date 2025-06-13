@@ -30,6 +30,7 @@ import heronarts.lx.LXComponentName;
 import heronarts.lx.color.LXColor;
 import heronarts.lx.model.LXModel;
 import heronarts.lx.model.LXPoint;
+import heronarts.lx.modulator.Damper;
 import heronarts.lx.parameter.CompoundDiscreteParameter;
 
 @LXCategory("Apotheneum/mcslee")
@@ -68,7 +69,7 @@ public class Abacus extends ApotheneumPattern {
       this.beadWidth = beadWidth;
       this.beadShift = beadShift;
       this.ones = DIVIDER + DIVIDER_WIDTH + DIVIDER_GAP + beadShift;
-      this.fives = DIVIDER - DIVIDER_GAP - BEAD_HEIGHT - beadShift;
+      this.fives = DIVIDER - DIVIDER_GAP - BEAD_HEIGHT;
     }
   }
 
@@ -93,6 +94,8 @@ public class Abacus extends ApotheneumPattern {
     private final CompoundDiscreteParameter placeValue;
     private final int xPos;
 
+    private final List<Damper> dampers = new ArrayList<>(NUM_BEADS);
+
     private Digit(Apotheneum.Cube.Face face, CompoundDiscreteParameter placeValue, int xPos) {
       this(face.columns, CUBE_METRICS, placeValue, xPos);
     }
@@ -106,24 +109,34 @@ public class Abacus extends ApotheneumPattern {
       this.metrics = metrics;
       this.placeValue = placeValue;
       this.xPos = xPos;
+      for (int i = 0; i < NUM_BEADS; ++i) {
+        final Damper damper = new Damper();
+        damper.sinShaping.setValue(true);
+        damper.start();
+        damper.periodMs.setValue(250);
+        this.dampers.add(damper);
+      }
     }
 
-    private final int[] beads = new int[NUM_BEADS];
+    private final int[] base = new int[NUM_BEADS];
 
     private void setBead(int i, int val) {
       if (i < 5) {
-        this.beads[i] = this.metrics.ones + (i*BEAD_SPACING) - ((val % 5) > i ? this.metrics.beadShift : 0);
+        this.base[i] = this.metrics.ones + (i*BEAD_SPACING);
+        this.dampers.get(i).toggle.setValue((val % 5) > i);
       } else {
-        this.beads[i] = this.metrics.fives - ( (i-5) * BEAD_SPACING) + ((val / 5) > (i-5) ? this.metrics.beadShift : 0);
+        this.base[i] = this.metrics.fives - ((i-5) * BEAD_SPACING);
+        this.dampers.get(i).toggle.setValue((val / 5) <= (i-5));
       }
     }
 
     private void render(double deltaMs) {
+      this.dampers.forEach(damper -> damper.loop(deltaMs));
       final int val = placeValue.getValuei();
       for (int i = 0; i < NUM_BEADS; ++i) {
         setBead(i, val);
-      }
-      for (int pos : this.beads) {
+        int pos = (int) Math.round(this.base[i] - this.dampers.get(i).getValue() * this.metrics.beadShift);
+
         for (int x = 0; x < this.metrics.beadWidth; ++x) {
           final LXModel column = this.columns[this.xPos+x];
           int yMin = 0, yMax = BEAD_HEIGHT;

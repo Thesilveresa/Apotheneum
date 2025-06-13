@@ -173,12 +173,16 @@ public class Quilt extends ApotheneumPattern implements UIDeviceControls<Quilt> 
       this.vStripes.add(new VStripe(Apotheneum.cube, i));
     }
     for (int i = 0; i < Apotheneum.cube.exterior.height(); ++i) {
+      // Cube ratio 200 / 45, do 3x
+      this.hStripes.add(new HStripe(Apotheneum.cube, i));
+      this.hStripes.add(new HStripe(Apotheneum.cube, i));
       this.hStripes.add(new HStripe(Apotheneum.cube, i));
     }
     for (int i = 0; i < Apotheneum.cylinder.exterior.columns.length; ++i) {
       this.vStripes.add(new VStripe(Apotheneum.cylinder, i));
     }
     for (int i = 0; i < Apotheneum.cylinder.exterior.height(); ++i) {
+      this.hStripes.add(new HStripe(Apotheneum.cylinder, i));
       this.hStripes.add(new HStripe(Apotheneum.cylinder, i));
     }
   }

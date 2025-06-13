@@ -35,12 +35,15 @@ import heronarts.lx.model.LXModel;
 import heronarts.lx.model.LXPoint;
 import heronarts.lx.osc.LXOscComponent;
 import heronarts.lx.parameter.CompoundParameter;
+import heronarts.lx.parameter.EnumParameter;
 import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.studio.LXStudio.UI;
 import heronarts.lx.studio.ui.device.UIDevice;
 import heronarts.lx.studio.ui.device.UIDeviceControls;
 import heronarts.lx.transform.LXParameterizedMatrix;
 import heronarts.lx.utils.LXUtils;
+
+import heronarts.glx.ui.component.UIDropMenu;
 
 @LXCategory("Apotheneum/mcslee")
 @LXComponentName("Surfacing")
@@ -103,6 +106,29 @@ public class Surfacing extends ApotheneumPattern implements UIDeviceControls<Sur
 
   }
 
+  public interface DistanceFunction {
+    public float getDistance(float pos, float wave);
+  }
+
+  public enum Fill {
+    SURFACE("Surface", (pos, wav) -> { return Math.abs(pos - wav); }),
+    BELOW("Below", (pos, wav) -> { return pos - wav; }),
+    Above("Above", (pos, wav) -> { return wav - pos; });
+
+    private final String label;
+    private final DistanceFunction function;
+
+    private Fill(String label, DistanceFunction function) {
+      this.label = label;
+      this.function = function;
+    }
+
+    @Override
+    public String toString() {
+      return this.label;
+    }
+  }
+
   public final CompoundParameter base =
     new CompoundParameter("Base", .5)
     .setUnits(CompoundParameter.Units.PERCENT_NORMALIZED);
@@ -127,6 +153,10 @@ public class Surfacing extends ApotheneumPattern implements UIDeviceControls<Sur
     .setUnits(CompoundParameter.Units.DEGREES)
     .setDescription("Roll rotation");
 
+  public final EnumParameter<Fill> fillMode =
+    new EnumParameter<Fill>("Fill", Fill.SURFACE)
+    .setDescription("How to fill the wave");
+
   private final List<Wave> waves = new ArrayList<>();
 
   private final LXParameterizedMatrix transform = new LXParameterizedMatrix();
@@ -139,6 +169,7 @@ public class Surfacing extends ApotheneumPattern implements UIDeviceControls<Sur
     addParameter("base", this.base);
     addParameter("size", this.size);
     addParameter("fade", this.fade);
+    addParameter("fillMode", this.fillMode);
     addTransformParameter("yaw", this.yaw);
     addTransformParameter("roll", this.roll);
     addArray("wave", this.waves);
@@ -194,8 +225,9 @@ public class Surfacing extends ApotheneumPattern implements UIDeviceControls<Sur
     final float size = this.size.getValuef();
     final float falloff = 1f / (size * this.fade.getValuef());
 
+    final DistanceFunction function = this.fillMode.getEnum().function;
     for (LXPoint p : column.points) {
-      float b = .5f - falloff * (Math.abs(p.yn - pos) - size);
+      float b = .5f - falloff * (function.getDistance(p.yn, pos) - size);
       if (b > 0) {
         colors[p.index] = LXColor.grayn(LXUtils.min(1, b));
       }
@@ -238,7 +270,8 @@ public class Surfacing extends ApotheneumPattern implements UIDeviceControls<Sur
     addColumn(uiDevice,
       "Size",
       newKnob(surfacing.size),
-      newKnob(surfacing.fade)
+      newKnob(surfacing.fade),
+      newDropMenu(surfacing.fillMode).setDirection(UIDropMenu.Direction.UP)
     );
 
     addVerticalBreak(ui, uiDevice);
