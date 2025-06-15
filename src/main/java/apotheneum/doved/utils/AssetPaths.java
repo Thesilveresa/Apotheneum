@@ -10,13 +10,14 @@ public class AssetPaths {
   public static String toRelativePathFromAssets(String absolutePath) {
     System.out.println("Converting absolute path from: " + absolutePath);
     File f_assets = assetsFolder();
-    Path assetsPath = Paths.get(f_assets.getAbsolutePath());
-    Path relativePath = assetsPath.relativize(Paths.get(absolutePath));
+    Path assetsPath = Paths.get(f_assets.getAbsolutePath()).normalize().toAbsolutePath();
+    Path inputPath = Paths.get(absolutePath).normalize().toAbsolutePath();
+    Path relativePath = assetsPath.relativize(inputPath);
     String relativePathString = relativePath.toString();
     // replace windows slash with mac slash
     String asMacString = relativePathString.replace("\\", "/");
     System.out.println("Path converted to " + asMacString);
-    return asMacString.toString();
+    return asMacString;
   }
 
   // Helper function to convert a relative path (relative to the `Assets`
