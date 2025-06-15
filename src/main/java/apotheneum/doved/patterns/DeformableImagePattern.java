@@ -22,17 +22,17 @@ import heronarts.lx.LX;
 import heronarts.lx.LXCategory;
 import heronarts.lx.LXComponent.Description;
 import heronarts.lx.pattern.LXPattern;
-import apotheneum.doved.components.ImageComponent;
+import apotheneum.doved.components.DeformableImage;
 import apotheneum.Apotheneum;
 
 @LXCategory(Apotheneum.IMAGE_CATEGORY)
 @Description("Renders a 2D image with Deformations")
 public class DeformableImagePattern extends LXPattern {
-  public final ImageComponent image;
+  public final DeformableImage image;
 
   public DeformableImagePattern(LX lx) {
     super(lx);
-    this.image = new ImageComponent(this.lx);
+    this.image = new DeformableImage(this.lx);
     this.addAutomationChild("image", this.image);
   }
 

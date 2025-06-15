@@ -32,7 +32,7 @@ import heronarts.lx.studio.ui.device.UIControls;
 import heronarts.lx.studio.ui.device.UIDevice;
 import heronarts.lx.studio.ui.device.UIDeviceControls;
 import apotheneum.doved.patterns.DeformableImagePattern;
-import apotheneum.doved.components.ImageComponent;
+import apotheneum.doved.components.DeformableImage;
 import apotheneum.doved.utils.AssetPaths;
 
 public class UIDeformableImagePattern implements UIDeviceControls<DeformableImagePattern> {
@@ -41,12 +41,12 @@ public class UIDeformableImagePattern implements UIDeviceControls<DeformableImag
 
     static class ReplaceImage extends LXCommand {
 
-      private final ComponentReference<ImageComponent> image;
+      private final ComponentReference<DeformableImage> image;
       private final String oldPath, newPath;
       private final String oldLabel;
 
-      ReplaceImage(ImageComponent image, String relativePath) {
-        this.image = new ComponentReference<ImageComponent>(image);
+      ReplaceImage(DeformableImage image, String relativePath) {
+        this.image = new ComponentReference<DeformableImage>(image);
         this.oldPath = image.fileName.getString();
         this.oldLabel = image.label.getString();
         this.newPath = relativePath;
@@ -68,7 +68,7 @@ public class UIDeformableImagePattern implements UIDeviceControls<DeformableImag
         this.image.get().label.setValue(this.oldLabel);
       }
 
-      static void setImagePath(ImageComponent image, String relativePath) {
+      static void setImagePath(DeformableImage image, String relativePath) {
         int separator = relativePath.lastIndexOf(File.separatorChar);
         String name;
         if (separator > 0) {
@@ -85,9 +85,9 @@ public class UIDeformableImagePattern implements UIDeviceControls<DeformableImag
 
   public static class ImageControls extends UI2dContainer implements UIControls {
 
-    public final ImageComponent image;
+    public final DeformableImage image;
 
-    protected ImageControls(UI ui, ImageComponent image) {
+    protected ImageControls(UI ui, DeformableImage image) {
       super(0, 0, 0, UIDevice.CONTENT_HEIGHT);
       this.image = image;
       setLayout(UI2dContainer.Layout.HORIZONTAL, 4);
