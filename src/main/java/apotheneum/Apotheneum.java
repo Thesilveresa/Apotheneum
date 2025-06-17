@@ -32,6 +32,7 @@ public class Apotheneum {
   public static final int GRID_HEIGHT = 45;
   public static final int CYLINDER_HEIGHT = 43;
   public static final int RING_LENGTH = Cylinder.Ring.LENGTH;
+  public static final String IMAGE_CATEGORY = "Image";
 
   public abstract static class Component {
     public abstract Orientation[] orientations();
