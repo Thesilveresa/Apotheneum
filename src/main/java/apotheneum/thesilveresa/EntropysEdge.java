@@ -1,4 +1,4 @@
-package apotheneum.examples;
+package apotheneum.thesilveresa;
 
 import apotheneum.ApotheneumPattern;
 import heronarts.lx.LX;
@@ -80,7 +80,7 @@ public class EntropysEdge extends ApotheneumPattern {
 
   @Override
   public void render(double deltaMs) {
-    float time = (float)(lx.engine.nowMillis / 1000.f);
+    float time = lx.engine.nowMillis / 1000.f;
     float o = order.getValuef();
     float d = disrupt.getValuef();
     float w = warp.getValuef();
@@ -128,4 +128,4 @@ public class EntropysEdge extends ApotheneumPattern {
     }
   }
 }
-    
+

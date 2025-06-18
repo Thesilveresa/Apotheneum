@@ -1,5 +1,5 @@
 
-package apotheneum.examples;
+package apotheneum.thesilveresa;
 
 import heronarts.lx.LX;
 import heronarts.lx.LXCategory;

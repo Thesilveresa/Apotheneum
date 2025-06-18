@@ -1,5 +1,5 @@
 
-package apotheneum.formlanguage;
+package apotheneum.thesilveresa;
 
 import apotheneum.ApotheneumPattern;
 import heronarts.lx.LX;
@@ -57,6 +57,7 @@ public class GoldenRise extends ApotheneumPattern {
     addParameter(spiral);
   }
 
+  @Override
   public void render(double deltaMs) {
     double rowSpacing = spacing.getValue();
     double rowOffset = offset.getValue();

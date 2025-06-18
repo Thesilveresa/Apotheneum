@@ -1,4 +1,4 @@
-package apotheneum.examples;
+package apotheneum.thesilveresa;
 
 import apotheneum.ApotheneumPattern;
 import heronarts.lx.LX;
@@ -8,7 +8,6 @@ import heronarts.lx.color.LXColor;
 import heronarts.lx.model.LXPoint;
 import heronarts.lx.parameter.CompoundParameter;
 import heronarts.lx.parameter.BooleanParameter;
-import heronarts.lx.utils.LXUtils;
 
 @LXCategory("Apotheneum/thesilveresa")
 @LXComponentName("Nonrepeat 2")

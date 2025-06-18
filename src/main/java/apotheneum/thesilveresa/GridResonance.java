@@ -1,5 +1,5 @@
 
-package apotheneum.formlanguage;
+package apotheneum.thesilveresa;
 
 import apotheneum.ApotheneumPattern;
 import heronarts.lx.LX;
@@ -42,6 +42,7 @@ public class GridResonance extends ApotheneumPattern {
     addParameter(contrast);
   }
 
+  @Override
   public void render(double deltaMs) {
     double spacing = grid.getValue();
     double thickness = width.getValue();
