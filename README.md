@@ -64,7 +64,7 @@ $ brew install maven
 After developing new animation content, you may install it by running `update.command` or invoking Maven directly:
 
 ```
-$ mvn install
+$ mvn -Pinstall install
 ````
 
 An example animation routine is provided at [`StripePattern.java`](src/main/java/apotheneum/examples/StripePattern.java)
