@@ -96,8 +96,8 @@ public class Crawlers extends ApotheneumPattern implements UIDeviceControls<Craw
     .setUnits(CompoundParameter.Units.PERCENT_NORMALIZED)
     .setDescription("Probability of turning on any step");
 
-  public final DiscreteParameter turnGate =
-    new DiscreteParameter("Turn Gate", 0, 64)
+  public final CompoundDiscreteParameter turnGate =
+    new CompoundDiscreteParameter("Turn Gate", 0, 64)
     .setDescription("Require a certain number of steps between turns");
 
   public final TriggerParameter trigHorizontal =
