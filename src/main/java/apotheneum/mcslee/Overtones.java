@@ -18,8 +18,6 @@
 
 package apotheneum.mcslee;
 
-import java.io.IOException;
-
 import apotheneum.Apotheneum;
 import apotheneum.ApotheneumPattern;
 import heronarts.lx.LX;
@@ -28,7 +26,6 @@ import heronarts.lx.LXComponent;
 import heronarts.lx.color.LXColor;
 import heronarts.lx.model.LXModel;
 import heronarts.lx.model.LXPoint;
-import heronarts.lx.osc.LXOscEngine;
 import heronarts.lx.osc.OscMessage;
 import heronarts.lx.parameter.BooleanParameter;
 import heronarts.lx.parameter.CompoundParameter;
@@ -68,8 +65,6 @@ public class Overtones extends ApotheneumPattern {
   public final TriggerParameter floor =
     new TriggerParameter("Floor", this::floor);
 
-  private final LXOscEngine.Transmitter oscTransmitter;
-
   private final OscMessage oscPeak = new OscMessage("/overtones/peak");
   private final OscMessage oscFloor = new OscMessage("/overtones/floor");
 
@@ -82,17 +77,6 @@ public class Overtones extends ApotheneumPattern {
     addParameter("peak", this.peak);
     addParameter("floor", this.floor);
     addParameter("outputTriggers", this.outputTriggers);
-
-    LXOscEngine.Transmitter oscTransmitter = null;
-    try {
-      oscTransmitter = lx.engine.osc.transmitter(
-        "127.0.0.1",
-        5050
-      );
-    } catch (Exception x) {
-      LX.error(x, "Overtones couldn't make local OSC transmitter");
-    }
-    this.oscTransmitter = oscTransmitter;
   }
 
   private static final int NUM_TONES = 30;
@@ -152,33 +136,14 @@ public class Overtones extends ApotheneumPattern {
         this.floor.trigger();
       }
     }
-
-
   }
 
   private void peak() {
-    send(this.oscPeak);
+    Apotheneum.osc2Ableton(this.oscPeak);
   }
 
   private void floor() {
-    send(this.oscFloor);
+    Apotheneum.osc2Ableton(this.oscFloor);
   }
 
-  private void send(OscMessage message) {
-    if (this.oscTransmitter != null) {
-      try {
-        this.oscTransmitter.send(message);
-      } catch (IOException iox) {
-        LX.error(iox, "Error sending OSC from Overtones");
-      }
-    }
-  }
-
-  @Override
-  public void dispose() {
-    super.dispose();
-    if (this.oscTransmitter != null) {
-      this.oscTransmitter.dispose();
-    }
-  }
 }

@@ -18,6 +18,8 @@
 
 package apotheneum;
 
+import java.io.IOException;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,9 +27,14 @@ import java.util.List;
 import heronarts.lx.LX;
 import heronarts.lx.model.LXModel;
 import heronarts.lx.model.LXPoint;
+import heronarts.lx.osc.LXOscEngine;
+import heronarts.lx.osc.OscMessage;
+import heronarts.lx.utils.LXUtils;
 
 public class Apotheneum {
 
+  public static final int DOOR_WIDTH = 10;
+  public static final int DOOR_HEIGHT = 11;
   public static final int GRID_WIDTH = 50;
   public static final int GRID_HEIGHT = 45;
   public static final int CYLINDER_HEIGHT = 43;
@@ -75,6 +82,8 @@ public class Apotheneum {
 
     public abstract Ring[] rings();
 
+    public abstract int available(int columnIndex);
+
     public Ring ring(int index) {
       return rings()[index];
     }
@@ -104,6 +113,8 @@ public class Apotheneum {
   }
 
   public static class Cube extends Component {
+
+    public static final int DOOR_START_COLUMN = 20;
 
     public static class Orientation extends Apotheneum.Orientation {
 
@@ -156,6 +167,14 @@ public class Apotheneum {
       @Override
       public Ring[] rings() {
         return this.rings;
+      }
+
+      @Override
+      public int available(int columnIndex) {
+        if (LXUtils.inRange(columnIndex % GRID_WIDTH, DOOR_START_COLUMN, DOOR_START_COLUMN + DOOR_WIDTH - 1)) {
+          return GRID_HEIGHT - DOOR_HEIGHT;
+        }
+        return GRID_HEIGHT;
       }
 
     }
@@ -259,6 +278,14 @@ public class Apotheneum {
       public Ring[] rings() {
         return this.rings;
       }
+
+      @Override
+      public int available(int columnIndex) {
+        if (LXUtils.inRange(columnIndex % 30, 10, 10 + DOOR_WIDTH - 1)) {
+          return CYLINDER_HEIGHT - DOOR_HEIGHT;
+        }
+        return CYLINDER_HEIGHT;
+      }
     }
 
     public static class Ring extends Apotheneum.Ring {
@@ -291,6 +318,7 @@ public class Apotheneum {
   public static Cube cube = null;
   public static Cylinder cylinder = null;
 
+  private static LX lx = null;
   private static boolean initialized = false;
   private static final ModelListener modelListener = new ModelListener();
 
@@ -299,6 +327,7 @@ public class Apotheneum {
       return;
     }
     initialized = true;
+    Apotheneum.lx = lx;
     modelListener.modelChanged(lx, lx.getModel());
     lx.addListener(modelListener);
   }
@@ -324,6 +353,25 @@ public class Apotheneum {
         exists = false;
         LX.error(x, "Error building Apotheneum helpers");
         lx.pushError(x, "Apotheneum model is out of date, you may need to update your fixture files.\n" + x.getMessage());;
+      }
+    }
+  }
+
+  private static LXOscEngine.Transmitter oscTransmitter = null;
+
+  public static void osc2Ableton(OscMessage message) {
+    if ((oscTransmitter == null) && (lx != null)) {
+      try {
+        oscTransmitter = lx.engine.osc.transmitter(InetAddress.getLoopbackAddress(), 5050);
+      } catch (Exception x) {
+        LX.error(x, "Apotheneum couldn't create local OSC transmitter: " + x.getMessage());
+      }
+    }
+    if (oscTransmitter != null) {
+      try {
+        oscTransmitter.send(message);
+      } catch (IOException iox) {
+        LX.error(iox, "Failed to send OSC message to Ableton: " + iox.getMessage());
       }
     }
   }
