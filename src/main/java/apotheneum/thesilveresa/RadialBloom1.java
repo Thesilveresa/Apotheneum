@@ -33,10 +33,10 @@ public class RadialBloom1 extends ApotheneumPattern {
 
     public RadialBloom1(LX lx) {
       super(lx);
-      addParameter(scale);
-      addParameter(hue);
-      addParameter(phase);
-      addParameter(warp);
+      addParameter("scale", this.scale);
+      addParameter("hue", this.hue);
+      addParameter("phase", this.phase);
+      addParameter("warp", this.warp);
     }
 
     @Override
