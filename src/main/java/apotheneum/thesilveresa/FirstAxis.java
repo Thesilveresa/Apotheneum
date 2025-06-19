@@ -26,9 +26,9 @@ public class FirstAxis extends ApotheneumPattern {
 
   public FirstAxis(LX lx) {
     super(lx);
-    addParameter(symmetry);
-    addParameter(lineWidth);
-    addParameter(brightness);
+    addParameter("symmetry", this.symmetry);
+    addParameter("lineWidth", this.lineWidth);
+    addParameter("brightness", this.brightness);
   }
 
   @Override
