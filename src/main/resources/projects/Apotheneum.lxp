@@ -1,6 +1,6 @@
 {
   "version": "1.1.1-SNAPSHOT",
-  "timestamp": 1750672455803,
+  "timestamp": 1750854907820,
   "model": {
     "id": 2,
     "class": "heronarts.lx.structure.LXStructure",
@@ -476,7 +476,7 @@
           "scale": 1.0,
           "hasCustomPointSize": false,
           "pointSize": 5.0,
-          "selected": false,
+          "selected": true,
           "deactivate": false,
           "enabled": true,
           "brightness": 1.0,
@@ -509,7 +509,7 @@
           "scale": 1.0,
           "hasCustomPointSize": false,
           "pointSize": 5.0,
-          "selected": true,
+          "selected": false,
           "deactivate": false,
           "enabled": true,
           "brightness": 1.0,
@@ -565,7 +565,7 @@
           "autoCycleMode": 0,
           "autoCycleMode/name": "NEXT",
           "autoCycleTimeSecs": 45.0,
-          "autoCycleCursor": 0,
+          "autoCycleCursor": 1,
           "triggerSwatchCycle": false,
           "expandedPerformance": true,
           "label1": "1",
@@ -605,7 +605,7 @@
                   "period": 30.0,
                   "primary/brightness": 100.0,
                   "primary/saturation": 100.0,
-                  "primary/hue": 0.0,
+                  "primary/hue": 11.529411315917969,
                   "secondary/brightness": 100.0,
                   "secondary/saturation": 100.0,
                   "secondary/hue": 120.0
@@ -627,7 +627,7 @@
                   "period": 30.0,
                   "primary/brightness": 100.0,
                   "primary/saturation": 100.0,
-                  "primary/hue": 25.242189407348633,
+                  "primary/hue": 9.882352828979492,
                   "secondary/brightness": 100.0,
                   "secondary/saturation": 100.0,
                   "secondary/hue": 120.0
@@ -647,9 +647,9 @@
                   "mode": 0,
                   "mode/name": "FIXED",
                   "period": 30.0,
-                  "primary/brightness": 100.0,
-                  "primary/saturation": 100.0,
-                  "primary/hue": 237.0703125,
+                  "primary/brightness": 60.0,
+                  "primary/saturation": 83.6601333618164,
+                  "primary/hue": 314.53125,
                   "secondary/brightness": 100.0,
                   "secondary/saturation": 100.0,
                   "secondary/hue": 120.0
@@ -4105,7 +4105,7 @@
                           "exp": 0.0
                         },
                         "children": {},
-                        "basis": 0.605688292011749
+                        "basis": 0.5684285270572623
                       },
                       {
                         "id": 33298,
@@ -4145,7 +4145,7 @@
                           "exp": 0.0
                         },
                         "children": {},
-                        "basis": 0.8276261336227508
+                        "basis": 0.3421750883424182
                       }
                     ],
                     "modulations": [
@@ -7136,7 +7136,7 @@
               "triggerOut": false
             },
             "children": {},
-            "basis": 0.3598369659388402
+            "basis": 0.4849368901645189
           },
           {
             "id": 11190,
@@ -9961,7 +9961,7 @@
   },
   "externals": {
     "ui": {
-      "leftPaneActiveSection": 2,
+      "leftPaneActiveSection": 1,
       "audioExpanded": true,
       "envelopExpanded": true,
       "reaperExpanded": true,
@@ -9986,9 +9986,9 @@
         "animation": true,
         "camera": {
           "active": true,
-          "radius": 202.6420865401347,
-          "theta": 359.9906089513097,
-          "phi": -88.745351113379,
+          "radius": 994.3555026051904,
+          "theta": 342.67047444265336,
+          "phi": 17.06061791884713,
           "x": 245.5,
           "y": 237.0,
           "z": 245.5
@@ -9996,9 +9996,9 @@
         "cue": [
           {
             "active": true,
-            "radius": 867.6209108978894,
+            "radius": 994.3555026051904,
             "theta": 342.67047444265336,
-            "phi": 26.658273949055,
+            "phi": 17.06061791884713,
             "x": 245.5,
             "y": 237.0,
             "z": 245.5
@@ -10070,7 +10070,7 @@
           "phiMotion": 2,
           "phiMotion/name": "NOISE"
         },
-        "focus": 1,
+        "focus": 0,
         "pointCloud": {
           "ledStyle": 2,
           "ledStyle/name": "LENS3",
