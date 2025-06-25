@@ -27,6 +27,7 @@ import heronarts.lx.LXComponentName;
 import heronarts.lx.LXLayer;
 import heronarts.lx.color.LXColor;
 import heronarts.lx.midi.MidiNoteOn;
+import heronarts.lx.mixer.LXChannel;
 import heronarts.lx.model.LXModel;
 import heronarts.lx.model.LXPoint;
 import heronarts.lx.osc.OscMessage;
@@ -34,12 +35,16 @@ import heronarts.lx.parameter.BooleanParameter;
 import heronarts.lx.parameter.CompoundDiscreteParameter;
 import heronarts.lx.parameter.CompoundParameter;
 import heronarts.lx.parameter.TriggerParameter;
+import heronarts.lx.pattern.LXPattern;
+import heronarts.lx.studio.LXStudio.UI;
+import heronarts.lx.studio.ui.device.UIDevice;
+import heronarts.lx.studio.ui.device.UIDeviceControls;
 import heronarts.lx.utils.LXUtils;
 
 @LXCategory("Apotheneum/mcslee")
 @LXComponentName("Raindrops")
 @LXComponent.Description("Accelerating raindrops that splash onto the cube/cylinder base")
-public class Raindrops extends ApotheneumPattern implements ApotheneumPattern.Midi {
+public class Raindrops extends ApotheneumPattern implements ApotheneumPattern.Midi, UIDeviceControls<Raindrops> {
 
   public final TriggerParameter trig =
     new TriggerParameter("Trig", this::trig)
@@ -60,11 +65,11 @@ public class Raindrops extends ApotheneumPattern implements ApotheneumPattern.Mi
     .setDescription("Gravity strength");
 
   public final CompoundParameter initVelocityMin =
-    new CompoundParameter("Min Init", 0, 5)
+    new CompoundParameter("Min Vel", 0, 5)
     .setDescription("Minimum initial velocity");
 
   public final CompoundParameter initVelocityMax =
-    new CompoundParameter("Max Init", 5, 0, 20)
+    new CompoundParameter("Max Vel", 5, 0, 20)
     .setDescription("Maximum initial velocity");
 
   public final CompoundParameter tailLength =
@@ -84,6 +89,10 @@ public class Raindrops extends ApotheneumPattern implements ApotheneumPattern.Mi
     new BooleanParameter("Send", false)
     .setDescription("Send splashes to OSC out");
 
+  public final BooleanParameter linkFloor =
+    new BooleanParameter("Link", false)
+    .setDescription("Link floor position from Surfacing");
+
   private final OscMessage oscSplash = new OscMessage("/raindrops/splash");
 
   private class Drop extends LXLayer {
@@ -94,8 +103,8 @@ public class Raindrops extends ApotheneumPattern implements ApotheneumPattern.Mi
     private double pos = 0;
     private double velocity = 0;
     private boolean hasSplashed = false;
-    private final int splashPoint;
-    private final LXPoint[] ring;
+    private int splashPoint;
+    private LXPoint[] ring;
 
     private Drop(LX lx) {
       super(lx);
@@ -135,6 +144,18 @@ public class Raindrops extends ApotheneumPattern implements ApotheneumPattern.Mi
         if (++pi > this.splashPoint) {
           break;
         }
+      }
+
+      // Sync to the surfacing splash point
+      if (!this.hasSplashed &&
+          (surface != null) &&
+          (this.orientation instanceof Apotheneum.Cylinder.Orientation)) {
+        this.splashPoint = (int) LXUtils.constrain(
+          LXUtils.lerp(column.points.length-1, 0, surface.getCylinderLevel(this.ringIndex)) + floorRand.getValue() * Math.random(),
+          0,
+          orientation.available(this.ringIndex) - 1
+        );
+        this.ring = this.orientation.ring(this.splashPoint).points;
       }
 
       final double splash = this.pos - this.splashPoint;
@@ -178,6 +199,7 @@ public class Raindrops extends ApotheneumPattern implements ApotheneumPattern.Mi
     addParameter("initVelocityMin", this.initVelocityMin);
     addParameter("initVelocityMax", this.initVelocityMax);
     addParameter("sendSplash", this.sendSplash);
+    addParameter("linkFloor", this.linkFloor);
   }
 
   private void trig() {
@@ -187,9 +209,23 @@ public class Raindrops extends ApotheneumPattern implements ApotheneumPattern.Mi
     }
   }
 
+  private Surfacing surface = null;
+
   @Override
   protected void render(double deltaMs) {
     setColors(LXColor.BLACK);
+    this.surface = null;
+    if (this.linkFloor.isOn()) {
+      LXComponent parent = getParent();
+      if (parent instanceof LXChannel channel) {
+        for (LXPattern pattern : channel.patterns) {
+          if (pattern instanceof Surfacing surface) {
+            this.surface = surface;
+            break;
+          }
+        }
+      }
+    }
   }
 
   @Override
@@ -200,6 +236,34 @@ public class Raindrops extends ApotheneumPattern implements ApotheneumPattern.Mi
   @Override
   public void noteOnReceived(MidiNoteOn midiNote) {
     trig();
+  }
+
+  @Override
+  public void buildDeviceControls(UI ui, UIDevice uiDevice, Raindrops raindrops) {
+    uiDevice.setLayout(UIDevice.Layout.HORIZONTAL, 2);
+    addColumn(uiDevice, "Input",
+      newButton(raindrops.trig).setBorderRounding(4).setMappable(true),
+      newIntegerBox(raindrops.perTrig).setTopMargin(-2),
+      newKnob(raindrops.position).setTopMargin(6),
+      newKnob(raindrops.tailLength)
+    ).setChildSpacing(6);
+
+    addVerticalBreak(ui, uiDevice);
+
+    addColumn(uiDevice, "Physics",
+      newKnob(raindrops.initVelocityMin),
+      newKnob(raindrops.initVelocityMax),
+      newKnob(raindrops.gravity)
+    ).setChildSpacing(6);
+
+    addVerticalBreak(ui, uiDevice);
+
+    addColumn(uiDevice, "Splash",
+      newKnob(raindrops.floor),
+      newKnob(raindrops.floorRand),
+      newButton(raindrops.linkFloor),
+      newButton(raindrops.sendSplash)
+    ).setChildSpacing(6);;
   }
 
 }
