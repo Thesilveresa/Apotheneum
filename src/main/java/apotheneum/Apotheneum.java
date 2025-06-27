@@ -255,6 +255,8 @@ public class Apotheneum {
 
   public static class Cylinder extends Component {
 
+    public static final int DOOR_START_COLUMN = 10;
+
     public static class Orientation extends Apotheneum.Orientation {
       public final int size;
       public final LXModel[] columns;

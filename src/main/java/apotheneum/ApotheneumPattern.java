@@ -108,6 +108,11 @@ public abstract class ApotheneumPattern extends LXPattern {
     }
   }
 
+  protected void setApotheneumColor(int color) {
+    setColor(Apotheneum.cube, color);
+    setColor(Apotheneum.cylinder, color);
+  }
+
   protected void setColor(Apotheneum.Component component, int color) {
     for (Apotheneum.Orientation orientation : component.orientations()) {
       setColor(orientation, color);

@@ -192,7 +192,7 @@ public class Surfacing extends ApotheneumPattern implements UIDeviceControls<Sur
 
     this.waves.forEach(wave -> wave.update());
 
-    setColors(LXColor.BLACK);
+    setApotheneumColor(LXColor.BLACK);
     int cylinderIndex = 0;
     for (LXModel column : Apotheneum.cylinder.exterior.columns) {
       renderColumn(column, cylinderIndex);
