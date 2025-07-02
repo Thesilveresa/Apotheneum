@@ -125,7 +125,7 @@ public class DoorEmanation extends ApotheneumPattern {
           addLayer(new StripLayer(
             lx,
             Apotheneum.cube.exterior.ring(Apotheneum.GRID_HEIGHT - 1 - y).points,
-            f*Apotheneum.GRID_WIDTH + Apotheneum.Cube.DOOR_START_COLUMN + Apotheneum.DOOR_WIDTH + 1,
+            f*Apotheneum.GRID_WIDTH + Apotheneum.Cube.DOOR_START_COLUMN + Apotheneum.DOOR_WIDTH,
             1,
             this.cubeWidth,
             i
@@ -141,7 +141,7 @@ public class DoorEmanation extends ApotheneumPattern {
           addLayer(new StripLayer(
             lx,
             Apotheneum.cylinder.exterior.ring(Apotheneum.CYLINDER_HEIGHT - 1 - y).points,
-            f*Apotheneum.RING_LENGTH/4 + Apotheneum.Cylinder.DOOR_START_COLUMN + Apotheneum.DOOR_WIDTH + 1,
+            f*Apotheneum.RING_LENGTH/4 + Apotheneum.Cylinder.DOOR_START_COLUMN + Apotheneum.DOOR_WIDTH,
             1,
             this.cylinderWidth,
             i

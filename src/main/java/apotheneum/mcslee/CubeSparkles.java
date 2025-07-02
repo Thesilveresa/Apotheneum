@@ -33,6 +33,7 @@ import heronarts.lx.model.LXModel;
 import heronarts.lx.model.LXPoint;
 import heronarts.lx.parameter.CompoundDiscreteParameter;
 import heronarts.lx.parameter.CompoundParameter;
+import heronarts.lx.parameter.EnumParameter;
 import heronarts.lx.parameter.TriggerParameter;
 import heronarts.lx.utils.LXUtils;
 
@@ -40,6 +41,29 @@ import heronarts.lx.utils.LXUtils;
 @LXComponentName("Cube Sparkles")
 @LXComponent.Description("MIDI reactive sparkles on the cube faces")
 public class CubeSparkles extends ApotheneumPattern implements ApotheneumPattern.Midi {
+
+  public interface DistanceFunction {
+    public float getDistance(float d);
+  }
+
+  public enum Shape {
+    ABS("Abs", d -> { return Math.abs(d); }),
+    Up("Up", d -> { return d; }),
+    Down("Down", d -> { return -d; });
+
+    public final String label;
+    public final DistanceFunction distance;
+
+    private Shape(String label, DistanceFunction distance) {
+      this.label = label;
+      this.distance = distance;
+    }
+
+    @Override
+    public String toString() {
+      return this.label;
+    }
+  }
 
   public final TriggerParameter sparkle =
     new TriggerParameter("Sparkle", this::onSparkle)
@@ -69,6 +93,10 @@ public class CubeSparkles extends ApotheneumPattern implements ApotheneumPattern
     .setUnits(CompoundParameter.Units.PERCENT_NORMALIZED)
     .setDescription("Sparkle Exp");
 
+  public EnumParameter<Shape> shape =
+    new EnumParameter<Shape>("Shape", Shape.ABS)
+    .setDescription("Sparkle Shape");
+
   public CubeSparkles(LX lx) {
     super(lx);
     addParameter("sparkle", this.sparkle);
@@ -77,6 +105,7 @@ public class CubeSparkles extends ApotheneumPattern implements ApotheneumPattern
     addParameter("sparkleTime", this.sparkleTime);
     addParameter("sparkleDistance", this.sparkleDistance);
     addParameter("sparkleExp", this.sparkleExp);
+    addParameter("shape", this.shape);
   }
 
   @Override
@@ -100,14 +129,16 @@ public class CubeSparkles extends ApotheneumPattern implements ApotheneumPattern
     protected void render(double deltaMs) {
       this.basis += deltaMs / (1000f * sparkleTime.getValuef());
       if (this.basis < 1) {
+        final DistanceFunction distance = shape.getEnum().distance;
+
         float dist = (float) (sparkleDistance.getValue() * Math.pow(this.basis, sparkleExp.getValuef()));
         float level = LXUtils.lerpf(100, 0, this.basis);
         float length = LXUtils.lerpf(1, 10, this.basis);
         float falloff = 4500f / length;
         for (LXPoint p : this.column.points) {
-          float b = level - falloff * Math.abs(Math.abs(p.yn - this.basePos) - dist);
+          float b = level - falloff * Math.abs(distance.getDistance(p.yn - this.basePos) - dist);
           if (b > 0) {
-            addColor(p.index, LXColor.gray(b));
+            addColor(p.index, LXColor.gray(LXUtils.minf(100f, b)));
           }
         }
 

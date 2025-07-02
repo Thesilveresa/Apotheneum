@@ -35,6 +35,8 @@ import heronarts.lx.studio.ui.device.UIDeviceControls;
 import heronarts.lx.utils.LXUtils;
 import heronarts.glx.ui.UI2dComponent;
 import heronarts.glx.ui.component.UIDropMenu;
+import heronarts.glx.ui.component.UILabel;
+import heronarts.glx.ui.vg.VGraphics;
 
 @LXCategory("Apotheneum/Test")
 @LXComponentName("Apotheneum Test")
@@ -115,7 +117,7 @@ public class ApotheneumTest extends ApotheneumPattern implements UIDeviceControl
     ALL,
     CUBE,
     CYLINDER,
-    NET;
+    SINGLE;
   }
 
   public enum Side {
@@ -181,8 +183,18 @@ public class ApotheneumTest extends ApotheneumPattern implements UIDeviceControl
 
   public enum Mode {
     GRADIENT,
-    HORIZONTAL,
-    VERTICAL;
+    HORIZONTAL_STRIPE,
+    VERTICAL_STRIPE,
+    DMX_CHANNEL;
+
+    public String getDescription() {
+      return switch (this) {
+      case GRADIENT -> "Generates a gradient pattern with net number. Top left green, bottom right red.";
+      case HORIZONTAL_STRIPE -> "Renders a stripe across the net with defined color + offset.";
+      case VERTICAL_STRIPE -> "Renders a stripe down the net with defined color + strip number.";
+      case DMX_CHANNEL -> "Output matches DMX channel on all universes, values range from 0-255.";
+      };
+    }
   }
 
   public enum Color {
@@ -241,9 +253,10 @@ public class ApotheneumTest extends ApotheneumPattern implements UIDeviceControl
 
   private void renderColumn(Apotheneum.Orientation orientation, LXModel column, int columnIndex) {
     switch (this.mode.getEnum()) {
-    case HORIZONTAL -> renderHorizontal(orientation, column, columnIndex);
-    case VERTICAL -> renderVertical(orientation, column, columnIndex);
-    default -> renderGradient(orientation, column, columnIndex);
+    case HORIZONTAL_STRIPE -> renderHorizontal(orientation, column, columnIndex);
+    case VERTICAL_STRIPE -> renderVertical(orientation, column, columnIndex);
+    case DMX_CHANNEL -> renderDMX(orientation, column, columnIndex);
+    case GRADIENT -> renderGradient(orientation, column, columnIndex);
     }
   }
 
@@ -270,7 +283,6 @@ public class ApotheneumTest extends ApotheneumPattern implements UIDeviceControl
         }
       }
     }
-
 
     if (LXUtils.inRange(columnIndex % 10, 2, 6)) {
       final int x = (columnIndex % 10) - 2;
@@ -314,6 +326,32 @@ public class ApotheneumTest extends ApotheneumPattern implements UIDeviceControl
     }
   }
 
+  private void renderDMX(Apotheneum.Orientation orientation, LXModel column, int columnIndex) {
+
+    final int perStrand = orientation.available(columnIndex);
+    final int strandIndex = columnIndex % 10;
+
+    int d = (perStrand * strandIndex) % 170;
+
+    if (columnIndex % 2 == 1) {
+      for (int i = perStrand-1; i >= 0; --i) {
+        int v0 = (3*d) % 256;
+        int v1 = (3*d + 1) % 256;
+        int v2 = (3*d + 2) % 256;
+        d = (d+1) % 170;
+        colors[column.points[i].index] = LXColor.rgba(v0, v1, v2, 255);
+      }
+    } else {
+      for (int i = 0; i < perStrand; ++i) {
+        int v0 = (3*d) % 256;
+        int v1 = (3*d + 1) % 256;
+        int v2 = (3*d + 2) % 256;
+        d = (d+1) % 170;
+        colors[column.points[i].index] = LXColor.rgba(v0, v1, v2, 255);
+      }
+    }
+  }
+
   private void render(Apotheneum.Orientation orientation) {
     int columnIndex = 0;
     for (LXModel column : orientation.columns()) {
@@ -331,7 +369,7 @@ public class ApotheneumTest extends ApotheneumPattern implements UIDeviceControl
       }
       case CUBE -> render(Apotheneum.cube.exterior);
       case CYLINDER -> render(Apotheneum.cylinder.exterior);
-      case NET -> {
+      case SINGLE -> {
         final Net net = this.net.getEnum();
         final Apotheneum.Orientation orientation = net.getOrientation();
         final int columnStart = net.getColumnIndex();
@@ -362,26 +400,33 @@ public class ApotheneumTest extends ApotheneumPattern implements UIDeviceControl
       net = newDropMenu(test.net).setDirection(UIDropMenu.Direction.UP),
       sectionLabel("Side"),
       newDropMenu(test.side)
-    );
+    ).setChildSpacing(4);
 
     uiDevice.addListener(test.target, p -> {
-      net.setEnabled(test.target.getEnum() == Target.NET);
+      net.setEnabled(test.target.getEnum() == Target.SINGLE);
     }, true);
 
     addVerticalBreak(ui, uiDevice);
 
     final UI2dComponent color, stripeX, stripeY;
+    final UILabel description;
+    final float cw = 120;
 
-    addColumn(uiDevice, "Mode",
-      newDropMenu(test.mode),
-      color = newDropMenu(test.color),
-      stripeX = newIntegerBox(test.stripeX),
-      stripeY = newIntegerBox(test.stripeY)
-    );
+    addColumn(uiDevice, cw, "Mode",
+      newDropMenu(test.mode).setWidth(cw),
+      color = newDropMenu(test.color).setWidth(cw),
+      stripeX = newIntegerBox(test.stripeX).setWidth(cw),
+      stripeY = newIntegerBox(test.stripeY).setWidth(cw),
+      description = (UILabel) new UILabel.Control(ui, cw, 16, "")
+        .setBreakLines(true, true)
+        .setPadding(0, 2)
+        .setTextAlignment(VGraphics.Align.LEFT, VGraphics.Align.TOP)
+    ).setChildSpacing(4);
 
     uiDevice.addListener(test.mode, p -> {
-      final boolean isHorizontal = test.mode.getEnum() == Mode.HORIZONTAL;
-      final boolean isVertical = test.mode.getEnum() == Mode.VERTICAL;
+      description.setLabel(test.mode.getEnum().getDescription());
+      final boolean isHorizontal = test.mode.getEnum() == Mode.HORIZONTAL_STRIPE;
+      final boolean isVertical = test.mode.getEnum() == Mode.VERTICAL_STRIPE;
       color.setVisible(isHorizontal || isVertical);
       stripeX.setVisible(isVertical);
       stripeY.setVisible(isHorizontal);
