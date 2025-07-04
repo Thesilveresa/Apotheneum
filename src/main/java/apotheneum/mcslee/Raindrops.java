@@ -242,7 +242,7 @@ public class Raindrops extends ApotheneumPattern implements ApotheneumPattern.Mi
   public void buildDeviceControls(UI ui, UIDevice uiDevice, Raindrops raindrops) {
     uiDevice.setLayout(UIDevice.Layout.HORIZONTAL, 2);
     addColumn(uiDevice, "Input",
-      newButton(raindrops.trig).setBorderRounding(4).setMappable(true),
+      newButton(raindrops.trig).setTriggerable(true).setBorderRounding(4),
       newIntegerBox(raindrops.perTrig).setTopMargin(-2),
       newKnob(raindrops.position).setTopMargin(6),
       newKnob(raindrops.tailLength)
