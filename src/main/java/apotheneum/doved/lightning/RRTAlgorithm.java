@@ -14,12 +14,13 @@ public class RRTAlgorithm {
     public final double jaggedness;
     public final double goalRadius;
     public final double electricalField;
+    public final double startX;
     public final int rasterWidth;
     public final int rasterHeight;
     
     public Parameters(double stepSize, double goalBias, int maxIterations, 
                      double branchProbability, double jaggedness, double goalRadius,
-                     double electricalField, int rasterWidth, int rasterHeight) {
+                     double electricalField, double startX, int rasterWidth, int rasterHeight) {
       this.stepSize = stepSize;
       this.goalBias = goalBias;
       this.maxIterations = maxIterations;
@@ -27,6 +28,7 @@ public class RRTAlgorithm {
       this.jaggedness = jaggedness;
       this.goalRadius = goalRadius;
       this.electricalField = electricalField;
+      this.startX = startX;
       this.rasterWidth = rasterWidth;
       this.rasterHeight = rasterHeight;
     }
@@ -102,8 +104,8 @@ public class RRTAlgorithm {
   }
   
   public static void generateLightning(List<LightningSegment> segments, Parameters params) {
-    // Initialize tree with root at top center
-    double startX = params.rasterWidth / 2.0;
+    // Initialize tree with root at configured startX position
+    double startX = params.startX * params.rasterWidth;
     double startY = 0;
     RRTNode root = new RRTNode(startX, startY, null, 1.0, 0, false);
     List<RRTNode> tree = new ArrayList<>();

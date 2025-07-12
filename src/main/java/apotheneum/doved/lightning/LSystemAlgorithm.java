@@ -13,16 +13,18 @@ public class LSystemAlgorithm {
     public final double angleVariation;
     public final double lengthVariation;
     public final double branchAngle;
+    public final double startX;
     public final int rasterWidth;
     public final int rasterHeight;
     
     public Parameters(int iterations, double segmentLength, double angleVariation, 
-                     double lengthVariation, double branchAngle, int rasterWidth, int rasterHeight) {
+                     double lengthVariation, double branchAngle, double startX, int rasterWidth, int rasterHeight) {
       this.iterations = iterations;
       this.segmentLength = segmentLength;
       this.angleVariation = angleVariation;
       this.lengthVariation = lengthVariation;
       this.branchAngle = branchAngle;
+      this.startX = startX;
       this.rasterWidth = rasterWidth;
       this.rasterHeight = rasterHeight;
     }
@@ -107,8 +109,8 @@ public class LSystemAlgorithm {
   }
 
   private static void interpretLSystem(List<LightningSegment> segments, String lSystemString, Parameters params) {
-    // Start from top center, pointing downward
-    double startX = params.rasterWidth / 2.0;
+    // Start from specified X position, pointing downward
+    double startX = params.startX * params.rasterWidth;
     double startY = 0;
     double startAngle = Math.PI / 2; // Point downward (90 degrees from standard orientation)
 

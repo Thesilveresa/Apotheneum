@@ -8,6 +8,7 @@ public class MidpointDisplacementAlgorithm {
   public static class Parameters {
     public final double displacement;
     public final int recursionDepth;
+    public final double startX;
     public final double startSpread;
     public final double endSpread;
     public final double branchProbability;
@@ -16,11 +17,12 @@ public class MidpointDisplacementAlgorithm {
     public final int rasterWidth;
     public final int rasterHeight;
     
-    public Parameters(double displacement, int recursionDepth, double startSpread, double endSpread,
+    public Parameters(double displacement, int recursionDepth, double startX, double startSpread, double endSpread,
                      double branchProbability, double branchDistance, double branchAngle, 
                      int rasterWidth, int rasterHeight) {
       this.displacement = displacement;
       this.recursionDepth = recursionDepth;
+      this.startX = startX;
       this.startSpread = startSpread;
       this.endSpread = endSpread;
       this.branchProbability = branchProbability;
@@ -48,12 +50,13 @@ public class MidpointDisplacementAlgorithm {
   
   public static void generateLightning(List<LightningSegment> segments, Parameters params) {
     // Generate lightning from top to bottom using spread controls
-    double centerX = params.rasterWidth / 2.0;
+    double baseStartX = params.startX * params.rasterWidth; // Convert 0-1 to pixel coordinates
     double startRange = params.startSpread * params.rasterWidth;
     double endRange = params.endSpread * params.rasterWidth;
     
-    double startX = centerX + (Math.random() - 0.5) * startRange;
+    double startX = baseStartX + (Math.random() - 0.5) * startRange;
     double startY = 0;
+    double centerX = params.rasterWidth / 2.0;
     double endX = centerX + (Math.random() - 0.5) * endRange;
     double endY = params.rasterHeight - 1;
     

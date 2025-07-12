@@ -56,13 +56,19 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
     new CompoundParameter("Depth", 6, 3, 10)
     .setDescription("Maximum subdivision levels for detail");
 
-  public final CompoundParameter fadeTime =
-    new CompoundParameter("Fade", 2, 0.5, 10)
-    .setDescription("Duration for lightning trails to fade (seconds)");
+  public final CompoundParameter fade =
+    new CompoundParameter("Fade", 1)
+    .setUnits(CompoundParameter.Units.PERCENT_NORMALIZED)
+    .setDescription("External envelope control for lightning fade");
 
   public final CompoundParameter thickness =
     new CompoundParameter("Thickness", 1, 0.5, 3)
     .setDescription("Base thickness of lightning bolts");
+
+  public final CompoundParameter startX =
+    new CompoundParameter("Start X", 0.5, 0, 1)
+    .setUnits(CompoundParameter.Units.PERCENT_NORMALIZED)
+    .setDescription("Starting X position across the top (0=left, 1=right)");
 
   public final CompoundParameter startSpread =
     new CompoundParameter("Start Spread", 0.5, 0, 1)
@@ -106,6 +112,10 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
     new CompoundParameter("LS Branch Angle", 45, 15, 90)
     .setDescription("Base angle for L-system branches in degrees");
 
+  public final CompoundParameter bleeding =
+    new CompoundParameter("Bleeding", 1, 0, 3)
+    .setDescription("Glow/bleeding effect strength for all algorithms");
+
   // RRT specific parameters
   public final CompoundParameter rrtStepSize =
     new CompoundParameter("RRT Step Size", 12, 5, 25)
@@ -137,21 +147,9 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
 
   private static class LightningBolt {
     public final List<LightningSegment> segments = new ArrayList<>();
-    public final double startTime;
-    public final double fadeTimeMs;
 
-    public LightningBolt(double startTime, double fadeTimeMs) {
-      this.startTime = startTime;
-      this.fadeTimeMs = fadeTimeMs;
-    }
-
-    public boolean isExpired(double currentTime) {
-      return (currentTime - startTime) > fadeTimeMs;
-    }
-
-    public double getFadeAmount(double currentTime) {
-      double elapsed = currentTime - startTime;
-      return Math.max(0, 1.0 - (elapsed / fadeTimeMs));
+    public LightningBolt() {
+      // Lightning bolts are now controlled by external envelope, no internal timing
     }
   }
 
@@ -165,8 +163,9 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
     addParameter("branchProbability", this.branchProbability);
     addParameter("displacement", this.displacement);
     addParameter("recursionDepth", this.recursionDepth);
-    addParameter("fadeTime", this.fadeTime);
+    addParameter("fade", this.fade);
     addParameter("thickness", this.thickness);
+    addParameter("startX", this.startX);
     addParameter("startSpread", this.startSpread);
     addParameter("endSpread", this.endSpread);
     addParameter("branchDistance", this.branchDistance);
@@ -176,6 +175,7 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
     addParameter("lsAngleVariation", this.lsAngleVariation);
     addParameter("lsLengthVariation", this.lsLengthVariation);
     addParameter("lsBranchAngle", this.lsBranchAngle);
+    addParameter("bleeding", this.bleeding);
     addParameter("rrtStepSize", this.rrtStepSize);
     addParameter("rrtGoalBias", this.rrtGoalBias);
     addParameter("rrtMaxIterations", this.rrtMaxIterations);
@@ -185,20 +185,20 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
   }
 
   private void trig() {
-    double currentTime = System.currentTimeMillis();
-    double fadeTimeMs = fadeTime.getValue() * 1000;
-    LightningBolt bolt = new LightningBolt(currentTime, fadeTimeMs);
-    
-    // Generate lightning based on selected algorithm
-    if (algorithm.getValuei() == 0) {
-      generateMidpointLightning(bolt);
-    } else if (algorithm.getValuei() == 1) {
-      generateLSystemLightning(bolt);
-    } else {
-      generateRRTLightning(bolt);
-    }
-    
+    // Clear existing bolts and create new one (single bolt controlled by envelope)
     synchronized (bolts) {
+      bolts.clear();
+      LightningBolt bolt = new LightningBolt();
+      
+      // Generate lightning based on selected algorithm
+      if (algorithm.getValuei() == 0) {
+        generateMidpointLightning(bolt);
+      } else if (algorithm.getValuei() == 1) {
+        generateLSystemLightning(bolt);
+      } else {
+        generateRRTLightning(bolt);
+      }
+      
       bolts.add(bolt);
     }
   }
@@ -209,6 +209,7 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
     MidpointDisplacementAlgorithm.Parameters params = new MidpointDisplacementAlgorithm.Parameters(
       displacement.getValue(),
       (int) recursionDepth.getValue(),
+      startX.getValue(),
       startSpread.getValue(),
       endSpread.getValue(),
       branchProbability.getValue(),
@@ -235,6 +236,7 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
       lsAngleVariation.getValue(),
       lsLengthVariation.getValue(),
       lsBranchAngle.getValue(),
+      startX.getValue(),
       RASTER_WIDTH,
       RASTER_HEIGHT
     );
@@ -258,6 +260,7 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
       rrtJaggedness.getValue(),
       rrtGoalRadius.getValue(),
       rrtElectricalField.getValue(),
+      startX.getValue(),
       RASTER_WIDTH,
       RASTER_HEIGHT
     );
@@ -275,19 +278,11 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
   protected void render(double deltaMs, Graphics2D graphics) {
     clear();
     
-    double currentTime = System.currentTimeMillis();
+    // Use fade envelope value directly
+    double fadeAmount = fade.getValue();
     
     synchronized (bolts) {
-      Iterator<LightningBolt> iterator = bolts.iterator();
-      while (iterator.hasNext()) {
-        LightningBolt bolt = iterator.next();
-        
-        if (bolt.isExpired(currentTime)) {
-          iterator.remove();
-          continue;
-        }
-        
-        double fadeAmount = bolt.getFadeAmount(currentTime);
+      for (LightningBolt bolt : bolts) {
         renderBolt(graphics, bolt, fadeAmount);
       }
     }
@@ -333,15 +328,16 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
       graphics.draw(path);
       
       // Add glow effect for bright segments
-      if (segmentAlpha > 0.5) {
+      double bleedingValue = bleeding.getValue();
+      if (segmentAlpha > 0.3 && bleedingValue > 0) {
         Color glowColor = new Color(
           (float) LXUtils.constrain(0.6 + 0.4 * segmentAlpha, 0, 1),
           (float) LXUtils.constrain(0.8 + 0.2 * segmentAlpha, 0, 1),
           (float) LXUtils.constrain(1.0, 0, 1),
-          (float) LXUtils.constrain(segmentAlpha * 0.3, 0, 1)
+          (float) LXUtils.constrain(segmentAlpha * 0.3 * bleedingValue, 0, 1)
         );
         graphics.setColor(glowColor);
-        graphics.setStroke(new BasicStroke(strokeWidth * 2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        graphics.setStroke(new BasicStroke((float)(strokeWidth * (1 + bleedingValue)), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         graphics.draw(path);
       }
     }
@@ -374,15 +370,16 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
       graphics.draw(path);
       
       // Add glow effect for bright segments
-      if (segmentAlpha > 0.4) {
+      double bleedingValue = bleeding.getValue();
+      if (segmentAlpha > 0.3 && bleedingValue > 0) {
         Color glowColor = new Color(
           (float) LXUtils.constrain(0.6 + 0.4 * segmentAlpha, 0, 1),
           (float) LXUtils.constrain(0.8 + 0.2 * segmentAlpha, 0, 1),
           (float) LXUtils.constrain(1.0, 0, 1),
-          (float) LXUtils.constrain(segmentAlpha * 0.3, 0, 1)
+          (float) LXUtils.constrain(segmentAlpha * 0.3 * bleedingValue, 0, 1)
         );
         graphics.setColor(glowColor);
-        graphics.setStroke(new BasicStroke(strokeWidth * 2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        graphics.setStroke(new BasicStroke((float)(strokeWidth * (1 + bleedingValue)), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         graphics.draw(path);
       }
     }
@@ -392,7 +389,8 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
     double alpha = fadeAmount * intensity.getValue();
     
     for (LightningSegment segment : bolt.segments) {
-      double segmentAlpha = alpha * segment.intensity;
+      // Boost RRT intensity to match other algorithms
+      double segmentAlpha = alpha * Math.max(0.8, segment.intensity * 1.2);
       
       // Create lightning color with fade - RRT uses slightly different coloring
       Color lightningColor = new Color(
@@ -416,15 +414,16 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
       graphics.draw(path);
       
       // Add glow effect for bright segments
-      if (segmentAlpha > 0.3) {
+      double bleedingValue = bleeding.getValue();
+      if (segmentAlpha > 0.2 && bleedingValue > 0) {
         Color glowColor = new Color(
           (float) LXUtils.constrain(0.5 + 0.5 * segmentAlpha, 0, 1),
           (float) LXUtils.constrain(0.7 + 0.3 * segmentAlpha, 0, 1),
           (float) LXUtils.constrain(1.0, 0, 1),
-          (float) LXUtils.constrain(segmentAlpha * 0.4, 0, 1)
+          (float) LXUtils.constrain(segmentAlpha * 0.4 * bleedingValue, 0, 1)
         );
         graphics.setColor(glowColor);
-        graphics.setStroke(new BasicStroke(strokeWidth * 2.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        graphics.setStroke(new BasicStroke((float)(strokeWidth * (1.5 + bleedingValue)), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         graphics.draw(path);
       }
     }
@@ -443,6 +442,14 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
       newButton(lightning.trig).setTriggerable(true).setBorderRounding(4),
       newDropMenu(lightning.algorithm).setTopMargin(6),
       newKnob(lightning.intensity).setTopMargin(6)
+    ).setChildSpacing(6);
+
+    addVerticalBreak(ui, uiDevice);
+
+    addColumn(uiDevice, "Settings",
+      newKnob(lightning.startX),
+      newKnob(lightning.fade),
+      newKnob(lightning.thickness)
     ).setChildSpacing(6);
 
     addVerticalBreak(ui, uiDevice);
@@ -496,8 +503,7 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
     addVerticalBreak(ui, uiDevice);
 
     addColumn(uiDevice, "Visual",
-      newKnob(lightning.fadeTime),
-      newKnob(lightning.thickness)
+      newKnob(lightning.bleeding)
     ).setChildSpacing(6);
     
     addVerticalBreak(ui, uiDevice);
