@@ -12,11 +12,12 @@ import heronarts.lx.LXComponentName;
 import heronarts.lx.midi.MidiNoteOn;
 import heronarts.lx.parameter.CompoundParameter;
 import heronarts.lx.parameter.DiscreteParameter;
-import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.parameter.TriggerParameter;
 import heronarts.lx.studio.LXStudio.UI;
 import heronarts.lx.studio.ui.device.UIDevice;
 import heronarts.lx.studio.ui.device.UIDeviceControls;
+import heronarts.glx.ui.UI2dContainer;
+import heronarts.glx.ui.UI2dComponent;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -149,8 +150,6 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
   }
 
   private final List<LightningBolt> bolts = new ArrayList<>();
-  private UIDevice currentUIDevice = null;
-  private UI currentUI = null;
 
   public Lightning(LX lx) {
     super(lx);
@@ -181,23 +180,6 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
     addParameter("rrtElectricalField", this.rrtElectricalField);
   }
 
-  @Override
-  public void onParameterChanged(LXParameter p) {
-    super.onParameterChanged(p);
-    if (p == this.algorithm && this.currentUIDevice != null && this.currentUI != null) {
-      // Rebuild the UI when algorithm changes
-      rebuildUI();
-    }
-  }
-
-  private void rebuildUI() {
-    if (this.currentUIDevice != null && this.currentUI != null) {
-      // Clear existing controls
-      this.currentUIDevice.removeAllChildren();
-      // Rebuild with current algorithm
-      buildDeviceControls(this.currentUI, this.currentUIDevice, this);
-    }
-  }
 
   private void trig() {
     // Clear existing bolts and create new one (single bolt controlled by envelope)
@@ -303,10 +285,6 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
 
   @Override
   public void buildDeviceControls(UI ui, UIDevice uiDevice, Lightning lightning) {
-    // Store references for dynamic updates
-    this.currentUI = ui;
-    this.currentUIDevice = uiDevice;
-    
     uiDevice.setLayout(UIDevice.Layout.HORIZONTAL, 6);
     
     // Always show trigger and algorithm controls
@@ -327,16 +305,52 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
 
     addVerticalBreak(ui, uiDevice);
 
-    // Show algorithm-specific controls based on current selection
-    int currentAlgorithm = lightning.algorithm.getValuei();
-    
-    if (currentAlgorithm == 0) { // Midpoint Displacement
-      buildMidpointControls(ui, uiDevice, lightning);
-    } else if (currentAlgorithm == 1) { // L-System
-      buildLSystemControls(ui, uiDevice, lightning);
-    } else if (currentAlgorithm == 2) { // RRT
-      buildRRTControls(ui, uiDevice, lightning);
-    }
+    // Create all algorithm-specific controls but manage their visibility
+    final UI2dComponent midpointBreak1 = addVerticalBreak(ui, uiDevice);
+    final UI2dContainer midpointCol1 = addColumn(uiDevice, "Midpoint",
+      newKnob(lightning.displacement),
+      newKnob(lightning.recursionDepth),
+      newKnob(lightning.startSpread)
+    ).setChildSpacing(6);
+
+    final UI2dComponent midpointBreak2 = addVerticalBreak(ui, uiDevice);
+    final UI2dContainer midpointCol2 = addColumn(uiDevice, "M-Spread",
+      newKnob(lightning.endSpread),
+      newKnob(lightning.branchProbability),
+      newKnob(lightning.branchDistance)
+    ).setChildSpacing(6);
+
+    final UI2dComponent midpointBreak3 = addVerticalBreak(ui, uiDevice);
+    final UI2dContainer midpointCol3 = addColumn(uiDevice, "M-Branch",
+      newKnob(lightning.branchAngle)
+    ).setChildSpacing(6);
+
+    final UI2dComponent lsystemBreak1 = addVerticalBreak(ui, uiDevice);
+    final UI2dContainer lsystemCol1 = addColumn(uiDevice, "L-System",
+      newKnob(lightning.lsIterations),
+      newKnob(lightning.lsSegmentLength),
+      newKnob(lightning.lsBranchAngle)
+    ).setChildSpacing(6);
+
+    final UI2dComponent lsystemBreak2 = addVerticalBreak(ui, uiDevice);
+    final UI2dContainer lsystemCol2 = addColumn(uiDevice, "LS-Variation",
+      newKnob(lightning.lsAngleVariation),
+      newKnob(lightning.lsLengthVariation)
+    ).setChildSpacing(6);
+
+    final UI2dComponent rrtBreak1 = addVerticalBreak(ui, uiDevice);
+    final UI2dContainer rrtCol1 = addColumn(uiDevice, "RRT",
+      newKnob(lightning.rrtStepSize),
+      newKnob(lightning.rrtGoalBias),
+      newKnob(lightning.rrtMaxIterations)
+    ).setChildSpacing(6);
+
+    final UI2dComponent rrtBreak2 = addVerticalBreak(ui, uiDevice);
+    final UI2dContainer rrtCol2 = addColumn(uiDevice, "RRT-Advanced",
+      newKnob(lightning.rrtJaggedness),
+      newKnob(lightning.rrtGoalRadius),
+      newKnob(lightning.rrtElectricalField)
+    ).setChildSpacing(6);
 
     // Always show visual and face controls
     addColumn(uiDevice, "Visual",
@@ -348,59 +362,34 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
     addColumn(uiDevice, "Faces",
       buildFaceControls(ui, uiDevice, 80)
     );
+
+    // Add listener to show/hide algorithm-specific controls
+    uiDevice.addListener(lightning.algorithm, p -> {
+      int algorithm = lightning.algorithm.getValuei();
+      
+      // Midpoint controls (algorithm 0)
+      boolean showMidpoint = (algorithm == 0);
+      midpointBreak1.setVisible(showMidpoint);
+      midpointCol1.setVisible(showMidpoint);
+      midpointBreak2.setVisible(showMidpoint);
+      midpointCol2.setVisible(showMidpoint);
+      midpointBreak3.setVisible(showMidpoint);
+      midpointCol3.setVisible(showMidpoint);
+      
+      // L-System controls (algorithm 1)
+      boolean showLSystem = (algorithm == 1);
+      lsystemBreak1.setVisible(showLSystem);
+      lsystemCol1.setVisible(showLSystem);
+      lsystemBreak2.setVisible(showLSystem);
+      lsystemCol2.setVisible(showLSystem);
+      
+      // RRT controls (algorithm 2)
+      boolean showRRT = (algorithm == 2);
+      rrtBreak1.setVisible(showRRT);
+      rrtCol1.setVisible(showRRT);
+      rrtBreak2.setVisible(showRRT);
+      rrtCol2.setVisible(showRRT);
+    }, true);
   }
 
-  private void buildMidpointControls(UI ui, UIDevice uiDevice, Lightning lightning) {
-    addColumn(uiDevice, "Midpoint",
-      newKnob(lightning.displacement),
-      newKnob(lightning.recursionDepth),
-      newKnob(lightning.startSpread),
-      newKnob(lightning.endSpread)
-    ).setChildSpacing(6);
-
-    addVerticalBreak(ui, uiDevice);
-
-    addColumn(uiDevice, "M-Branching",
-      newKnob(lightning.branchProbability),
-      newKnob(lightning.branchDistance),
-      newKnob(lightning.branchAngle)
-    ).setChildSpacing(6);
-
-    addVerticalBreak(ui, uiDevice);
-  }
-
-  private void buildLSystemControls(UI ui, UIDevice uiDevice, Lightning lightning) {
-    addColumn(uiDevice, "L-System",
-      newKnob(lightning.lsIterations),
-      newKnob(lightning.lsSegmentLength),
-      newKnob(lightning.lsBranchAngle)
-    ).setChildSpacing(6);
-
-    addVerticalBreak(ui, uiDevice);
-
-    addColumn(uiDevice, "LS-Variation",
-      newKnob(lightning.lsAngleVariation),
-      newKnob(lightning.lsLengthVariation)
-    ).setChildSpacing(6);
-
-    addVerticalBreak(ui, uiDevice);
-  }
-
-  private void buildRRTControls(UI ui, UIDevice uiDevice, Lightning lightning) {
-    addColumn(uiDevice, "RRT",
-      newKnob(lightning.rrtStepSize),
-      newKnob(lightning.rrtGoalBias),
-      newKnob(lightning.rrtMaxIterations)
-    ).setChildSpacing(6);
-
-    addVerticalBreak(ui, uiDevice);
-
-    addColumn(uiDevice, "RRT-Advanced",
-      newKnob(lightning.rrtJaggedness),
-      newKnob(lightning.rrtGoalRadius),
-      newKnob(lightning.rrtElectricalField)
-    ).setChildSpacing(6);
-
-    addVerticalBreak(ui, uiDevice);
-  }
 }
