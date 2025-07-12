@@ -96,19 +96,15 @@ This algorithm can also generate interesting lightning patterns:
 
 ### Current Implementation
 
-The lightning package contains two main implementations:
+The lightning package contains one main implementation:
 
-**Lightning.java** - 2D Raster Lightning
+**Lightning.java** - 2D Raster Lightning Pattern
 - Extends `ApotheneumRasterPattern` for 2D graphics rendering
-- Supports both Midpoint Displacement and L-System algorithms
+- Supports three algorithms: Midpoint Displacement, L-System, and RRT
 - Renders to 2D raster buffer, then maps to installation geometry
 - Uses `Graphics2D` for drawing lightning segments with glow effects
-
-**Lightning3D.java** - 3D Space Lightning
-- Extends `ApotheneumPattern` for direct 3D LED manipulation
-- Generates lightning paths in 3D space within cube/cylinder geometry
-- Uses distance calculations to determine LED brightness based on proximity to lightning segments
-- Supports targeting cube, cylinder, or both geometries
+- Features dynamic UI that shows only controls relevant to the selected algorithm
+- All algorithms use the common `LightningSegment` class for consistency
 
 ### Algorithm Implementation Details
 
@@ -134,42 +130,59 @@ The lightning package contains two main implementations:
 - Configurable electrical field for realistic discharge patterns
 - Support for obstacle avoidance and complex boundary handling
 - Integrated into Lightning.java pattern with full UI support
+- Optimized rendering with reduced glow for sharper lightning appearance
 
 ### Common Classes
 
 **LightningSegment.java**
 - Common segment representation for all algorithms
-- Conversion methods: `fromMidpoint()`, `fromLSystem()`, and `fromRRT()`
+- Used directly by all three algorithms (no conversion methods needed)
 - Stores position, intensity, branching info, and depth
 
 ### Apotheneum-Specific Considerations
-- 2D version uses raster pattern for face-based rendering
-- 3D version works directly with LED points in 3D space
-- Both support MIDI triggering and fade-out trails
-- Lightning can originate from various points and target different geometries
+- Uses raster pattern for face-based rendering across cube and cylinder surfaces
+- Supports MIDI triggering and external envelope control for fade effects
+- Lightning originates from configurable X position across the top
+- Dynamic UI shows only relevant controls for the selected algorithm
+- All three algorithms maintain consistent segment representation
 
-### Recommended Usage
-1. Use **Lightning** (2D) for face-based effects with complex visual rendering
-2. Use **Lightning3D** for volumetric lightning effects within the installation
-3. Both support multiple simultaneous lightning strikes
-4. Implement fade-out trails for realistic visual persistence
+### UI Features
+- **Dynamic Interface**: UI automatically shows only controls relevant to the selected algorithm
+- **Algorithm Selection**: Dropdown to choose between Midpoint, L-System, and RRT
+- **Real-time Updates**: UI rebuilds immediately when algorithm changes
+- **Organized Controls**: Maximum 3 controls per column for clean layout
+- **Algorithm-Specific Parameters**: Each algorithm has its own dedicated control sections
 
 ## Parameters
 
-### 2D Lightning Parameters
+### Lightning Pattern Parameters
+
+**Common Controls (Always Visible)**:
 - `algorithm` - Choose between Midpoint Displacement, L-System, and RRT
 - `trig` - Manual trigger for lightning strikes
 - `intensity` - Overall brightness multiplier
-- `branchProbability` - Likelihood of creating branches
-- `displacement` - Maximum perpendicular displacement (Midpoint)
-- `recursionDepth` - Subdivision levels for detail
-- `fadeTime` - Duration for lightning trails to fade
+- `startX` - Starting X position across the top (0=left, 1=right)
+- `fade` - External envelope control for lightning fade
 - `thickness` - Base thickness of lightning bolts
-- `startSpread`/`endSpread` - Distribution of lightning endpoints
+- `bleeding` - Glow/bleeding effect strength for all algorithms
+
+**Midpoint Displacement Controls**:
+- `displacement` - Maximum perpendicular displacement
+- `recursionDepth` - Subdivision levels for detail
+- `startSpread` - How spread out lightning start points are
+- `endSpread` - How spread out lightning end points are
+- `branchProbability` - Likelihood of creating branches
+- `branchDistance` - Maximum distance branches can extend
+- `branchAngle` - How much branches can deviate from main bolt
+
+**L-System Controls**:
 - `lsIterations` - Number of L-system iterations
 - `lsSegmentLength` - Base length of L-system segments
+- `lsBranchAngle` - Base angle for L-system branches in degrees
 - `lsAngleVariation` - Random variation in L-system angles
-- `lsBranchAngle` - Base angle for L-system branches
+- `lsLengthVariation` - Random variation in L-system segment lengths
+
+**RRT Controls**:
 - `rrtStepSize` - Distance of each RRT tree extension
 - `rrtGoalBias` - Probability of sampling from goal region (0.0-1.0)
 - `rrtMaxIterations` - Maximum number of RRT tree extensions
@@ -177,19 +190,12 @@ The lightning package contains two main implementations:
 - `rrtGoalRadius` - Size of target region considered "reached"
 - `rrtElectricalField` - Electrical field strength for biased sampling
 
-### 3D Lightning Parameters
-- `target` - Which geometry to target (Cube/Cylinder/Both)
-- `trig` - Manual trigger for lightning strikes
-- `intensity` - Overall brightness multiplier
-- `fadeTime` - Duration for lightning trails to fade
-- `thickness` - 3D thickness for proximity calculations
-- `branchProbability` - Likelihood of creating branches
-- `segmentLength` - Length of individual lightning segments
-- `angleVariation` - Random variation in lightning direction
-- `verticalBias` - Bias towards vertical movement
-
 ### Known Issues Fixed
 - **L-System Intensity**: Fixed excessive fading by improving intensity calculation
 - **L-System Direction**: Fixed angle calculations for proper downward movement
 - **Edge Artifacts**: Prevented segments from being drawn when constrained to bounds
 - **Angle Variation**: Reduced excessive randomness in branch directions
+- **RRT Blur**: Reduced glow effect for sharper lightning appearance
+- **RRT Thickness**: Fixed thickness parameter scaling for proper visual control
+- **Dynamic UI**: Implemented proper parameter-based visibility using UI component listeners
+- **Segment Consistency**: All algorithms now use common LightningSegment class directly

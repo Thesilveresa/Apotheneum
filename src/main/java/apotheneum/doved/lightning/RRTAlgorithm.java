@@ -284,40 +284,40 @@ public class RRTAlgorithm {
     double alpha = fadeAmount * intensityValue;
 
     for (LightningSegment segment : segments) {
-      // Boost RRT intensity to match other algorithms
-      double segmentAlpha = alpha * Math.max(0.8, segment.intensity * 1.2);
+      // More controlled intensity boost for RRT - avoid over-brightening
+      double segmentAlpha = alpha * Math.max(0.9, segment.intensity * 1.1);
 
-      // Create lightning color with fade - RRT uses slightly different coloring
+      // Create sharp lightning color with high contrast
       Color lightningColor = new Color(
-          (float) LXUtils.constrain(0.7 + 0.3 * segmentAlpha, 0, 1), // R - slightly more red
-          (float) LXUtils.constrain(0.85 + 0.15 * segmentAlpha, 0, 1), // G
+          (float) LXUtils.constrain(0.85 + 0.15 * segmentAlpha, 0, 1), // R - brighter core
+          (float) LXUtils.constrain(0.9 + 0.1 * segmentAlpha, 0, 1), // G
           (float) LXUtils.constrain(1.0, 0, 1), // B
           (float) LXUtils.constrain(segmentAlpha, 0, 1) // A
       );
 
-      graphics.setColor(lightningColor);
-
-      // Set stroke thickness based on depth and branch status
+      // Draw main lightning bolt with proper thickness scaling
       float strokeWidth = (float) (thicknessValue *
-          (segment.isBranch ? 0.6 : 1.0) / (1.0 + segment.depth * 0.2));
+          (segment.isBranch ? 0.7 : 1.0) * Math.max(0.5, 1.0 - segment.depth * 0.1));
+      graphics.setColor(lightningColor);
       graphics.setStroke(new BasicStroke(strokeWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 
-      // Draw the lightning segment
       Path2D path = new Path2D.Double();
       path.moveTo(segment.x1, segment.y1);
       path.lineTo(segment.x2, segment.y2);
       graphics.draw(path);
 
-      // Add glow effect for bright segments
-      if (segmentAlpha > 0.2 && bleedingValue > 0) {
+      // Add much more subtle glow effect only when bleeding is enabled
+      if (segmentAlpha > 0.4 && bleedingValue > 0.1) {
         Color glowColor = new Color(
-            (float) LXUtils.constrain(0.5 + 0.5 * segmentAlpha, 0, 1),
-            (float) LXUtils.constrain(0.7 + 0.3 * segmentAlpha, 0, 1),
+            (float) LXUtils.constrain(0.6 + 0.4 * segmentAlpha, 0, 1),
+            (float) LXUtils.constrain(0.75 + 0.25 * segmentAlpha, 0, 1),
             (float) LXUtils.constrain(1.0, 0, 1),
-            (float) LXUtils.constrain(segmentAlpha * 0.4 * bleedingValue, 0, 1));
+            (float) LXUtils.constrain(segmentAlpha * 0.2 * bleedingValue, 0, 1)); // Much less glow opacity
         graphics.setColor(glowColor);
-        graphics.setStroke(new BasicStroke((float) (strokeWidth * (1.5 + bleedingValue)), BasicStroke.CAP_ROUND,
-            BasicStroke.JOIN_ROUND));
+        
+        // Reduced glow thickness - only slightly wider than main stroke
+        float glowWidth = (float) (strokeWidth * (1.0 + bleedingValue * 0.5));
+        graphics.setStroke(new BasicStroke(glowWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         graphics.draw(path);
       }
     }
