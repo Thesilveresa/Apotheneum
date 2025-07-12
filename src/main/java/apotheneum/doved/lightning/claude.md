@@ -48,35 +48,86 @@ This algorithm can also generate interesting lightning patterns:
 
 ## Implementation Notes
 
-### Apotheneum-Specific Considerations
-- The Lightning pattern should extend `ApotheneumPattern` for access to geometry utilities
-- Consider using both cube faces and cylinder surfaces for 3D lightning effects
-- Use `copyCubeFace()` or `copyExterior()` to mirror lightning across surfaces
-- Lightning can originate from doors or travel between cube and cylinder
+### Current Implementation
 
-### Recommended Approach
-1. Use **Midpoint Displacement Algorithm** for main lightning bolts
-2. Generate lightning paths in 2D space, then map to 3D installation geometry
-3. Support multiple simultaneous lightning strikes
+The lightning package contains two main implementations:
+
+**Lightning.java** - 2D Raster Lightning
+- Extends `ApotheneumRasterPattern` for 2D graphics rendering
+- Supports both Midpoint Displacement and L-System algorithms
+- Renders to 2D raster buffer, then maps to installation geometry
+- Uses `Graphics2D` for drawing lightning segments with glow effects
+
+**Lightning3D.java** - 3D Space Lightning
+- Extends `ApotheneumPattern` for direct 3D LED manipulation
+- Generates lightning paths in 3D space within cube/cylinder geometry
+- Uses distance calculations to determine LED brightness based on proximity to lightning segments
+- Supports targeting cube, cylinder, or both geometries
+
+### Algorithm Implementation Details
+
+**Midpoint Displacement Algorithm**
+- Implemented in `MidpointDisplacementAlgorithm.java`
+- Recursive subdivision with perpendicular displacement
+- Configurable branching probability and branch angles
+- Handles boundary constraints to prevent edge artifacts
+
+**L-System Algorithm**
+- Implemented in `LSystemAlgorithm.java`
+- Uses rule: `F → F[+F][-F]F` for fractal branching
+- Fixed intensity calculation to prevent excessive fading: `Math.max(0.4, 1.0 - depth * 0.15)`
+- Improved angle calculations for proper downward lightning direction
+- Boundary checking prevents segments from creating edge artifacts
+
+### Common Classes
+
+**LightningSegment.java**
+- Common segment representation for both algorithms
+- Conversion methods: `fromMidpoint()` and `fromLSystem()`
+- Stores position, intensity, branching info, and depth
+
+### Apotheneum-Specific Considerations
+- 2D version uses raster pattern for face-based rendering
+- 3D version works directly with LED points in 3D space
+- Both support MIDI triggering and fade-out trails
+- Lightning can originate from various points and target different geometries
+
+### Recommended Usage
+1. Use **Lightning** (2D) for face-based effects with complex visual rendering
+2. Use **Lightning3D** for volumetric lightning effects within the installation
+3. Both support multiple simultaneous lightning strikes
 4. Implement fade-out trails for realistic visual persistence
 
 ## Parameters
 
-### Suggested Parameters
-- `trig` - **TriggerParameter** to manually trigger lightning strikes (like Raindrops)
-- `intensity` - Overall brightness of lightning
-- `branchProbability` - Likelihood of creating branches during displacement
-- `displacement` - Maximum perpendicular displacement for midpoint algorithm
-- `recursionDepth` - Maximum subdivision levels for detail
+### 2D Lightning Parameters
+- `algorithm` - Choose between Midpoint Displacement and L-System
+- `trig` - Manual trigger for lightning strikes
+- `intensity` - Overall brightness multiplier
+- `branchProbability` - Likelihood of creating branches
+- `displacement` - Maximum perpendicular displacement (Midpoint)
+- `recursionDepth` - Subdivision levels for detail
 - `fadeTime` - Duration for lightning trails to fade
-- `color` - Lightning color (default: blue-white)
 - `thickness` - Base thickness of lightning bolts
-- `branchThickness` - Thickness multiplier for branches
+- `startSpread`/`endSpread` - Distribution of lightning endpoints
+- `lsIterations` - Number of L-system iterations
+- `lsSegmentLength` - Base length of L-system segments
+- `lsAngleVariation` - Random variation in L-system angles
+- `lsBranchAngle` - Base angle for L-system branches
 
-### Trigger Implementation
-Following the Raindrops pattern approach:
-- Use `TriggerParameter` for manual lightning strikes
-- Implement `Midi` interface for MIDI note triggers
-- Create `Lightning.Bolt` inner class (similar to `Raindrops.Drop`)
-- Use `LXLayer` system for individual lightning bolts
-- Each triggered bolt runs independently with its own lifecycle
+### 3D Lightning Parameters
+- `target` - Which geometry to target (Cube/Cylinder/Both)
+- `trig` - Manual trigger for lightning strikes
+- `intensity` - Overall brightness multiplier
+- `fadeTime` - Duration for lightning trails to fade
+- `thickness` - 3D thickness for proximity calculations
+- `branchProbability` - Likelihood of creating branches
+- `segmentLength` - Length of individual lightning segments
+- `angleVariation` - Random variation in lightning direction
+- `verticalBias` - Bias towards vertical movement
+
+### Known Issues Fixed
+- **L-System Intensity**: Fixed excessive fading by improving intensity calculation
+- **L-System Direction**: Fixed angle calculations for proper downward movement
+- **Edge Artifacts**: Prevented segments from being drawn when constrained to bounds
+- **Angle Variation**: Reduced excessive randomness in branch directions
