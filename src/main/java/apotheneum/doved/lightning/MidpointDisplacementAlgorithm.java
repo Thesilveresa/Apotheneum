@@ -1,6 +1,10 @@
 package apotheneum.doved.lightning;
 
 import heronarts.lx.utils.LXUtils;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.Path2D;
 import java.util.List;
 
 public class MidpointDisplacementAlgorithm {
@@ -33,20 +37,6 @@ public class MidpointDisplacementAlgorithm {
     }
   }
   
-  public static class LightningSegment {
-    public final double x1, y1, x2, y2;
-    public final boolean isBranch;
-    public final double intensity;
-    
-    public LightningSegment(double x1, double y1, double x2, double y2, boolean isBranch, double intensity) {
-      this.x1 = x1;
-      this.y1 = y1;
-      this.x2 = x2;
-      this.y2 = y2;
-      this.isBranch = isBranch;
-      this.intensity = intensity;
-    }
-  }
   
   public static void generateLightning(List<LightningSegment> segments, Parameters params) {
     // Generate lightning from top to bottom using spread controls
@@ -71,7 +61,7 @@ public class MidpointDisplacementAlgorithm {
                                               double x1, double y1, double x2, double y2, 
                                               boolean isBranch, double intensity, int depth) {
     if (depth >= params.recursionDepth) {
-      segments.add(new LightningSegment(x1, y1, x2, y2, isBranch, intensity));
+      segments.add(new LightningSegment(x1, y1, x2, y2, isBranch, intensity, depth));
       return;
     }
 
@@ -125,6 +115,50 @@ public class MidpointDisplacementAlgorithm {
       branchEndY = LXUtils.constrain(branchEndY, 0, params.rasterHeight - 1);
       
       generateLightningSegments(segments, params, midX, midY, branchEndX, branchEndY, true, intensity * 0.7, depth + 1);
+    }
+  }
+  
+  public static void render(Graphics2D graphics, List<LightningSegment> segments, double fadeAmount, double intensityValue, double thicknessValue, double bleedingValue) {
+    double alpha = fadeAmount * intensityValue;
+    
+    for (LightningSegment segment : segments) {
+      double segmentAlpha = alpha * segment.intensity;
+      if (segment.isBranch) {
+        segmentAlpha *= 0.7;
+      }
+      
+      // Create lightning color with fade
+      Color lightningColor = new Color(
+        (float) LXUtils.constrain(0.8 + 0.2 * segmentAlpha, 0, 1),  // R
+        (float) LXUtils.constrain(0.9 + 0.1 * segmentAlpha, 0, 1),  // G
+        (float) LXUtils.constrain(1.0, 0, 1),                       // B
+        (float) LXUtils.constrain(segmentAlpha, 0, 1)               // A
+      );
+      
+      graphics.setColor(lightningColor);
+      
+      // Set stroke thickness - branches are thinner
+      float strokeWidth = (float) (thicknessValue * (segment.isBranch ? 0.5 : 1.0));
+      graphics.setStroke(new BasicStroke(strokeWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+      
+      // Draw the lightning segment
+      Path2D path = new Path2D.Double();
+      path.moveTo(segment.x1, segment.y1);
+      path.lineTo(segment.x2, segment.y2);
+      graphics.draw(path);
+      
+      // Add glow effect for bright segments
+      if (segmentAlpha > 0.3 && bleedingValue > 0) {
+        Color glowColor = new Color(
+          (float) LXUtils.constrain(0.6 + 0.4 * segmentAlpha, 0, 1),
+          (float) LXUtils.constrain(0.8 + 0.2 * segmentAlpha, 0, 1),
+          (float) LXUtils.constrain(1.0, 0, 1),
+          (float) LXUtils.constrain(segmentAlpha * 0.3 * bleedingValue, 0, 1)
+        );
+        graphics.setColor(glowColor);
+        graphics.setStroke(new BasicStroke((float)(strokeWidth * (1 + bleedingValue)), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        graphics.draw(path);
+      }
     }
   }
 }

@@ -19,19 +19,5 @@ public class LightningSegment {
     this.intensity = intensity;
     this.depth = depth;
   }
-  
-  // Convert from MidpointDisplacementAlgorithm.LightningSegment
-  public static LightningSegment fromMidpoint(MidpointDisplacementAlgorithm.LightningSegment segment) {
-    return new LightningSegment(segment.x1, segment.y1, segment.x2, segment.y2, segment.isBranch, segment.intensity, 0);
-  }
-  
-  // Convert from LSystemAlgorithm.LightningSegment
-  public static LightningSegment fromLSystem(LSystemAlgorithm.LightningSegment segment) {
-    return new LightningSegment(segment.x1, segment.y1, segment.x2, segment.y2, segment.isBranch, segment.intensity, segment.depth);
-  }
-  
-  // Convert from RRTAlgorithm.LightningSegment
-  public static LightningSegment fromRRT(RRTAlgorithm.LightningSegment segment) {
-    return new LightningSegment(segment.x1, segment.y1, segment.x2, segment.y2, segment.isBranch, segment.intensity, segment.depth);
-  }
+
 }

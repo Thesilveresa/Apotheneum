@@ -12,18 +12,13 @@ import heronarts.lx.LXComponentName;
 import heronarts.lx.midi.MidiNoteOn;
 import heronarts.lx.parameter.CompoundParameter;
 import heronarts.lx.parameter.DiscreteParameter;
+import heronarts.lx.parameter.LXParameter;
 import heronarts.lx.parameter.TriggerParameter;
 import heronarts.lx.studio.LXStudio.UI;
 import heronarts.lx.studio.ui.device.UIDevice;
 import heronarts.lx.studio.ui.device.UIDeviceControls;
-import heronarts.lx.utils.LXUtils;
-
-import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.geom.Path2D;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @LXCategory("Apotheneum/doved")
@@ -154,6 +149,8 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
   }
 
   private final List<LightningBolt> bolts = new ArrayList<>();
+  private UIDevice currentUIDevice = null;
+  private UI currentUI = null;
 
   public Lightning(LX lx) {
     super(lx);
@@ -184,6 +181,24 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
     addParameter("rrtElectricalField", this.rrtElectricalField);
   }
 
+  @Override
+  public void onParameterChanged(LXParameter p) {
+    super.onParameterChanged(p);
+    if (p == this.algorithm && this.currentUIDevice != null && this.currentUI != null) {
+      // Rebuild the UI when algorithm changes
+      rebuildUI();
+    }
+  }
+
+  private void rebuildUI() {
+    if (this.currentUIDevice != null && this.currentUI != null) {
+      // Clear existing controls
+      this.currentUIDevice.removeAllChildren();
+      // Rebuild with current algorithm
+      buildDeviceControls(this.currentUI, this.currentUIDevice, this);
+    }
+  }
+
   private void trig() {
     // Clear existing bolts and create new one (single bolt controlled by envelope)
     synchronized (bolts) {
@@ -204,8 +219,6 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
   }
   
   private void generateMidpointLightning(LightningBolt bolt) {
-    List<MidpointDisplacementAlgorithm.LightningSegment> midpointSegments = new ArrayList<>();
-    
     MidpointDisplacementAlgorithm.Parameters params = new MidpointDisplacementAlgorithm.Parameters(
       displacement.getValue(),
       (int) recursionDepth.getValue(),
@@ -219,17 +232,10 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
       RASTER_HEIGHT
     );
     
-    MidpointDisplacementAlgorithm.generateLightning(midpointSegments, params);
-    
-    // Convert to common lightning segments
-    for (MidpointDisplacementAlgorithm.LightningSegment segment : midpointSegments) {
-      bolt.segments.add(LightningSegment.fromMidpoint(segment));
-    }
+    MidpointDisplacementAlgorithm.generateLightning(bolt.segments, params);
   }
   
   private void generateLSystemLightning(LightningBolt bolt) {
-    List<LSystemAlgorithm.LightningSegment> lSystemSegments = new ArrayList<>();
-    
     LSystemAlgorithm.Parameters params = new LSystemAlgorithm.Parameters(
       (int) lsIterations.getValue(),
       lsSegmentLength.getValue(),
@@ -241,17 +247,10 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
       RASTER_HEIGHT
     );
     
-    LSystemAlgorithm.generateLightning(lSystemSegments, params);
-    
-    // Convert to common lightning segments
-    for (LSystemAlgorithm.LightningSegment segment : lSystemSegments) {
-      bolt.segments.add(LightningSegment.fromLSystem(segment));
-    }
+    LSystemAlgorithm.generateLightning(bolt.segments, params);
   }
   
   private void generateRRTLightning(LightningBolt bolt) {
-    List<RRTAlgorithm.LightningSegment> rrtSegments = new ArrayList<>();
-    
     RRTAlgorithm.Parameters params = new RRTAlgorithm.Parameters(
       rrtStepSize.getValue(),
       rrtGoalBias.getValue(),
@@ -265,12 +264,7 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
       RASTER_HEIGHT
     );
     
-    RRTAlgorithm.generateLightning(rrtSegments, params);
-    
-    // Convert to common lightning segments
-    for (RRTAlgorithm.LightningSegment segment : rrtSegments) {
-      bolt.segments.add(LightningSegment.fromRRT(segment));
-    }
+    RRTAlgorithm.generateLightning(bolt.segments, params);
   }
 
 
@@ -289,143 +283,16 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
   }
 
   private void renderBolt(Graphics2D graphics, LightningBolt bolt, double fadeAmount) {
+    double intensityValue = intensity.getValue();
+    double thicknessValue = thickness.getValue();
+    double bleedingValue = bleeding.getValue();
+    
     if (algorithm.getValuei() == 0) {
-      renderMidpointBolt(graphics, bolt, fadeAmount);
+      MidpointDisplacementAlgorithm.render(graphics, bolt.segments, fadeAmount, intensityValue, thicknessValue, bleedingValue);
     } else if (algorithm.getValuei() == 1) {
-      renderLSystemBolt(graphics, bolt, fadeAmount);
+      LSystemAlgorithm.render(graphics, bolt.segments, fadeAmount, intensityValue, thicknessValue, bleedingValue);
     } else {
-      renderRRTBolt(graphics, bolt, fadeAmount);
-    }
-  }
-  
-  private void renderMidpointBolt(Graphics2D graphics, LightningBolt bolt, double fadeAmount) {
-    double alpha = fadeAmount * intensity.getValue();
-    
-    for (LightningSegment segment : bolt.segments) {
-      double segmentAlpha = alpha * segment.intensity;
-      if (segment.isBranch) {
-        segmentAlpha *= 0.7;
-      }
-      
-      // Create lightning color with fade
-      Color lightningColor = new Color(
-        (float) LXUtils.constrain(0.8 + 0.2 * segmentAlpha, 0, 1),  // R
-        (float) LXUtils.constrain(0.9 + 0.1 * segmentAlpha, 0, 1),  // G
-        (float) LXUtils.constrain(1.0, 0, 1),                       // B
-        (float) LXUtils.constrain(segmentAlpha, 0, 1)               // A
-      );
-      
-      graphics.setColor(lightningColor);
-      
-      // Set stroke thickness - branches are thinner
-      float strokeWidth = (float) (thickness.getValue() * (segment.isBranch ? 0.5 : 1.0));
-      graphics.setStroke(new BasicStroke(strokeWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-      
-      // Draw the lightning segment
-      Path2D path = new Path2D.Double();
-      path.moveTo(segment.x1, segment.y1);
-      path.lineTo(segment.x2, segment.y2);
-      graphics.draw(path);
-      
-      // Add glow effect for bright segments
-      double bleedingValue = bleeding.getValue();
-      if (segmentAlpha > 0.3 && bleedingValue > 0) {
-        Color glowColor = new Color(
-          (float) LXUtils.constrain(0.6 + 0.4 * segmentAlpha, 0, 1),
-          (float) LXUtils.constrain(0.8 + 0.2 * segmentAlpha, 0, 1),
-          (float) LXUtils.constrain(1.0, 0, 1),
-          (float) LXUtils.constrain(segmentAlpha * 0.3 * bleedingValue, 0, 1)
-        );
-        graphics.setColor(glowColor);
-        graphics.setStroke(new BasicStroke((float)(strokeWidth * (1 + bleedingValue)), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        graphics.draw(path);
-      }
-    }
-  }
-  
-  private void renderLSystemBolt(Graphics2D graphics, LightningBolt bolt, double fadeAmount) {
-    double alpha = fadeAmount * intensity.getValue();
-    
-    for (LightningSegment segment : bolt.segments) {
-      double segmentAlpha = alpha * segment.intensity;
-      
-      // Create lightning color with fade
-      Color lightningColor = new Color(
-        (float) LXUtils.constrain(0.8 + 0.2 * segmentAlpha, 0, 1),  // R
-        (float) LXUtils.constrain(0.9 + 0.1 * segmentAlpha, 0, 1),  // G
-        (float) LXUtils.constrain(1.0, 0, 1),                       // B
-        (float) LXUtils.constrain(segmentAlpha, 0, 1)               // A
-      );
-      
-      graphics.setColor(lightningColor);
-      
-      // Set stroke thickness based on depth - deeper branches are thinner
-      float strokeWidth = (float) (thickness.getValue() / (1.0 + segment.depth * 0.3));
-      graphics.setStroke(new BasicStroke(strokeWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-      
-      // Draw the lightning segment
-      Path2D path = new Path2D.Double();
-      path.moveTo(segment.x1, segment.y1);
-      path.lineTo(segment.x2, segment.y2);
-      graphics.draw(path);
-      
-      // Add glow effect for bright segments
-      double bleedingValue = bleeding.getValue();
-      if (segmentAlpha > 0.3 && bleedingValue > 0) {
-        Color glowColor = new Color(
-          (float) LXUtils.constrain(0.6 + 0.4 * segmentAlpha, 0, 1),
-          (float) LXUtils.constrain(0.8 + 0.2 * segmentAlpha, 0, 1),
-          (float) LXUtils.constrain(1.0, 0, 1),
-          (float) LXUtils.constrain(segmentAlpha * 0.3 * bleedingValue, 0, 1)
-        );
-        graphics.setColor(glowColor);
-        graphics.setStroke(new BasicStroke((float)(strokeWidth * (1 + bleedingValue)), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        graphics.draw(path);
-      }
-    }
-  }
-  
-  private void renderRRTBolt(Graphics2D graphics, LightningBolt bolt, double fadeAmount) {
-    double alpha = fadeAmount * intensity.getValue();
-    
-    for (LightningSegment segment : bolt.segments) {
-      // Boost RRT intensity to match other algorithms
-      double segmentAlpha = alpha * Math.max(0.8, segment.intensity * 1.2);
-      
-      // Create lightning color with fade - RRT uses slightly different coloring
-      Color lightningColor = new Color(
-        (float) LXUtils.constrain(0.7 + 0.3 * segmentAlpha, 0, 1),  // R - slightly more red
-        (float) LXUtils.constrain(0.85 + 0.15 * segmentAlpha, 0, 1), // G
-        (float) LXUtils.constrain(1.0, 0, 1),                        // B
-        (float) LXUtils.constrain(segmentAlpha, 0, 1)                // A
-      );
-      
-      graphics.setColor(lightningColor);
-      
-      // Set stroke thickness based on depth and branch status
-      float strokeWidth = (float) (thickness.getValue() * 
-        (segment.isBranch ? 0.6 : 1.0) / (1.0 + segment.depth * 0.2));
-      graphics.setStroke(new BasicStroke(strokeWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-      
-      // Draw the lightning segment
-      Path2D path = new Path2D.Double();
-      path.moveTo(segment.x1, segment.y1);
-      path.lineTo(segment.x2, segment.y2);
-      graphics.draw(path);
-      
-      // Add glow effect for bright segments
-      double bleedingValue = bleeding.getValue();
-      if (segmentAlpha > 0.2 && bleedingValue > 0) {
-        Color glowColor = new Color(
-          (float) LXUtils.constrain(0.5 + 0.5 * segmentAlpha, 0, 1),
-          (float) LXUtils.constrain(0.7 + 0.3 * segmentAlpha, 0, 1),
-          (float) LXUtils.constrain(1.0, 0, 1),
-          (float) LXUtils.constrain(segmentAlpha * 0.4 * bleedingValue, 0, 1)
-        );
-        graphics.setColor(glowColor);
-        graphics.setStroke(new BasicStroke((float)(strokeWidth * (1.5 + bleedingValue)), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        graphics.draw(path);
-      }
+      RRTAlgorithm.render(graphics, bolt.segments, fadeAmount, intensityValue, thicknessValue, bleedingValue);
     }
   }
 
@@ -436,8 +303,13 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
 
   @Override
   public void buildDeviceControls(UI ui, UIDevice uiDevice, Lightning lightning) {
+    // Store references for dynamic updates
+    this.currentUI = ui;
+    this.currentUIDevice = uiDevice;
+    
     uiDevice.setLayout(UIDevice.Layout.HORIZONTAL, 6);
     
+    // Always show trigger and algorithm controls
     addColumn(uiDevice, "Trigger",
       newButton(lightning.trig).setTriggerable(true).setBorderRounding(4),
       newDropMenu(lightning.algorithm).setTopMargin(6),
@@ -446,6 +318,7 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
 
     addVerticalBreak(ui, uiDevice);
 
+    // Always show common settings
     addColumn(uiDevice, "Settings",
       newKnob(lightning.startX),
       newKnob(lightning.fade),
@@ -454,6 +327,30 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
 
     addVerticalBreak(ui, uiDevice);
 
+    // Show algorithm-specific controls based on current selection
+    int currentAlgorithm = lightning.algorithm.getValuei();
+    
+    if (currentAlgorithm == 0) { // Midpoint Displacement
+      buildMidpointControls(ui, uiDevice, lightning);
+    } else if (currentAlgorithm == 1) { // L-System
+      buildLSystemControls(ui, uiDevice, lightning);
+    } else if (currentAlgorithm == 2) { // RRT
+      buildRRTControls(ui, uiDevice, lightning);
+    }
+
+    // Always show visual and face controls
+    addColumn(uiDevice, "Visual",
+      newKnob(lightning.bleeding)
+    ).setChildSpacing(6);
+    
+    addVerticalBreak(ui, uiDevice);
+    
+    addColumn(uiDevice, "Faces",
+      buildFaceControls(ui, uiDevice, 80)
+    );
+  }
+
+  private void buildMidpointControls(UI ui, UIDevice uiDevice, Lightning lightning) {
     addColumn(uiDevice, "Midpoint",
       newKnob(lightning.displacement),
       newKnob(lightning.recursionDepth),
@@ -470,7 +367,9 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
     ).setChildSpacing(6);
 
     addVerticalBreak(ui, uiDevice);
+  }
 
+  private void buildLSystemControls(UI ui, UIDevice uiDevice, Lightning lightning) {
     addColumn(uiDevice, "L-System",
       newKnob(lightning.lsIterations),
       newKnob(lightning.lsSegmentLength),
@@ -485,7 +384,9 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
     ).setChildSpacing(6);
 
     addVerticalBreak(ui, uiDevice);
+  }
 
+  private void buildRRTControls(UI ui, UIDevice uiDevice, Lightning lightning) {
     addColumn(uiDevice, "RRT",
       newKnob(lightning.rrtStepSize),
       newKnob(lightning.rrtGoalBias),
@@ -501,15 +402,5 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
     ).setChildSpacing(6);
 
     addVerticalBreak(ui, uiDevice);
-
-    addColumn(uiDevice, "Visual",
-      newKnob(lightning.bleeding)
-    ).setChildSpacing(6);
-    
-    addVerticalBreak(ui, uiDevice);
-    
-    addColumn(uiDevice, "Faces",
-      buildFaceControls(ui, uiDevice, 80)
-    );
   }
 }
