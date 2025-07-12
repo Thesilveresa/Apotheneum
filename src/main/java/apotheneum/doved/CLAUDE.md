@@ -1,0 +1,88 @@
+# CLAUDE.md - Doved Package
+
+This file provides guidance to Claude Code (claude.ai/code) when working with the doved package in the Apotheneum repository.
+
+## Package Overview
+
+The `apotheneum.doved` package contains image rendering and deformation utilities for the Apotheneum LED installation, created by Dan Oved.
+
+## Architecture
+
+### Components (`components/`)
+
+**DeformableImage.java**
+- Extends `ImagePattern.Image` from the LX framework
+- Provides kaleidoscope deformation effects for images
+- Implements auto-cycle eligibility for slideshow functionality
+- Key features:
+  - Kaleidoscope transformations with configurable segments
+  - 3D rotation controls (theta, phi)
+  - Position offsets (x, y, z)
+  - File path management for image assets
+
+### Patterns (`patterns/`)
+
+**DeformableImagePattern.java**
+- Extends `LXPattern` directly (not `ApotheneumPattern`)
+- Uses composition with `DeformableImage` component
+- Renders 2D images with deformation effects
+- Categorized under `Apotheneum.IMAGE_CATEGORY`
+- Handles GIF animation timing
+
+### UI (`ui/`)
+
+**UIDeformableImagePattern.java**
+- Provides user interface controls for the DeformableImagePattern
+- Manages parameter controls and image selection
+
+### Utils (`utils/`)
+
+**AssetPaths.java**
+- Utility for managing asset file paths
+
+**Kaleidoscope.java**
+- Core kaleidoscope algorithm implementation
+- Converts 3D coordinates to polar coordinates
+- Applies segment-based reflections for kaleidoscope effect
+- Based on algorithm from Daniel Ilett's kaleidoscope tutorial
+
+**KaleidoscopeParams.java**
+- Parameter container for kaleidoscope settings
+- Manages segments, rotation, and position parameters
+
+## Development Notes
+
+### Why Direct LXPattern Inheritance?
+
+The `DeformableImagePattern` extends `LXPattern` directly instead of `ApotheneumPattern` because:
+- It doesn't need Apotheneum-specific geometry utilities
+- It uses composition with the `DeformableImage` component for functionality
+- It works with general image rendering, not LED installation geometry
+
+### Image Deformation Pipeline
+
+1. **Image Loading**: Standard LX image loading through `DeformableImage`
+2. **Kaleidoscope Transform**: 3D coordinates converted to polar, then reflected across segments
+3. **Rendering**: Transformed coordinates used to sample image pixels
+4. **Animation**: GIF frames animated with `animateGif(deltaMs)`
+
+### Key Parameters
+
+- `segments`: Number of kaleidoscope segments (1 = no effect)
+- `rotateTheta`/`rotatePhi`: 3D rotation angles
+- `x`/`y`/`z`: Position offsets for transformation center
+- `autoCycleEligible`: Whether image participates in slideshow cycling
+
+## Usage Example
+
+```java
+// Create pattern
+DeformableImagePattern pattern = new DeformableImagePattern(lx);
+
+// Configure kaleidoscope
+pattern.image.kaleidoscope.params.segments.setValue(6);
+pattern.image.kaleidoscope.params.rotateTheta.setValue(Math.PI / 4);
+
+// Load image
+pattern.image.file.setValue(new File("path/to/image.jpg"));
+```
