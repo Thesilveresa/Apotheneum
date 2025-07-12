@@ -128,7 +128,7 @@ public class LSystemAlgorithm {
           // Only draw segment if both points are within bounds
           if (newX >= 0 && newX < params.rasterWidth && newY >= 0 && newY < params.rasterHeight) {
             // Calculate intensity based on depth (main trunk stronger)
-            double intensity = Math.max(0.4, 1.0 - state.depth * 0.15);
+            double intensity = Math.max(0.7, 1.0 - state.depth * 0.1);
             
             segments.add(new LightningSegment(state.x, state.y, newX, newY, state.depth > 0, intensity, state.depth));
             

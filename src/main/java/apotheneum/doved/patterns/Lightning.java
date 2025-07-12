@@ -4,6 +4,7 @@ import apotheneum.ApotheneumRasterPattern;
 import apotheneum.doved.lightning.LightningSegment;
 import apotheneum.doved.lightning.MidpointDisplacementAlgorithm;
 import apotheneum.doved.lightning.LSystemAlgorithm;
+import apotheneum.doved.lightning.RRTAlgorithm;
 import heronarts.lx.LX;
 import heronarts.lx.LXCategory;
 import heronarts.lx.LXComponent;
@@ -35,7 +36,7 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
     .setDescription("Trigger a lightning strike");
 
   public final DiscreteParameter algorithm =
-    new DiscreteParameter("Algorithm", new String[] {"Midpoint", "L-System"}, 0)
+    new DiscreteParameter("Algorithm", new String[] {"Midpoint", "L-System", "RRT"}, 0)
     .setDescription("Lightning generation algorithm");
 
   public final CompoundParameter intensity =
@@ -105,6 +106,34 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
     new CompoundParameter("LS Branch Angle", 45, 15, 90)
     .setDescription("Base angle for L-system branches in degrees");
 
+  // RRT specific parameters
+  public final CompoundParameter rrtStepSize =
+    new CompoundParameter("RRT Step Size", 12, 5, 25)
+    .setDescription("Distance of each RRT tree extension");
+
+  public final CompoundParameter rrtGoalBias =
+    new CompoundParameter("RRT Goal Bias", 0.1, 0, 0.5)
+    .setUnits(CompoundParameter.Units.PERCENT_NORMALIZED)
+    .setDescription("Probability of sampling from goal region");
+
+  public final CompoundParameter rrtMaxIterations =
+    new CompoundParameter("RRT Max Iter", 150, 50, 300)
+    .setDescription("Maximum number of RRT tree extensions");
+
+  public final CompoundParameter rrtJaggedness =
+    new CompoundParameter("RRT Jaggedness", 0.3, 0, 1)
+    .setUnits(CompoundParameter.Units.PERCENT_NORMALIZED)
+    .setDescription("Amount of random perpendicular displacement");
+
+  public final CompoundParameter rrtGoalRadius =
+    new CompoundParameter("RRT Goal Radius", 20, 10, 50)
+    .setDescription("Size of target region considered reached");
+
+  public final CompoundParameter rrtElectricalField =
+    new CompoundParameter("RRT Elec Field", 0.5, 0, 1)
+    .setUnits(CompoundParameter.Units.PERCENT_NORMALIZED)
+    .setDescription("Electrical field strength for biased sampling");
+
 
   private static class LightningBolt {
     public final List<LightningSegment> segments = new ArrayList<>();
@@ -147,6 +176,12 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
     addParameter("lsAngleVariation", this.lsAngleVariation);
     addParameter("lsLengthVariation", this.lsLengthVariation);
     addParameter("lsBranchAngle", this.lsBranchAngle);
+    addParameter("rrtStepSize", this.rrtStepSize);
+    addParameter("rrtGoalBias", this.rrtGoalBias);
+    addParameter("rrtMaxIterations", this.rrtMaxIterations);
+    addParameter("rrtJaggedness", this.rrtJaggedness);
+    addParameter("rrtGoalRadius", this.rrtGoalRadius);
+    addParameter("rrtElectricalField", this.rrtElectricalField);
   }
 
   private void trig() {
@@ -157,8 +192,10 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
     // Generate lightning based on selected algorithm
     if (algorithm.getValuei() == 0) {
       generateMidpointLightning(bolt);
-    } else {
+    } else if (algorithm.getValuei() == 1) {
       generateLSystemLightning(bolt);
+    } else {
+      generateRRTLightning(bolt);
     }
     
     synchronized (bolts) {
@@ -209,6 +246,29 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
       bolt.segments.add(LightningSegment.fromLSystem(segment));
     }
   }
+  
+  private void generateRRTLightning(LightningBolt bolt) {
+    List<RRTAlgorithm.LightningSegment> rrtSegments = new ArrayList<>();
+    
+    RRTAlgorithm.Parameters params = new RRTAlgorithm.Parameters(
+      rrtStepSize.getValue(),
+      rrtGoalBias.getValue(),
+      (int) rrtMaxIterations.getValue(),
+      branchProbability.getValue(),
+      rrtJaggedness.getValue(),
+      rrtGoalRadius.getValue(),
+      rrtElectricalField.getValue(),
+      RASTER_WIDTH,
+      RASTER_HEIGHT
+    );
+    
+    RRTAlgorithm.generateLightning(rrtSegments, params);
+    
+    // Convert to common lightning segments
+    for (RRTAlgorithm.LightningSegment segment : rrtSegments) {
+      bolt.segments.add(LightningSegment.fromRRT(segment));
+    }
+  }
 
 
   @Override
@@ -236,8 +296,10 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
   private void renderBolt(Graphics2D graphics, LightningBolt bolt, double fadeAmount) {
     if (algorithm.getValuei() == 0) {
       renderMidpointBolt(graphics, bolt, fadeAmount);
-    } else {
+    } else if (algorithm.getValuei() == 1) {
       renderLSystemBolt(graphics, bolt, fadeAmount);
+    } else {
+      renderRRTBolt(graphics, bolt, fadeAmount);
     }
   }
   
@@ -289,7 +351,7 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
     double alpha = fadeAmount * intensity.getValue();
     
     for (LightningSegment segment : bolt.segments) {
-      double segmentAlpha = alpha * (0.3 + 0.7 * segment.intensity);
+      double segmentAlpha = alpha * segment.intensity;
       
       // Create lightning color with fade
       Color lightningColor = new Color(
@@ -321,6 +383,48 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
         );
         graphics.setColor(glowColor);
         graphics.setStroke(new BasicStroke(strokeWidth * 2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        graphics.draw(path);
+      }
+    }
+  }
+  
+  private void renderRRTBolt(Graphics2D graphics, LightningBolt bolt, double fadeAmount) {
+    double alpha = fadeAmount * intensity.getValue();
+    
+    for (LightningSegment segment : bolt.segments) {
+      double segmentAlpha = alpha * segment.intensity;
+      
+      // Create lightning color with fade - RRT uses slightly different coloring
+      Color lightningColor = new Color(
+        (float) LXUtils.constrain(0.7 + 0.3 * segmentAlpha, 0, 1),  // R - slightly more red
+        (float) LXUtils.constrain(0.85 + 0.15 * segmentAlpha, 0, 1), // G
+        (float) LXUtils.constrain(1.0, 0, 1),                        // B
+        (float) LXUtils.constrain(segmentAlpha, 0, 1)                // A
+      );
+      
+      graphics.setColor(lightningColor);
+      
+      // Set stroke thickness based on depth and branch status
+      float strokeWidth = (float) (thickness.getValue() * 
+        (segment.isBranch ? 0.6 : 1.0) / (1.0 + segment.depth * 0.2));
+      graphics.setStroke(new BasicStroke(strokeWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+      
+      // Draw the lightning segment
+      Path2D path = new Path2D.Double();
+      path.moveTo(segment.x1, segment.y1);
+      path.lineTo(segment.x2, segment.y2);
+      graphics.draw(path);
+      
+      // Add glow effect for bright segments
+      if (segmentAlpha > 0.3) {
+        Color glowColor = new Color(
+          (float) LXUtils.constrain(0.5 + 0.5 * segmentAlpha, 0, 1),
+          (float) LXUtils.constrain(0.7 + 0.3 * segmentAlpha, 0, 1),
+          (float) LXUtils.constrain(1.0, 0, 1),
+          (float) LXUtils.constrain(segmentAlpha * 0.4, 0, 1)
+        );
+        graphics.setColor(glowColor);
+        graphics.setStroke(new BasicStroke(strokeWidth * 2.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         graphics.draw(path);
       }
     }
@@ -371,6 +475,22 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
     addColumn(uiDevice, "LS-Variation",
       newKnob(lightning.lsAngleVariation),
       newKnob(lightning.lsLengthVariation)
+    ).setChildSpacing(6);
+
+    addVerticalBreak(ui, uiDevice);
+
+    addColumn(uiDevice, "RRT",
+      newKnob(lightning.rrtStepSize),
+      newKnob(lightning.rrtGoalBias),
+      newKnob(lightning.rrtMaxIterations)
+    ).setChildSpacing(6);
+
+    addVerticalBreak(ui, uiDevice);
+
+    addColumn(uiDevice, "RRT-Advanced",
+      newKnob(lightning.rrtJaggedness),
+      newKnob(lightning.rrtGoalRadius),
+      newKnob(lightning.rrtElectricalField)
     ).setChildSpacing(6);
 
     addVerticalBreak(ui, uiDevice);

@@ -34,6 +34,52 @@ This algorithm can also generate interesting lightning patterns:
 - **Random Samples**: At each step, a random point near the goal is chosen, and the closest point on the existing lightning structure extends towards that random sample
 - **Flexibility**: Modifying how the random points are sampled and how the lightning extends can lead to different lightning styles, including ones that wrap around obstacles
 
+#### RRT Algorithm Implementation Details
+
+**Initialization**:
+- Create a tree with a single root node at the lightning origin point
+- Define a goal region (target area for lightning to reach)
+- Set step size for tree growth (segment length)
+- Define bias probability for goal-directed sampling
+
+**Core Algorithm Loop**:
+1. **Sample Point**: Generate a random point in the search space
+   - With probability `goalBias` (e.g., 0.1), sample directly from goal region
+   - Otherwise, sample uniformly from the entire space
+2. **Find Nearest**: Locate the closest node in the existing tree to the sampled point
+3. **Extend**: Create a new node by extending from the nearest node towards the sample
+   - Move a fixed step size in the direction of the sample
+   - Add random perpendicular displacement for lightning-like jaggedness
+4. **Add Node**: Add the new node to the tree if it doesn't violate constraints
+5. **Check Goal**: If the new node reaches the goal region, terminate or continue for denser branching
+
+**Branching Strategy**:
+- **Natural Branching**: The tree structure inherently creates branches
+- **Forced Branching**: With small probability, extend multiple nodes from the same parent
+- **Pruning**: Remove branches that haven't grown recently to focus energy on active paths
+
+**Lightning-Specific Adaptations**:
+- **Electrical Field Simulation**: Bias sampling towards areas of high "electrical potential"
+- **Stepped Leader Model**: Implement stepped progression with pauses and redirections
+- **Return Stroke**: Once main path is established, trace back with higher intensity
+- **Charge Accumulation**: Model charge buildup that influences subsequent branching
+
+**Advantages for Lightning**:
+- Creates naturally branching, tree-like structures
+- Goal-oriented growth mimics electrical discharge seeking shortest path
+- Can handle complex obstacles and boundaries
+- Produces organic, non-repetitive patterns
+- Easily parameterized for different lightning styles
+
+**Implementation Parameters**:
+- `stepSize`: Distance of each tree extension (affects detail level)
+- `goalBias`: Probability of sampling from goal region (0.0-1.0)
+- `maxIterations`: Maximum number of tree extensions
+- `branchProbability`: Chance of creating multiple branches from one node
+- `jaggedness`: Amount of random perpendicular displacement
+- `goalRadius`: Size of the target region considered "reached"
+- `electricalField`: Function defining charge distribution for biased sampling
+
 ### Visual Enhancement Tips
 
 **Jaggedness and Randomness**: Lightning rarely travels in a perfectly straight line, so introduce random deviations and sharp turns to create a natural, chaotic look.
@@ -79,11 +125,21 @@ The lightning package contains two main implementations:
 - Improved angle calculations for proper downward lightning direction
 - Boundary checking prevents segments from creating edge artifacts
 
+**RRT Algorithm**
+- Implemented in `RRTAlgorithm.java`
+- Tree-based growth from origin towards goal region
+- Goal-biased sampling with configurable bias probability
+- Natural branching through tree structure expansion
+- Stepped leader model with charge accumulation simulation
+- Configurable electrical field for realistic discharge patterns
+- Support for obstacle avoidance and complex boundary handling
+- Integrated into Lightning.java pattern with full UI support
+
 ### Common Classes
 
 **LightningSegment.java**
-- Common segment representation for both algorithms
-- Conversion methods: `fromMidpoint()` and `fromLSystem()`
+- Common segment representation for all algorithms
+- Conversion methods: `fromMidpoint()`, `fromLSystem()`, and `fromRRT()`
 - Stores position, intensity, branching info, and depth
 
 ### Apotheneum-Specific Considerations
@@ -101,7 +157,7 @@ The lightning package contains two main implementations:
 ## Parameters
 
 ### 2D Lightning Parameters
-- `algorithm` - Choose between Midpoint Displacement and L-System
+- `algorithm` - Choose between Midpoint Displacement, L-System, and RRT
 - `trig` - Manual trigger for lightning strikes
 - `intensity` - Overall brightness multiplier
 - `branchProbability` - Likelihood of creating branches
@@ -114,6 +170,12 @@ The lightning package contains two main implementations:
 - `lsSegmentLength` - Base length of L-system segments
 - `lsAngleVariation` - Random variation in L-system angles
 - `lsBranchAngle` - Base angle for L-system branches
+- `rrtStepSize` - Distance of each RRT tree extension
+- `rrtGoalBias` - Probability of sampling from goal region (0.0-1.0)
+- `rrtMaxIterations` - Maximum number of RRT tree extensions
+- `rrtJaggedness` - Amount of random perpendicular displacement
+- `rrtGoalRadius` - Size of target region considered "reached"
+- `rrtElectricalField` - Electrical field strength for biased sampling
 
 ### 3D Lightning Parameters
 - `target` - Which geometry to target (Cube/Cylinder/Both)
