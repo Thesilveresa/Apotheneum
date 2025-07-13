@@ -130,7 +130,7 @@ The lightning package contains one main implementation:
 
 **Lightning.java** - 2D Raster Lightning Pattern
 - Extends `ApotheneumRasterPattern` for 2D graphics rendering
-- Supports three algorithms: Midpoint Displacement, L-System, and RRT
+- Supports four algorithms: Midpoint Displacement, L-System, RRT, and Physically-Based
 - Renders to 2D raster buffer, then maps to installation geometry
 - Uses `Graphics2D` for drawing lightning segments with glow effects
 - Features dynamic UI that shows only controls relevant to the selected algorithm
@@ -161,6 +161,16 @@ The lightning package contains one main implementation:
 - Support for obstacle avoidance and complex boundary handling
 - Integrated into Lightning.java pattern with full UI support
 - Optimized rendering with reduced glow for sharper lightning appearance
+
+**Physically-Based Algorithm**
+- Implemented in `PhysicallyBasedAlgorithm.java`
+- Simulates actual lightning physics: stepped leader formation and return stroke
+- Electric field calculations influence step direction and branching
+- Charge distribution affects intensity and propagation behavior
+- Two-phase rendering: dim stepped leaders followed by bright return strokes
+- Natural branching based on electric potential, not random probability
+- Corona glow effects for high-intensity return stroke segments
+- Realistic blue-white lightning coloration with slight purple tint
 
 ### Common Classes
 
