@@ -5,6 +5,7 @@ import apotheneum.doved.lightning.LightningSegment;
 import apotheneum.doved.lightning.MidpointDisplacementAlgorithm;
 import apotheneum.doved.lightning.LSystemAlgorithm;
 import apotheneum.doved.lightning.RRTAlgorithm;
+import apotheneum.doved.lightning.PhysicallyBasedAlgorithm;
 import heronarts.lx.LX;
 import heronarts.lx.LXCategory;
 import heronarts.lx.LXComponent;
@@ -32,7 +33,7 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
     .setDescription("Trigger a lightning strike");
 
   public final DiscreteParameter algorithm =
-    new DiscreteParameter("Algorithm", new String[] {"Midpoint", "L-System", "RRT"}, 0)
+    new DiscreteParameter("Algorithm", new String[] {"Midpoint", "L-System", "RRT", "Physical"}, 0)
     .setDescription("Lightning generation algorithm");
 
   public final CompoundParameter intensity =
@@ -140,6 +141,34 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
     .setUnits(CompoundParameter.Units.PERCENT_NORMALIZED)
     .setDescription("Electrical field strength for biased sampling");
 
+  // Physically-based parameters
+  public final CompoundParameter electricPotential =
+    new CompoundParameter("Electric Potential", 0.8, 0.1, 1)
+    .setUnits(CompoundParameter.Units.PERCENT_NORMALIZED)
+    .setDescription("Initial electric potential of the cloud");
+
+  public final CompoundParameter stepLength =
+    new CompoundParameter("Step Length", 8, 2, 20)
+    .setDescription("Length of each stepped leader step");
+
+  public final CompoundParameter maxSteps =
+    new CompoundParameter("Max Steps", 100, 50, 200)
+    .setDescription("Maximum number of stepped leader steps");
+
+  public final CompoundParameter physicalBranching =
+    new CompoundParameter("Physical Branch", 0.3, 0, 0.8)
+    .setUnits(CompoundParameter.Units.PERCENT_NORMALIZED)
+    .setDescription("Probability of stepped leader branching");
+
+  public final CompoundParameter stepAngleVariation =
+    new CompoundParameter("Step Angle Var", 0.5, 0, 1)
+    .setUnits(CompoundParameter.Units.PERCENT_NORMALIZED)
+    .setDescription("Random variation in stepped leader direction");
+
+  public final CompoundParameter chargeDecay =
+    new CompoundParameter("Charge Decay", 0.02, 0, 0.1)
+    .setDescription("Rate of charge decay along stepped leader");
+
 
   private static class LightningBolt {
     public final List<LightningSegment> segments = new ArrayList<>();
@@ -178,6 +207,12 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
     addParameter("rrtJaggedness", this.rrtJaggedness);
     addParameter("rrtGoalRadius", this.rrtGoalRadius);
     addParameter("rrtElectricalField", this.rrtElectricalField);
+    addParameter("electricPotential", this.electricPotential);
+    addParameter("stepLength", this.stepLength);
+    addParameter("maxSteps", this.maxSteps);
+    addParameter("physicalBranching", this.physicalBranching);
+    addParameter("stepAngleVariation", this.stepAngleVariation);
+    addParameter("chargeDecay", this.chargeDecay);
   }
 
 
@@ -192,8 +227,10 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
         generateMidpointLightning(bolt);
       } else if (algorithm.getValuei() == 1) {
         generateLSystemLightning(bolt);
-      } else {
+      } else if (algorithm.getValuei() == 2) {
         generateRRTLightning(bolt);
+      } else {
+        generatePhysicalLightning(bolt);
       }
       
       bolts.add(bolt);
@@ -248,6 +285,23 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
     
     RRTAlgorithm.generateLightning(bolt.segments, params);
   }
+  
+  private void generatePhysicalLightning(LightningBolt bolt) {
+    PhysicallyBasedAlgorithm.Parameters params = new PhysicallyBasedAlgorithm.Parameters(
+      electricPotential.getValue(),
+      stepLength.getValue(),
+      (int) maxSteps.getValue(),
+      physicalBranching.getValue(),
+      stepAngleVariation.getValue() * Math.PI, // Convert to radians
+      chargeDecay.getValue(),
+      10.0, // Connection distance
+      startX.getValue(),
+      RASTER_WIDTH,
+      RASTER_HEIGHT
+    );
+    
+    PhysicallyBasedAlgorithm.generateLightning(bolt.segments, params);
+  }
 
 
   @Override
@@ -273,8 +327,10 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
       MidpointDisplacementAlgorithm.render(graphics, bolt.segments, fadeAmount, intensityValue, thicknessValue, bleedingValue);
     } else if (algorithm.getValuei() == 1) {
       LSystemAlgorithm.render(graphics, bolt.segments, fadeAmount, intensityValue, thicknessValue, bleedingValue);
-    } else {
+    } else if (algorithm.getValuei() == 2) {
       RRTAlgorithm.render(graphics, bolt.segments, fadeAmount, intensityValue, thicknessValue, bleedingValue);
+    } else {
+      PhysicallyBasedAlgorithm.render(graphics, bolt.segments, fadeAmount, intensityValue, thicknessValue, bleedingValue);
     }
   }
 
@@ -352,6 +408,20 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
       newKnob(lightning.rrtElectricalField)
     ).setChildSpacing(6);
 
+    final UI2dComponent physicalBreak1 = addVerticalBreak(ui, uiDevice);
+    final UI2dContainer physicalCol1 = addColumn(uiDevice, "Physical",
+      newKnob(lightning.electricPotential),
+      newKnob(lightning.stepLength),
+      newKnob(lightning.maxSteps)
+    ).setChildSpacing(6);
+
+    final UI2dComponent physicalBreak2 = addVerticalBreak(ui, uiDevice);
+    final UI2dContainer physicalCol2 = addColumn(uiDevice, "P-Stepped",
+      newKnob(lightning.physicalBranching),
+      newKnob(lightning.stepAngleVariation),
+      newKnob(lightning.chargeDecay)
+    ).setChildSpacing(6);
+
     // Always show visual and face controls
     addColumn(uiDevice, "Visual",
       newKnob(lightning.bleeding)
@@ -389,6 +459,13 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
       rrtCol1.setVisible(showRRT);
       rrtBreak2.setVisible(showRRT);
       rrtCol2.setVisible(showRRT);
+      
+      // Physical controls (algorithm 3)
+      boolean showPhysical = (algorithm == 3);
+      physicalBreak1.setVisible(showPhysical);
+      physicalCol1.setVisible(showPhysical);
+      physicalBreak2.setVisible(showPhysical);
+      physicalCol2.setVisible(showPhysical);
     }, true);
   }
 

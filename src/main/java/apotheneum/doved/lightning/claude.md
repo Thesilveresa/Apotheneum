@@ -34,6 +34,15 @@ This algorithm can also generate interesting lightning patterns:
 - **Random Samples**: At each step, a random point near the goal is chosen, and the closest point on the existing lightning structure extends towards that random sample
 - **Flexibility**: Modifying how the random points are sampled and how the lightning extends can lead to different lightning styles, including ones that wrap around obstacles
 
+### 4. Physically-Based Algorithm
+This algorithm simulates the actual physics of lightning formation, based on the stepped leader and return stroke process:
+
+- **Stepped Leader Simulation**: Models the downward-propagating negative charge channel that branches as it seeks ground connection
+- **Electric Field Influence**: Each step is influenced by electric field calculations and charge distribution
+- **Natural Branching**: Branches occur based on electric potential and field conditions, not random probability
+- **Return Stroke**: Once ground connection is made, bright return strokes travel back up the established channels
+- **Charge Decay**: Electric potential decreases along the channel, affecting intensity and branching behavior
+
 #### RRT Algorithm Implementation Details
 
 **Initialization**:
