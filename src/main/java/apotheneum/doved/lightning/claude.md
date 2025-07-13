@@ -43,6 +43,27 @@ This algorithm simulates the actual physics of lightning formation, based on the
 - **Return Stroke**: Once ground connection is made, bright return strokes travel back up the established channels
 - **Charge Decay**: Electric potential decreases along the channel, affecting intensity and branching behavior
 
+#### Physically-Based Algorithm Implementation Details
+
+**Phase 1: Stepped Leader Formation**:
+- Initialize with high electric potential at cloud base
+- Propagate downward in discrete steps based on electric field direction
+- Each step influenced by ground attraction and charge distribution
+- Create branches when electric field conditions favor it
+- Continue until ground connection is made within connection distance
+
+**Phase 2: Return Stroke Generation**:
+- Trace path from connection point back to cloud base
+- Generate bright return stroke along established channel
+- Create secondary return strokes for major branches with sufficient charge
+- Return stroke intensity based on accumulated charge in channel
+
+**Phase 3: Rendering**:
+- Stepped leader segments rendered dim (30% intensity) to show channel formation
+- Return stroke segments rendered bright (100% intensity) for the main discharge
+- Thickness varies based on segment intensity and charge distribution
+- Corona glow effect for high-intensity return stroke segments
+
 #### RRT Algorithm Implementation Details
 
 **Initialization**:
