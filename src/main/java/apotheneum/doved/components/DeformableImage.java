@@ -51,6 +51,7 @@ public class DeformableImage extends Image implements LXComponent.Renamable, LXO
 
   @Override
   public void onParameterChanged(LXParameter p) {
+    super.onParameterChanged(p);
     if (p == this.fileRelativePath) {
       // Convert relative path to absolute path for loading, following the original
       // pattern
