@@ -218,23 +218,21 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
 
   private void trig() {
     // Clear existing bolts and create new one (single bolt controlled by envelope)
-    synchronized (bolts) {
-      bolts.clear();
-      LightningBolt bolt = new LightningBolt();
-      
-      // Generate lightning based on selected algorithm
-      if (algorithm.getValuei() == 0) {
-        generateMidpointLightning(bolt);
-      } else if (algorithm.getValuei() == 1) {
-        generateLSystemLightning(bolt);
-      } else if (algorithm.getValuei() == 2) {
-        generateRRTLightning(bolt);
-      } else {
-        generatePhysicalLightning(bolt);
-      }
-      
-      bolts.add(bolt);
+    bolts.clear();
+    LightningBolt bolt = new LightningBolt();
+    
+    // Generate lightning based on selected algorithm
+    if (algorithm.getValuei() == 0) {
+      generateMidpointLightning(bolt);
+    } else if (algorithm.getValuei() == 1) {
+      generateLSystemLightning(bolt);
+    } else if (algorithm.getValuei() == 2) {
+      generateRRTLightning(bolt);
+    } else {
+      generatePhysicalLightning(bolt);
     }
+    
+    bolts.add(bolt);
   }
   
   private void generateMidpointLightning(LightningBolt bolt) {
@@ -311,10 +309,8 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
     // Use fade envelope value directly
     double fadeAmount = fade.getValue();
     
-    synchronized (bolts) {
-      for (LightningBolt bolt : bolts) {
-        renderBolt(graphics, bolt, fadeAmount);
-      }
+    for (LightningBolt bolt : bolts) {
+      renderBolt(graphics, bolt, fadeAmount);
     }
   }
 
