@@ -6,6 +6,8 @@ import apotheneum.doved.lightning.MidpointDisplacementAlgorithm;
 import apotheneum.doved.lightning.LSystemAlgorithm;
 import apotheneum.doved.lightning.RRTAlgorithm;
 import apotheneum.doved.lightning.PhysicallyBasedAlgorithm;
+import apotheneum.doved.lightning.LightningAlgorithm;
+import apotheneum.doved.lightning.LightningGenerator;
 import heronarts.lx.LX;
 import heronarts.lx.LXCategory;
 import heronarts.lx.LXComponent;
@@ -33,7 +35,7 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
     .setDescription("Trigger a lightning strike");
 
   public final DiscreteParameter algorithm =
-    new DiscreteParameter("Algorithm", new String[] {"Midpoint", "L-System", "RRT", "Physical"}, 0)
+    new DiscreteParameter("Algorithm", LightningAlgorithm.getDisplayNames(), 0)
     .setDescription("Lightning generation algorithm");
 
   public final CompoundParameter intensity =
@@ -221,85 +223,14 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
     bolts.clear();
     LightningBolt bolt = new LightningBolt();
     
-    // Generate lightning based on selected algorithm
-    if (algorithm.getValuei() == 0) {
-      generateMidpointLightning(bolt);
-    } else if (algorithm.getValuei() == 1) {
-      generateLSystemLightning(bolt);
-    } else if (algorithm.getValuei() == 2) {
-      generateRRTLightning(bolt);
-    } else {
-      generatePhysicalLightning(bolt);
-    }
+    // Generate lightning using the interface
+    LightningGenerator generator = getLightningGenerator();
+    Object params = getAlgorithmParameters();
+    generator.generateLightning(bolt.segments, params);
     
     bolts.add(bolt);
   }
   
-  private void generateMidpointLightning(LightningBolt bolt) {
-    MidpointDisplacementAlgorithm.Parameters params = new MidpointDisplacementAlgorithm.Parameters(
-      displacement.getValue(),
-      (int) recursionDepth.getValue(),
-      startX.getValue(),
-      startSpread.getValue(),
-      endSpread.getValue(),
-      branchProbability.getValue(),
-      branchDistance.getValue(),
-      branchAngle.getValue(),
-      RASTER_WIDTH,
-      RASTER_HEIGHT
-    );
-    
-    MidpointDisplacementAlgorithm.generateLightning(bolt.segments, params);
-  }
-  
-  private void generateLSystemLightning(LightningBolt bolt) {
-    LSystemAlgorithm.Parameters params = new LSystemAlgorithm.Parameters(
-      (int) lsIterations.getValue(),
-      lsSegmentLength.getValue(),
-      lsAngleVariation.getValue(),
-      lsLengthVariation.getValue(),
-      lsBranchAngle.getValue(),
-      startX.getValue(),
-      RASTER_WIDTH,
-      RASTER_HEIGHT
-    );
-    
-    LSystemAlgorithm.generateLightning(bolt.segments, params);
-  }
-  
-  private void generateRRTLightning(LightningBolt bolt) {
-    RRTAlgorithm.Parameters params = new RRTAlgorithm.Parameters(
-      rrtStepSize.getValue(),
-      rrtGoalBias.getValue(),
-      (int) rrtMaxIterations.getValue(),
-      branchProbability.getValue(),
-      rrtJaggedness.getValue(),
-      rrtGoalRadius.getValue(),
-      rrtElectricalField.getValue(),
-      startX.getValue(),
-      RASTER_WIDTH,
-      RASTER_HEIGHT
-    );
-    
-    RRTAlgorithm.generateLightning(bolt.segments, params);
-  }
-  
-  private void generatePhysicalLightning(LightningBolt bolt) {
-    PhysicallyBasedAlgorithm.Parameters params = new PhysicallyBasedAlgorithm.Parameters(
-      electricPotential.getValue(),
-      stepLength.getValue(),
-      (int) maxSteps.getValue(),
-      physicalBranching.getValue(),
-      stepAngleVariation.getValue() * Math.PI, // Convert to radians
-      chargeDecay.getValue(),
-      10.0, // Connection distance
-      startX.getValue(),
-      RASTER_WIDTH,
-      RASTER_HEIGHT
-    );
-    
-    PhysicallyBasedAlgorithm.generateLightning(bolt.segments, params);
-  }
 
 
   @Override
@@ -319,14 +250,92 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
     double thicknessValue = thickness.getValue();
     double bleedingValue = bleeding.getValue();
     
-    if (algorithm.getValuei() == 0) {
-      MidpointDisplacementAlgorithm.render(graphics, bolt.segments, fadeAmount, intensityValue, thicknessValue, bleedingValue);
-    } else if (algorithm.getValuei() == 1) {
-      LSystemAlgorithm.render(graphics, bolt.segments, fadeAmount, intensityValue, thicknessValue, bleedingValue);
-    } else if (algorithm.getValuei() == 2) {
-      RRTAlgorithm.render(graphics, bolt.segments, fadeAmount, intensityValue, thicknessValue, bleedingValue);
-    } else {
-      PhysicallyBasedAlgorithm.render(graphics, bolt.segments, fadeAmount, intensityValue, thicknessValue, bleedingValue);
+    LightningGenerator generator = getLightningGenerator();
+    generator.render(graphics, bolt.segments, fadeAmount, intensityValue, thicknessValue, bleedingValue);
+  }
+  
+  private LightningGenerator getLightningGenerator() {
+    LightningAlgorithm selectedAlgorithm = LightningAlgorithm.values()[algorithm.getValuei()];
+    switch (selectedAlgorithm) {
+      case MIDPOINT:
+        return new MidpointDisplacementAlgorithm();
+      case L_SYSTEM:
+        return new LSystemAlgorithm();
+      case RRT:
+        return new RRTAlgorithm();
+      case PHYSICAL:
+        return new PhysicallyBasedAlgorithm();
+      default:
+        return new MidpointDisplacementAlgorithm();
+    }
+  }
+  
+  private Object getAlgorithmParameters() {
+    LightningAlgorithm selectedAlgorithm = LightningAlgorithm.values()[algorithm.getValuei()];
+    switch (selectedAlgorithm) {
+      case MIDPOINT:
+        return new MidpointDisplacementAlgorithm.Parameters(
+          displacement.getValue(),
+          (int) recursionDepth.getValue(),
+          startX.getValue(),
+          startSpread.getValue(),
+          endSpread.getValue(),
+          branchProbability.getValue(),
+          branchDistance.getValue(),
+          branchAngle.getValue(),
+          RASTER_WIDTH,
+          RASTER_HEIGHT
+        );
+      case L_SYSTEM:
+        return new LSystemAlgorithm.Parameters(
+          (int) lsIterations.getValue(),
+          lsSegmentLength.getValue(),
+          lsAngleVariation.getValue(),
+          lsLengthVariation.getValue(),
+          lsBranchAngle.getValue(),
+          startX.getValue(),
+          RASTER_WIDTH,
+          RASTER_HEIGHT
+        );
+      case RRT:
+        return new RRTAlgorithm.Parameters(
+          rrtStepSize.getValue(),
+          rrtGoalBias.getValue(),
+          (int) rrtMaxIterations.getValue(),
+          branchProbability.getValue(),
+          rrtJaggedness.getValue(),
+          rrtGoalRadius.getValue(),
+          rrtElectricalField.getValue(),
+          startX.getValue(),
+          RASTER_WIDTH,
+          RASTER_HEIGHT
+        );
+      case PHYSICAL:
+        return new PhysicallyBasedAlgorithm.Parameters(
+          electricPotential.getValue(),
+          stepLength.getValue(),
+          (int) maxSteps.getValue(),
+          physicalBranching.getValue(),
+          stepAngleVariation.getValue() * Math.PI, // Convert to radians
+          chargeDecay.getValue(),
+          10.0, // Connection distance
+          startX.getValue(),
+          RASTER_WIDTH,
+          RASTER_HEIGHT
+        );
+      default:
+        return new MidpointDisplacementAlgorithm.Parameters(
+          displacement.getValue(),
+          (int) recursionDepth.getValue(),
+          startX.getValue(),
+          startSpread.getValue(),
+          endSpread.getValue(),
+          branchProbability.getValue(),
+          branchDistance.getValue(),
+          branchAngle.getValue(),
+          RASTER_WIDTH,
+          RASTER_HEIGHT
+        );
     }
   }
 
@@ -431,10 +440,10 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
 
     // Add listener to show/hide algorithm-specific controls
     uiDevice.addListener(lightning.algorithm, p -> {
-      int algorithm = lightning.algorithm.getValuei();
+      LightningAlgorithm selectedAlgorithm = LightningAlgorithm.values()[lightning.algorithm.getValuei()];
       
-      // Midpoint controls (algorithm 0)
-      boolean showMidpoint = (algorithm == 0);
+      // Midpoint controls
+      boolean showMidpoint = (selectedAlgorithm == LightningAlgorithm.MIDPOINT);
       midpointBreak1.setVisible(showMidpoint);
       midpointCol1.setVisible(showMidpoint);
       midpointBreak2.setVisible(showMidpoint);
@@ -442,22 +451,22 @@ public class Lightning extends ApotheneumRasterPattern implements ApotheneumRast
       midpointBreak3.setVisible(showMidpoint);
       midpointCol3.setVisible(showMidpoint);
       
-      // L-System controls (algorithm 1)
-      boolean showLSystem = (algorithm == 1);
+      // L-System controls
+      boolean showLSystem = (selectedAlgorithm == LightningAlgorithm.L_SYSTEM);
       lsystemBreak1.setVisible(showLSystem);
       lsystemCol1.setVisible(showLSystem);
       lsystemBreak2.setVisible(showLSystem);
       lsystemCol2.setVisible(showLSystem);
       
-      // RRT controls (algorithm 2)
-      boolean showRRT = (algorithm == 2);
+      // RRT controls
+      boolean showRRT = (selectedAlgorithm == LightningAlgorithm.RRT);
       rrtBreak1.setVisible(showRRT);
       rrtCol1.setVisible(showRRT);
       rrtBreak2.setVisible(showRRT);
       rrtCol2.setVisible(showRRT);
       
-      // Physical controls (algorithm 3)
-      boolean showPhysical = (algorithm == 3);
+      // Physical controls
+      boolean showPhysical = (selectedAlgorithm == LightningAlgorithm.PHYSICAL);
       physicalBreak1.setVisible(showPhysical);
       physicalCol1.setVisible(showPhysical);
       physicalBreak2.setVisible(showPhysical);
