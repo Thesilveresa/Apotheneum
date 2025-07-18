@@ -125,11 +125,10 @@ public class UIApotheneumFloorLights extends UI3dComponent {
             limit = true;
             break;
           } else {
-            int input = colors[p.index] & 0xff;
-            int r = this.gammaLut[input];
-            int g = LXUtils.max(0, r - 24);
-            int b = LXUtils.max(0, r - 48);
-            int abgr = LXColor.ALPHA_MASK |
+            final int r = this.gammaLut[colors[p.index] & 0xff];
+            final int g = (r * 0xd0) >> 8;
+            final int b = (r * 0xb0) >> 8;
+            final int abgr = LXColor.ALPHA_MASK |
               b << 16 |
               g << 8 |
               r;
