@@ -53,6 +53,8 @@ public class UIApotheneumFloorLights extends UI3dComponent {
   private final DynamicVertexBuffer colors;
   private boolean auxiliary;
 
+  private final int[] gammaLut;
+
   public UIApotheneumFloorLights(UI ui, boolean auxiliary) {
     super();
     this.auxiliary = auxiliary;
@@ -89,6 +91,14 @@ public class UIApotheneumFloorLights extends UI3dComponent {
         bgfx_set_dynamic_vertex_buffer(1, colors.getHandle(), 0, NUM_VERTICES);
       }
     };
+
+    this.gammaLut = new int[256];
+    this.gammaLut[0] = 0;
+    final int gammaFloor = 24;
+    for (int i = 1; i < this.gammaLut.length; ++i) {
+      double lerp = (i-1.) / (this.gammaLut.length-2.);
+      this.gammaLut[i] = (int) Math.round(LXUtils.lerp(gammaFloor, 255, lerp));
+    }
   }
 
   private static final long BGFX_STATE = 0
@@ -115,7 +125,8 @@ public class UIApotheneumFloorLights extends UI3dComponent {
             limit = true;
             break;
           } else {
-            int r = colors[p.index] & 0xff;
+            int input = colors[p.index] & 0xff;
+            int r = this.gammaLut[input];
             int g = LXUtils.max(0, r - 24);
             int b = LXUtils.max(0, r - 48);
             int abgr = LXColor.ALPHA_MASK |
