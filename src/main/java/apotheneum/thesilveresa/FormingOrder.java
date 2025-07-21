@@ -27,9 +27,9 @@ public class FormingOrder extends ApotheneumPattern {
 
   public FormingOrder(LX lx) {
     super(lx);
-    addParameter("grid", this.grid);
-    addParameter("width", this.width);
-    addParameter("skew", this.skew);
+    addParameter(grid);
+    addParameter(width);
+    addParameter(skew);
   }
 
   @Override

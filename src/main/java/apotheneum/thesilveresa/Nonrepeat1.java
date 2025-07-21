@@ -37,11 +37,11 @@ public class Nonrepeat1 extends ApotheneumPattern {
 
   public Nonrepeat1(LX lx) {
     super(lx);
-    addParameter("flicker", this.flicker);
-    addParameter("repeatHint", this.repeatHint);
-    addParameter("phaseDrift", this.phaseDrift);
-    addParameter("grainSize", this.grainSize);
-    addParameter("hueShift", this.hueShift);
+    addParameter(flicker);
+    addParameter(repeatHint);
+    addParameter(phaseDrift);
+    addParameter(grainSize);
+    addParameter(hueShift);
   }
 
   @Override

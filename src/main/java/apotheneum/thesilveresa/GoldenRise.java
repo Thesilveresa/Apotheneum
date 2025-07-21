@@ -47,14 +47,14 @@ public class GoldenRise extends ApotheneumPattern {
 
   public GoldenRise(LX lx) {
     super(lx);
-    addParameter("spacing", this.spacing);
-    addParameter("offset", this.offset);
-    addParameter("phiShift", this.phiShift);
-    addParameter("rise", this.rise);
-    addParameter("contrast", this.contrast);
-    addParameter("time", this.time);
-    addParameter("curve", this.curve);
-    addParameter("spiral", this.spiral);
+    addParameter(spacing);
+    addParameter(offset);
+    addParameter(phiShift);
+    addParameter(rise);
+    addParameter(contrast);
+    addParameter(time);
+    addParameter(curve);
+    addParameter(spiral);
   }
 
   @Override

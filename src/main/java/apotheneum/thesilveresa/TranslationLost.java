@@ -24,14 +24,14 @@ public class TranslationLost extends ApotheneumPattern {
 
   public TranslationLost(LX lx) {
     super(lx);
-    addParameter("jitterAmount", this.jitterAmount);
-    addParameter("scaleVariance", this.scaleVariance);
-    addParameter("flickerChance", this.flickerChance);
-    addParameter("tilingKnob", this.tilingKnob);
-    addParameter("rotateX", this.rotateX);
-    addParameter("rotateY", this.rotateY);
-    addParameter("rotateZ", this.rotateZ);
-    addParameter("mirror", this.mirror);
+    addParameter("Jitter", jitterAmount);
+    addParameter("Scale", scaleVariance);
+    addParameter("Flicker", flickerChance);
+    addParameter("Tiling", tilingKnob);
+    addParameter("SpinX", rotateX);
+    addParameter("SpinY", rotateY);
+    addParameter("SpinZ", rotateZ);
+    addParameter("Mirror", mirror);
   }
 
   private double elapsedMs = 0;

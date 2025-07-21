@@ -26,10 +26,10 @@ public class AperiodicBloom extends ApotheneumPattern {
     .setDescription("Rotates the color palette");
 
   public AperiodicBloom(LX lx) {
-    super(lx);    
-    addParameter("scale", this.scale);
-    addParameter("tiling", this.tiling);
-    addParameter("hueShift", this.hueShift);
+    super(lx);
+    addParameter(scale);
+    addParameter(tiling);
+    addParameter(hueShift);
   }
 
   @Override

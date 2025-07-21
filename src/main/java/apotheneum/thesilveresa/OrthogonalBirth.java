@@ -39,12 +39,12 @@ public class OrthogonalBirth extends ApotheneumPattern {
 
   public OrthogonalBirth(LX lx) {
     super(lx);
-    addParameter("grid", this.grid);
-    addParameter("width", this.width);
-    addParameter("brightness", this.brightness);
-    addParameter("rate", this.rate);
-    addParameter("pulse", this.pulse);
-    addParameter("phase", this.phase);
+    addParameter(grid);
+    addParameter(width);
+    addParameter(brightness);
+    addParameter(rate);
+    addParameter(pulse);
+    addParameter(phase);
   }
 
   @Override
