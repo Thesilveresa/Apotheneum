@@ -192,6 +192,11 @@ public class Quilt extends ApotheneumPattern implements UIDeviceControls<Quilt> 
   @Override
   public void render(double deltaMs) {
     setColors(LXColor.BLACK);
+
+    // Ensure cleared regardless of view
+    setColor(Apotheneum.cube.exterior, LXColor.BLACK);
+    setColor(Apotheneum.cylinder.exterior, LXColor.BLACK);
+
     this.hHue = this.hColor.hue.getValue();
     this.vHue = this.vColor.hue.getValue();
     this.hSaturation = this.hColor.saturation.getValue();

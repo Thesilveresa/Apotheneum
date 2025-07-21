@@ -18,15 +18,15 @@ This package currently requires macOS on an Apple Silicon machine. Windows instr
 
 
 
-* Download the latest [Chromatik pre-release](https://github.com/heronarts/Chromatik/releases/tag/1.1.1-SNAPSHOT-2025-05-27)
-  * [MacOS Build](https://github.com/heronarts/Chromatik/releases/download/1.1.1-SNAPSHOT-2025-05-27/Chromatik-1.1.1-SNAPSHOT-MacOS-Apple-Silicon.zip)
-  * [Windows Build](https://github.com/heronarts/Chromatik/releases/download/1.1.1-SNAPSHOT-2025-05-27/Chromatik-1.1.1-SNAPSHOT-Win64-Installer.msi)
+* Download the latest [Chromatik pre-release](https://github.com/heronarts/Chromatik/releases/tag/1.1.1-SNAPSHOT-2025-07-14)
+  * [MacOS Build](https://github.com/heronarts/Chromatik/releases/download/1.1.1-SNAPSHOT-2025-07-14/Chromatik-1.1.1-SNAPSHOT-MacOS-Apple-Silicon.zip)
+  * [Windows Build](https://github.com/heronarts/Chromatik/releases/download/1.1.1-SNAPSHOT-2025-07-14/Chromatik-1.1.1-SNAPSHOT-Win64-Installer.msi)
 * Register a [Chromatik account](https://chromatik.co/login)
 * Authorize Chromatik with your free license
 
 #### Apotheneum Assets
 
-* Download the latest [Apotheneum release](https://github.com/Apotheneum/Apotheneum/releases/download/2025.05.27/apotheneum-0.0.1-SNAPSHOT.jar)
+* Download the latest [Apotheneum release](https://github.com/Apotheneum/Apotheneum/releases/download/2025.07.14/apotheneum-0.0.1-SNAPSHOT.jar)
 * Open Chromatik, drag-and-drop the Apotheneum file `apotheneum-0.0.1-SNAPSHOT.jar` onto the application window
 * From Chromatik, open the example project file `~/Chromatik/Projects/Apotheneum/Apotheneum.lxp`
 
@@ -50,6 +50,8 @@ Coding experience is neither required nor necessary to build animation content i
 
 Learn more by reading the [Chromatik Developer Guide &rarr;](https://chromatik.co/develop/)
 
+#### Development Setup
+
 Install the following tools:
 
 * [Java 21 Temurin](https://adoptium.net/)
@@ -57,16 +59,65 @@ Install the following tools:
 
 Maven can be installed using [Homebrew](https://brew.sh/) via the following command:
 
-```
+```bash
 $ brew install maven
-````
+```
+
+#### Building and Installing
 
 After developing new animation content, you may install it by running `update.command` or invoking Maven directly:
 
-```
+```bash
 $ mvn -Pinstall install
-````
+```
 
-An example animation routine is provided at [`StripePattern.java`](src/main/java/apotheneum/examples/StripePattern.java)
+This builds the JAR file and copies it to `~/Chromatik/Packages` for automatic loading in Chromatik.
+
+#### Pattern Development
+
+Apotheneum provides specialized base classes for different types of animations:
+
+**For Apotheneum-specific geometry patterns:**
+```java
+public class MyPattern extends ApotheneumPattern {
+    protected void render(double deltaMs) {
+        // Access cube and cylinder geometry
+        // Use utility methods like copyExterior()
+    }
+}
+```
+
+**For 2D raster-based patterns:**
+```java
+public class MyRasterPattern extends ApotheneumRasterPattern {
+    protected void render(double deltaMs) {
+        // Use Graphics2D for 2D rendering
+        // Automatic mapping to cube faces
+    }
+}
+```
+
+**For general 3D patterns:**
+```java
+public class MyGeneralPattern extends LXPattern {
+    public void run(double deltaMs) {
+        // Standard LX pattern development
+    }
+}
+```
+
+#### Example Patterns
+
+* [`StripePattern.java`](src/main/java/apotheneum/examples/StripePattern.java) - General 3D geometry pattern
+* [`RasterOval.java`](src/main/java/apotheneum/examples/RasterOval.java) - 2D raster pattern
+* [`Raindrops.java`](src/main/java/apotheneum/mcslee/Raindrops.java) - Apotheneum-specific geometry pattern
+
+#### Physical Structure
+
+The installation consists of:
+* **Cube**: 4 faces of 50×45 LED grids (exterior + interior)
+* **Cylinder**: 120 columns of 43 LEDs each (exterior + interior)  
+* **Doors**: 10×11 LED cutouts affect pixel availability
+* **Total**: 13,280 LED nodes
 
 A more general overview of the content package structure is provided in the [LXPackage Template Repository &rarr;](https://github.com/heronarts/LXPackage)

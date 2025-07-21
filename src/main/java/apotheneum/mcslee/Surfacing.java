@@ -192,18 +192,27 @@ public class Surfacing extends ApotheneumPattern implements UIDeviceControls<Sur
 
     this.waves.forEach(wave -> wave.update());
 
-    setColors(LXColor.BLACK);
+    setApotheneumColor(LXColor.BLACK);
+    int cylinderIndex = 0;
     for (LXModel column : Apotheneum.cylinder.exterior.columns) {
-      renderColumn(column);
+      renderColumn(column, cylinderIndex);
+      ++cylinderIndex;
     }
+    cylinderIndex = -1;
     for (LXModel column : Apotheneum.cube.exterior.columns) {
-      renderColumn(column);
+      renderColumn(column, cylinderIndex);
     }
     copyCylinderExterior();
     copyCubeExterior();
   }
 
-  private void renderColumn(LXModel column) {
+  private float[] cylinderLevels = new float[Apotheneum.RING_LENGTH];
+
+  public float getCylinderLevel(int cylinderIndex) {
+    return this.cylinderLevels[cylinderIndex];
+  }
+
+  private void renderColumn(LXModel column, int cylinderIndex) {
     final LXPoint c = column.points[0];
 
     final float xn =
@@ -223,7 +232,12 @@ public class Surfacing extends ApotheneumPattern implements UIDeviceControls<Sur
     }
 
     final float size = this.size.getValuef();
-    final float falloff = 1f / (size * this.fade.getValuef());
+    final float fade = this.fade.getValuef();
+    final float falloff = 1f / (size * fade);
+
+    if (cylinderIndex >= 0) {
+      this.cylinderLevels[cylinderIndex] = pos + size;
+    }
 
     final DistanceFunction function = this.fillMode.getEnum().function;
     for (LXPoint p : column.points) {

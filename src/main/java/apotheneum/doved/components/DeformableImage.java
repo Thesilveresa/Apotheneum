@@ -8,7 +8,6 @@ import heronarts.lx.parameter.BooleanParameter;
 import heronarts.lx.pattern.image.ImagePattern.Image;
 import heronarts.lx.model.LXModel;
 import heronarts.lx.model.LXPoint;
-import heronarts.lx.color.LXColor;
 import heronarts.lx.transform.LXVector;
 import heronarts.lx.transform.LXMatrix;
 import heronarts.lx.utils.LXUtils;
@@ -17,6 +16,7 @@ import heronarts.glx.GLXUtils;
 import apotheneum.doved.utils.AssetPaths;
 import apotheneum.doved.utils.Kaleidoscope;
 import heronarts.lx.parameter.StringParameter;
+import heronarts.lx.pattern.image.ImagePattern;
 
 public class DeformableImage extends Image implements LXComponent.Renamable, LXOscComponent {
 
@@ -51,6 +51,7 @@ public class DeformableImage extends Image implements LXComponent.Renamable, LXO
 
   @Override
   public void onParameterChanged(LXParameter p) {
+    super.onParameterChanged(p);
     if (p == this.fileRelativePath) {
       // Convert relative path to absolute path for loading, following the original
       // pattern
@@ -59,8 +60,6 @@ public class DeformableImage extends Image implements LXComponent.Renamable, LXO
       String absolutePath = AssetPaths.toAbsolutePathFromAssets(relativePath);
 
       this.fileName.setValue(absolutePath);
-
-      super.onParameterChanged(this.fileName);
     }
   }
 
@@ -115,11 +114,20 @@ public class DeformableImage extends Image implements LXComponent.Renamable, LXO
    * This is the key method that adds kaleidoscope functionality to the base Image
    * class
    */
+  @Override
   public void render(LXModel model, int[] colors) {
-    if (this.hasImage()) {
+    int backgroundColor = this.backgroundMode.getEnum().color;
+
+    if (!this.hasImage()) {
+      // Fill with background color if no image
+      for (LXPoint p : model.points) {
+        colors[p.index] = backgroundColor;
+      }
+    } else {
       this.computeTransformMatrix(model);
 
-      // Get the coordinate function from imageMode (using reflection-like access)
+      // Get the imageMode for coordinate function
+      ImagePattern.ImageMode imageMode = this.imageMode.getEnum();
       float scrollX = (1.0f - this.scrollX.getValuef()) % 1.0f;
       float scrollY = (1.0f - this.scrollY.getValuef()) % 1.0f;
       GLXUtils.Image glxImage = this.getImage();
@@ -130,31 +138,49 @@ public class DeformableImage extends Image implements LXComponent.Renamable, LXO
           LXVector pD = this.kaleidoscope.deform(p.xn, p.yn, p.zn);
 
           // Apply matrix transformation for position, rotation, scale (same as parent)
-          float xn = pD.x * this.transformMatrix.m11 + (1.0f - pD.y) * this.transformMatrix.m12
+          float rawXn = pD.x * this.transformMatrix.m11 + (1.0f - pD.y) * this.transformMatrix.m12
               + pD.z * this.transformMatrix.m13 + this.transformMatrix.m14;
-          float yn = pD.x * this.transformMatrix.m21 + (1.0f - pD.y) * this.transformMatrix.m22
+          float rawYn = pD.x * this.transformMatrix.m21 + (1.0f - pD.y) * this.transformMatrix.m22
               + pD.z * this.transformMatrix.m23 + this.transformMatrix.m24;
 
-          // Apply coordinate function wrapping (simplified to TILE mode for now)
+          // Apply the image mode coordinate function (CLAMP, CLIP, TILE, MIRROR)
+          float xn = applyImageModeCoordinate(imageMode, rawXn);
+          float yn = applyImageModeCoordinate(imageMode, rawYn);
+
+          // Check if coordinates are out of bounds (for CLIP mode)
           if (xn < 0.0f || yn < 0.0f) {
-            colors[p.index] = LXColor.BLACK;
+            colors[p.index] = backgroundColor;
           } else {
-            // Apply scroll and wrapping
-            xn = (xn + scrollX) % 1.0f;
-            yn = (yn + scrollY) % 1.0f;
-            colors[p.index] = glxImage.getNormalized(xn, yn);
+            // Apply scroll and get the color
+            colors[p.index] = glxImage.getNormalized((xn + scrollX) % 1.0f, (yn + scrollY) % 1.0f);
           }
         }
       } else {
         for (LXPoint p : model.points) {
-          colors[p.index] = LXColor.BLACK;
+          colors[p.index] = backgroundColor;
         }
       }
-    } else {
-      // Fill with black if no image
-      for (LXPoint p : model.points) {
-        colors[p.index] = LXColor.BLACK;
-      }
+    }
+  }
+
+  /**
+   * Apply the coordinate function based on the image mode
+   * This replicates the logic from ImagePattern.ImageMode enum
+   */
+  private float applyImageModeCoordinate(ImagePattern.ImageMode mode, float raw) {
+    switch (mode) {
+      case CLAMP:
+        return LXUtils.clampf(raw, 0.0f, 1.0f);
+      case CLIP:
+        return raw > 1.0f ? -1.0f : raw;
+      case TILE:
+        return raw - (float) Math.floor(raw);
+      case MIRROR:
+        float floor = (float) Math.floor(raw);
+        float diff = raw - floor;
+        return (int) floor % 2 == 0 ? diff : 1.0f - diff;
+      default:
+        return raw;
     }
   }
 

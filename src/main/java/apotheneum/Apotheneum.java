@@ -18,6 +18,8 @@
 
 package apotheneum;
 
+import java.io.IOException;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,9 +27,14 @@ import java.util.List;
 import heronarts.lx.LX;
 import heronarts.lx.model.LXModel;
 import heronarts.lx.model.LXPoint;
+import heronarts.lx.osc.LXOscEngine;
+import heronarts.lx.osc.OscMessage;
+import heronarts.lx.utils.LXUtils;
 
 public class Apotheneum {
 
+  public static final int DOOR_WIDTH = 10;
+  public static final int DOOR_HEIGHT = 11;
   public static final int GRID_WIDTH = 50;
   public static final int GRID_HEIGHT = 45;
   public static final int CYLINDER_HEIGHT = 43;
@@ -75,6 +82,8 @@ public class Apotheneum {
 
     public abstract Ring[] rings();
 
+    public abstract int available(int columnIndex);
+
     public Ring ring(int index) {
       return rings()[index];
     }
@@ -104,6 +113,8 @@ public class Apotheneum {
   }
 
   public static class Cube extends Component {
+
+    public static final int DOOR_START_COLUMN = 20;
 
     public static class Orientation extends Apotheneum.Orientation {
 
@@ -158,6 +169,14 @@ public class Apotheneum {
         return this.rings;
       }
 
+      @Override
+      public int available(int columnIndex) {
+        if (LXUtils.inRange(columnIndex % GRID_WIDTH, DOOR_START_COLUMN, DOOR_START_COLUMN + DOOR_WIDTH - 1)) {
+          return GRID_HEIGHT - DOOR_HEIGHT;
+        }
+        return GRID_HEIGHT;
+      }
+
     }
 
     public static class Face {
@@ -171,11 +190,11 @@ public class Apotheneum {
         this.rows = new Row[GRID_HEIGHT];
 
         if (this.columns.length != GRID_WIDTH) {
-          throw new IllegalStateException("Apotheneum face has wrong number of columns: " + this.columns.length);
+          throw new IllegalStateException("Apotheneum face expects " + GRID_WIDTH + " columns, found " + this.columns.length);
         }
         for (LXModel column : this.columns) {
           if (column.size != GRID_HEIGHT) {
-            throw new IllegalStateException("Apotheneum column has wrong length: " + column.size);
+            throw new IllegalStateException("Apotheneum cube column expects " + GRID_HEIGHT + " points, found " + column.size);
           }
         }
 
@@ -236,6 +255,8 @@ public class Apotheneum {
 
   public static class Cylinder extends Component {
 
+    public static final int DOOR_START_COLUMN = 10;
+
     public static class Orientation extends Apotheneum.Orientation {
       public final int size;
       public final LXModel[] columns;
@@ -243,6 +264,15 @@ public class Apotheneum {
 
       private Orientation(LXModel model, String suffix) {
         this.columns = model.sub("cylinder" + suffix).toArray(new LXModel[0]);
+        if (this.columns.length != Ring.LENGTH) {
+          throw new IllegalStateException("Apotheneum cylinder expects " + Ring.LENGTH + " columns, found " + this.columns.length);
+        }
+        for (LXModel column : this.columns) {
+          if (column.size != CYLINDER_HEIGHT) {
+            throw new IllegalStateException("Apotheneum cylinder column expects " + CYLINDER_HEIGHT + " points, found " + column.size);
+          }
+        }
+
         this.rings = new Ring[this.columns[0].size];
         for (int i = 0; i < this.rings.length; ++i) {
           this.rings[i] = new Ring(i, this.columns);
@@ -258,6 +288,14 @@ public class Apotheneum {
       @Override
       public Ring[] rings() {
         return this.rings;
+      }
+
+      @Override
+      public int available(int columnIndex) {
+        if (LXUtils.inRange(columnIndex % 30, 10, 10 + DOOR_WIDTH - 1)) {
+          return CYLINDER_HEIGHT - DOOR_HEIGHT;
+        }
+        return CYLINDER_HEIGHT;
       }
     }
 
@@ -291,6 +329,7 @@ public class Apotheneum {
   public static Cube cube = null;
   public static Cylinder cylinder = null;
 
+  private static LX lx = null;
   private static boolean initialized = false;
   private static final ModelListener modelListener = new ModelListener();
 
@@ -299,6 +338,7 @@ public class Apotheneum {
       return;
     }
     initialized = true;
+    Apotheneum.lx = lx;
     modelListener.modelChanged(lx, lx.getModel());
     lx.addListener(modelListener);
   }
@@ -323,7 +363,26 @@ public class Apotheneum {
         cylinder = null;
         exists = false;
         LX.error(x, "Error building Apotheneum helpers");
-        lx.pushError(x, "Apotheneum model is out of date, you may need to update your fixture files.\n" + x.getMessage());;
+        lx.pushError(x, "Apotheneum detected but contains errors. Fixture files may be out of date or multiple instances loaded?\n" + x.getMessage());;
+      }
+    }
+  }
+
+  private static LXOscEngine.Transmitter oscTransmitter = null;
+
+  public static void osc2Ableton(OscMessage message) {
+    if ((oscTransmitter == null) && (lx != null)) {
+      try {
+        oscTransmitter = lx.engine.osc.transmitter(InetAddress.getLoopbackAddress(), 5050);
+      } catch (Exception x) {
+        LX.error(x, "Apotheneum couldn't create local OSC transmitter: " + x.getMessage());
+      }
+    }
+    if (oscTransmitter != null) {
+      try {
+        oscTransmitter.send(message);
+      } catch (IOException iox) {
+        LX.error(iox, "Failed to send OSC message to Ableton: " + iox.getMessage());
       }
     }
   }
