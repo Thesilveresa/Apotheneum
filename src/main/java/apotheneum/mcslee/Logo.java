@@ -26,7 +26,6 @@ import heronarts.lx.LX;
 import heronarts.lx.LXCategory;
 import heronarts.lx.LXComponent;
 import heronarts.lx.color.LXColor;
-import heronarts.lx.model.LXModel;
 import heronarts.lx.model.LXPoint;
 import heronarts.lx.parameter.CompoundParameter;
 import heronarts.lx.utils.LXUtils;
@@ -90,13 +89,12 @@ public class Logo extends ApotheneumPattern {
 
     Arrays.fill(this.level, 0);
 
-    int xi = 0;
     int ai = 0;
-    for (LXModel col : Apotheneum.cube.exterior.front.columns) {
+    for (int xi = 0; xi < Apotheneum.GRID_WIDTH; ++xi) {
       final float xn = xi / (float) (Apotheneum.GRID_WIDTH-1);
       final float xd = Math.abs(xi - ((Apotheneum.GRID_WIDTH-1) * .5f));
-      int yi = 0;
-      for (LXPoint p : col.points) {
+
+      for (int yi = 0; yi < Apotheneum.GRID_HEIGHT; ++yi) {
         final float yn = yi / (float) (Apotheneum.GRID_HEIGHT-1);
         final float yd = Math.abs(yi - ((Apotheneum.GRID_HEIGHT-1) * .5f));
         if (xd > BOX_THRESH || yd > BOX_THRESH) {
@@ -114,9 +112,7 @@ public class Logo extends ApotheneumPattern {
           // colors[p.index] = LXColor.grayn(LXUtils.clamp(circleContrast - 10 * circleContrast * Math.abs(circleRadius - d), 0, 1));
         }
         ++ai;
-        ++yi;
       }
-      ++xi;
     }
 
     final float front = this.front.getValuef();
@@ -141,9 +137,6 @@ public class Logo extends ApotheneumPattern {
       colors[p.index] = LXColor.grayn(this.level[ai++] * left);
     }
 
-//    copy(Apotheneum.cube.exterior.front, Apotheneum.cube.exterior.left);
-//    copy(Apotheneum.cube.exterior.front, Apotheneum.cube.exterior.right);
-//    copy(Apotheneum.cube.exterior.front, Apotheneum.cube.exterior.back);
     copyCubeExterior();
   }
 
