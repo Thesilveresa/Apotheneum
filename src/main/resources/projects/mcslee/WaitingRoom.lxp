@@ -1,6 +1,6 @@
 {
   "version": "1.1.1-SNAPSHOT",
-  "timestamp": 1753098594478,
+  "timestamp": 1753100396223,
   "model": {
     "id": 2,
     "class": "heronarts.lx.structure.LXStructure",
@@ -573,8 +573,8 @@
           "pitch": 90.0,
           "roll": 0.0,
           "scale": 1.0,
-          "hasCustomPointSize": true,
-          "pointSize": 25.0,
+          "hasCustomPointSize": false,
+          "pointSize": 5.0,
           "selected": true,
           "deactivate": false,
           "enabled": true,
@@ -604,7 +604,7 @@
       "networkMultithreaded": false,
       "framesPerSecond": 60.0,
       "speed": 1.0,
-      "performanceMode": true,
+      "performanceMode": false,
       "camera-1": false,
       "camera-2": false,
       "camera-3": false,
@@ -1792,12 +1792,12 @@
             },
             "parameters": {
               "label": "Master",
-              "fader": 1.0,
+              "fader": 0.0,
               "arm": false,
               "selected": false,
               "stopClips": false,
-              "previewMode": 0,
-              "previewMode/name": "PRE"
+              "previewMode": 1,
+              "previewMode/name": "POST"
             },
             "children": {
               "modulation": {
@@ -1916,7 +1916,7 @@
               "transitionEnabled": false,
               "transitionTimeSecs": 5.0,
               "transitionBlendMode": 0,
-              "focusedPattern": 0,
+              "focusedPattern": 10,
               "triggerPatternCycle": false,
               "launchPatternCycle": false
             },
@@ -1972,7 +1972,7 @@
                       "exp": 0.0
                     },
                     "children": {},
-                    "basis": 0.4491888518819361
+                    "basis": 0.9947931749930415
                   }
                 ],
                 "modulations": [
@@ -2423,7 +2423,7 @@
                           "exp": 0.0
                         },
                         "children": {},
-                        "basis": 0.5847452760752548
+                        "basis": 0.8356644787136976
                       }
                     ],
                     "modulations": [
@@ -2625,7 +2625,7 @@
                           "exp": 0.0
                         },
                         "children": {},
-                        "basis": 0.37029679859591147
+                        "basis": 0.365111421411471
                       }
                     ],
                     "modulations": [
@@ -3140,7 +3140,7 @@
                           "exp": 0.0
                         },
                         "children": {},
-                        "basis": 0.4243215244082836
+                        "basis": 0.6024356139968111
                       }
                     ],
                     "modulations": [
@@ -3538,7 +3538,7 @@
                   "xOffset": 0.0,
                   "yOffset": 0.0,
                   "zOffset": 0.0,
-                  "scale": 0.06222655862075044,
+                  "scale": 0.12332030879770173,
                   "minScale": 1.0,
                   "maxScale": 10.0,
                   "xScale": 1.0,
@@ -3595,7 +3595,7 @@
                       "expanded": true,
                       "expandedCue": true,
                       "expandedAux": true,
-                      "modulationExpanded": false
+                      "modulationExpanded": true
                     },
                     "parameters": {
                       "label": "Colorize",
@@ -3620,7 +3620,7 @@
                       "blendMode": 0,
                       "blendMode/name": "RGB",
                       "color1/brightness": 89.82514917152002,
-                      "color1/saturation": 59.505207976326346,
+                      "color1/saturation": 82.98921116220299,
                       "color1/hue": 0.0,
                       "color2/brightness": 100.0,
                       "color2/saturation": 100.0,
@@ -3718,7 +3718,7 @@
                               "maxLevel": 1.0,
                               "algorithm": 0,
                               "algorithm/name": "PERLIN",
-                              "seed": 4,
+                              "seed": 10,
                               "octaves": 3,
                               "lacunarity": 2.0,
                               "gain": 0.5,
@@ -4407,9 +4407,9 @@
         "animation": true,
         "camera": {
           "active": true,
-          "radius": 813.7231661793767,
-          "theta": 155.85720000004642,
-          "phi": 1.9574145974686594,
+          "radius": 1238.6146283977741,
+          "theta": 30.168767307417284,
+          "phi": 3.1773498505353928,
           "x": 287.33946697274223,
           "y": 193.72419194877148,
           "z": 235.92783349426463
@@ -4471,7 +4471,7 @@
           }
         ],
         "autopilot": {
-          "enabled": true,
+          "enabled": false,
           "radiusPeriod": 31.0,
           "radiusMin": 700.0,
           "radiusMax": 1100.0,
