@@ -14,7 +14,7 @@ import heronarts.lx.parameter.CompoundParameter;
 public class GoldenRise extends ApotheneumPattern {
 
   final CompoundParameter spacing =
-    new CompoundParameter("Spacing", 0.05, 0.01, 0.2)
+    new CompoundParameter("Space", 0.05, 0.01, 0.2)
       .setDescription("Vertical spacing between rows");
 
   final CompoundParameter offset =

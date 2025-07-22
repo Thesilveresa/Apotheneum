@@ -26,9 +26,9 @@ public class AperiodicBloom extends ApotheneumPattern {
     .setDescription("Rotates the color palette");
 
   public AperiodicBloom(LX lx) {
-    super(lx);    
-    addParameter("scale", this.scale);
-    addParameter("tiling", this.tiling);
+    super(lx);
+    addParameter("scaleVariance", this.scale);
+    addParameter("tilingKnob", this.tiling);
     addParameter("hueShift", this.hueShift);
   }
 
