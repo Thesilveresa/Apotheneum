@@ -41,9 +41,14 @@ public class CubeBursts extends Bursts implements ApotheneumPattern.Midi, UIDevi
     new BooleanParameter("All Faces", false)
     .setDescription("Burst on all faces at once");
 
+  public final BooleanParameter allFacesSymmetry =
+    new BooleanParameter("Symmetry", false)
+    .setDescription("Burst on all faces are identical");
+
   public CubeBursts(LX lx) {
     super(lx);
     addParameter("allFaces", this.allFaces);
+    addParameter("allFacesSymmetry", this.allFacesSymmetry);
   }
 
   @Override
@@ -54,10 +59,16 @@ public class CubeBursts extends Bursts implements ApotheneumPattern.Midi, UIDevi
   @Override
   protected void generateBursts(int num) {
     final boolean allFaces = this.allFaces.isOn();
+    final boolean allFacesSymmetry = this.allFacesSymmetry.isOn();
     for (int i = 0; i < num; ++i) {
       if (allFaces) {
+        Burst b = null;
         for (Apotheneum.Cube.Face face : Apotheneum.cube.exterior.faces) {
-          addBurst(new Burst(face));
+          if (allFacesSymmetry && b != null) {
+            addBurst(new Burst(face, b));
+          } else {
+            addBurst(b = new Burst(face));
+          }
         }
       } else {
         addBurst(new Burst(Apotheneum.cube.exterior.faces[LXUtils.randomi(0, 3)]));
@@ -77,8 +88,9 @@ public class CubeBursts extends Bursts implements ApotheneumPattern.Midi, UIDevi
     addColumn(uiDevice,
       newButton(cubeBursts.burst).setTriggerable(true).setBorderRounding(4),
       newKnob(cubeBursts.perTrig),
-      newButton(cubeBursts.allFaces),
-      newKnob(cubeBursts.burstSpread)
+      newKnob(cubeBursts.burstSpread),
+      newButton(cubeBursts.allFaces).setTopMargin(12),
+      newButton(cubeBursts.allFacesSymmetry)
     ).setChildSpacing(4);
 
     addVerticalBreak(ui, uiDevice);

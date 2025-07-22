@@ -170,32 +170,47 @@ public abstract class Bursts extends ApotheneumPattern implements ApotheneumPatt
     private final Matrix2f spinCompositeMatrix = new Matrix2f();
 
     protected Burst(Apotheneum.Cube.Face face) {
-      this(face.columns);
+      this(face.columns, null);
+    }
+
+    protected Burst(Apotheneum.Cube.Face face, Burst copy) {
+      this(face.columns, copy);
     }
 
     protected Burst(Apotheneum.Orientation orientation) {
-      this(orientation.columns());
+      this(orientation.columns(), null);
     }
 
-    protected Burst(LXModel[] columns) {
+    protected Burst(LXModel[] columns, Burst copy) {
       this.columns = columns;
-      this.spinRandomMatrix.rotation((float) LXUtils.lerp(0, LX.TWO_PI * spinRandom.getValue(), Math.random()));
 
-      final float shapeLimit = .5f * shapeRandom.getValuef();
-      this.shapeRnd = (float) LXUtils.lerp(-shapeLimit, shapeLimit, Math.random());
+      if (copy != null) {
 
-      float spread = burstSpread.getValuef();
-      if (spread <= 1) {
-        this.xn = (float) LXUtils.lerp(.5 - .5*spread, .5 + .5*spread, Math.random());
-        this.yn = (float) LXUtils.lerp(.5 - .5*spread, .5 + .5*spread, Math.random());
+        this.spinRandomMatrix.set(copy.spinRandomMatrix);
+        this.shapeRnd = copy.shapeRnd;
+        this.xn = copy.xn;
+        this.yn = copy.yn;
+
       } else {
-        float s2 = spread - 1;
-        this.xn = Math.random() > 0.5 ?
-          (float) LXUtils.lerp(0, .5 - .5*s2, Math.random()) :
-          (float) LXUtils.lerp(.5 + .5*s2, 1, Math.random());
-        this.yn = Math.random() > 0.5 ?
-          (float) LXUtils.lerp(0, .5 - .5*s2, Math.random()) :
-          (float) LXUtils.lerp(.5 + .5*s2, 1, Math.random());
+
+        this.spinRandomMatrix.rotation((float) LXUtils.lerp(0, LX.TWO_PI * spinRandom.getValue(), Math.random()));
+
+        final float shapeLimit = .5f * shapeRandom.getValuef();
+        this.shapeRnd = (float) LXUtils.lerp(-shapeLimit, shapeLimit, Math.random());
+
+        float spread = burstSpread.getValuef();
+        if (spread <= 1) {
+          this.xn = (float) LXUtils.lerp(.5 - .5*spread, .5 + .5*spread, Math.random());
+          this.yn = (float) LXUtils.lerp(.5 - .5*spread, .5 + .5*spread, Math.random());
+        } else {
+          float s2 = spread - 1;
+          this.xn = Math.random() > 0.5 ?
+            (float) LXUtils.lerp(0, .5 - .5*s2, Math.random()) :
+            (float) LXUtils.lerp(.5 + .5*s2, 1, Math.random());
+          this.yn = Math.random() > 0.5 ?
+            (float) LXUtils.lerp(0, .5 - .5*s2, Math.random()) :
+            (float) LXUtils.lerp(.5 + .5*s2, 1, Math.random());
+        }
       }
     }
 
