@@ -20,7 +20,6 @@ This package currently requires macOS on an Apple Silicon machine. Windows instr
 
 * Download the latest [Chromatik pre-release](https://github.com/heronarts/Chromatik/releases/tag/1.1.1-SNAPSHOT-2025-07-22)
   * [MacOS Build](https://github.com/heronarts/Chromatik/releases/download/1.1.1-SNAPSHOT-2025-07-22/Chromatik-1.1.1-SNAPSHOT-MacOS-Apple-Silicon.zip)
-  * [Windows Build](https://github.com/heronarts/Chromatik/releases/download/1.1.1-SNAPSHOT-2025-07-22/Chromatik-1.1.1-SNAPSHOT-Win64-Installer.msi)
 * Register a [Chromatik account](https://chromatik.co/login)
 * Authorize Chromatik with your free license
 
