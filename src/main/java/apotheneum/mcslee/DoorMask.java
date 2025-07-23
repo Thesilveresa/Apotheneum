@@ -55,6 +55,11 @@ public class DoorMask extends ApotheneumEffect {
     .setExponent(2)
     .setDescription("Contrast level");
 
+  public final CompoundParameter invert =
+    new CompoundParameter("Invert", 0)
+    .setUnits(CompoundParameter.Units.PERCENT_NORMALIZED)
+    .setDescription("Invert the mask");
+
   public final BooleanParameter cue =
     new BooleanParameter("Cue", false)
     .setMode(BooleanParameter.Mode.MOMENTARY)
@@ -66,6 +71,7 @@ public class DoorMask extends ApotheneumEffect {
     addParameter("distance", this.distance);
     addParameter("contrast", this.contrast);
     addParameter("yRatio", this.yRatio);
+    addParameter("invert", this.invert);
     addParameter("cue", this.cue);
   }
 
@@ -110,6 +116,7 @@ public class DoorMask extends ApotheneumEffect {
     final double yRatio = 1. / this.yRatio.getValue();
     final boolean cue = this.cue.isOn();
     final double contrast = this.contrast.getValue();
+    final double sign = LXUtils.lerp(1, -1, this.invert.getValue());
 
     int pi = 0;
     for (LXPoint p : column.points) {
@@ -118,7 +125,7 @@ public class DoorMask extends ApotheneumEffect {
       double max = LXUtils.max(xDist, yDist);
       double dist = LXUtils.lerp(avg, max, square);
 
-      int mask = LXColor.grayn(LXUtils.lerp(1, LXUtils.clamp(.5f - contrast * (dist - distance), 0, 1), amount));
+      int mask = LXColor.grayn(LXUtils.lerp(1, LXUtils.clamp(.5f - sign * contrast * (dist - distance), 0, 1), amount));
       if (cue) {
         colors[p.index] = mask;
       } else {
