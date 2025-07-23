@@ -1,6 +1,6 @@
 {
   "version": "1.1.1-SNAPSHOT",
-  "timestamp": 1753265775595,
+  "timestamp": 1753266838202,
   "model": {
     "id": 2,
     "class": "heronarts.lx.structure.LXStructure",
@@ -1976,10 +1976,36 @@
                       "exp": 0.0
                     },
                     "children": {},
-                    "basis": 0.07995570368193144
+                    "basis": 0.09842623181735671
                   }
                 ],
                 "modulations": [
+                  {
+                    "source": {
+                      "id": 10387369,
+                      "path": "/modulation/modulator/1"
+                    },
+                    "target": {
+                      "componentId": 10387374,
+                      "parameterPath": "pitch",
+                      "path": "/pattern/2/pitch"
+                    },
+                    "id": 10393762,
+                    "class": "heronarts.lx.modulation.LXCompoundModulation",
+                    "internal": {
+                      "modulationColor": 0,
+                      "modulationControlsExpanded": true,
+                      "modulationsExpanded": true
+                    },
+                    "parameters": {
+                      "label": "LX",
+                      "enabled": true,
+                      "polarity": 0,
+                      "polarity/name": "UNIPOLAR",
+                      "range": 0.25
+                    },
+                    "children": {}
+                  },
                   {
                     "source": {
                       "id": 10387369,
@@ -2369,7 +2395,7 @@
                   "reverse": false,
                   "invert": 0.0,
                   "level": 1.0,
-                  "rotate": false,
+                  "rotate": true,
                   "yaw": 0.0,
                   "pitch": 0.0,
                   "roll": 0.0,
@@ -2429,7 +2455,7 @@
                           "exp": 0.0
                         },
                         "children": {},
-                        "basis": 0.07963739724298101
+                        "basis": 0.6809628015057931
                       }
                     ],
                     "modulations": [
@@ -2860,7 +2886,7 @@
                           "exp": 0.0
                         },
                         "children": {},
-                        "basis": 0.8268055636461312
+                        "basis": 0.2713088338939425
                       }
                     ],
                     "modulations": [
@@ -4127,12 +4153,12 @@
         "animation": true,
         "camera": {
           "active": true,
-          "radius": 1238.6146283977741,
-          "theta": 76.03555032331292,
-          "phi": 29.677889177575707,
-          "x": 287.33946697274223,
-          "y": 193.72419194877148,
-          "z": 235.92783349426463
+          "radius": 828.1306461374847,
+          "theta": 26.912938332254498,
+          "phi": 0.07229444039757027,
+          "x": 245.5,
+          "y": 237.75,
+          "z": 245.5
         },
         "cue": [
           {
@@ -4146,12 +4172,12 @@
           },
           {
             "active": true,
-            "radius": 1066.7506386865853,
-            "theta": 342.7422180024317,
-            "phi": 8.141010584658943,
-            "x": 260.7604882642627,
-            "y": 184.8747883439064,
-            "z": 224.1107775066048
+            "radius": 998.6553433606485,
+            "theta": 4.927781328468029,
+            "phi": 3.3080907965988007,
+            "x": 280.45631695354115,
+            "y": 192.1287361201553,
+            "z": 235.85892406541564
           },
           {
             "active": true,
@@ -4211,7 +4237,7 @@
           "phiMotion": 2,
           "phiMotion/name": "NOISE"
         },
-        "focus": 2,
+        "focus": 0,
         "pointCloud": {
           "ledStyle": 2,
           "ledStyle/name": "LENS3",
