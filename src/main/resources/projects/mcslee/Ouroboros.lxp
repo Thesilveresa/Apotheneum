@@ -1,6 +1,6 @@
 {
   "version": "1.1.1-SNAPSHOT",
-  "timestamp": 1753439001581,
+  "timestamp": 1753439158779,
   "model": {
     "id": 2,
     "class": "heronarts.lx.structure.LXStructure",
@@ -13843,7 +13843,7 @@
                                   "exp": 0.0
                                 },
                                 "children": {},
-                                "basis": 0.020922146246380984
+                                "basis": 0.19772464497167902
                               },
                               {
                                 "id": 10653390,
@@ -13885,7 +13885,7 @@
                                   "exp": 0.0
                                 },
                                 "children": {},
-                                "basis": 0.9277348677698098
+                                "basis": 0.13502724719377784
                               }
                             ],
                             "modulations": [
@@ -19428,7 +19428,7 @@
                                   "exp": 0.11749999014136847
                                 },
                                 "children": {},
-                                "basis": 0.2770922715030956
+                                "basis": 0.2944370348062347
                               },
                               {
                                 "id": 9845624,
@@ -19475,7 +19475,7 @@
                                   "triggerOut": false
                                 },
                                 "children": {},
-                                "basis": 0.45266559993911615
+                                "basis": 0.766557592832159
                               },
                               {
                                 "id": 9845653,
@@ -19517,7 +19517,7 @@
                                   "exp": 0.0
                                 },
                                 "children": {},
-                                "basis": 0.18033476971403414
+                                "basis": 0.26940823157283794
                               }
                             ],
                             "modulations": [
@@ -40405,7 +40405,7 @@
                           "exp": 0.0
                         },
                         "children": {},
-                        "basis": 0.24702971759100567
+                        "basis": 0.37967111224862427
                       }
                     ],
                     "modulations": [
@@ -40987,7 +40987,7 @@
                           "triggerOut": false
                         },
                         "children": {},
-                        "basis": 0.7655252625102787
+                        "basis": 0.8341466576436123
                       },
                       {
                         "id": 10655809,
@@ -41164,7 +41164,7 @@
               "triggerOut": false
             },
             "children": {},
-            "basis": 0.8758572291929089
+            "basis": 0.9807517281864916
           },
           {
             "id": 9848593,
@@ -41638,7 +41638,7 @@
           "receiveActive": true,
           "transmitHost": "localhost",
           "transmitPort": 4040,
-          "transmitActive": true,
+          "transmitActive": false,
           "logInput": false,
           "logOutput": false
         },
@@ -41675,9 +41675,9 @@
         "animation": false,
         "camera": {
           "active": true,
-          "radius": 712.7146322469899,
-          "theta": 43.12079999999918,
-          "phi": -4.902051565613248,
+          "radius": 914.0391573426317,
+          "theta": 12.873599999999954,
+          "phi": -1.863126611862455,
           "x": 245.40563212381676,
           "y": 257.25590347498655,
           "z": 247.76839566824492
