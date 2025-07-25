@@ -33,47 +33,6 @@ public class Lightning extends ApotheneumRasterPattern
   public final TriggerParameter trig = new TriggerParameter("Trig", this::trig)
       .setDescription("Trigger a lightning strike");
 
-<<<<<<< HEAD
-  public final DiscreteParameter algorithm = new DiscreteParameter("Algorithm",
-      new String[] { "Midpoint", "L-System", "RRT", "Physical" }, 0)
-      .setDescription("Lightning generation algorithm");
-
-  public final CompoundParameter intensity = new CompoundParameter("Intensity", 1)
-      .setUnits(CompoundParameter.Units.PERCENT_NORMALIZED)
-      .setDescription("Overall brightness of lightning");
-
-  public final CompoundParameter branchProbability = new CompoundParameter("Branch", 0.3, 0, 1)
-      .setDescription("Likelihood of creating branches during displacement");
-
-  public final CompoundParameter displacement = new CompoundParameter("Displace", 0.5, 0, 1)
-      .setDescription("Maximum perpendicular displacement for midpoint algorithm");
-
-  public final CompoundParameter recursionDepth = new CompoundParameter("Depth", 6, 3, 10)
-      .setDescription("Maximum subdivision levels for detail");
-
-  public final CompoundParameter fade = new CompoundParameter("Fade", 1)
-      .setUnits(CompoundParameter.Units.PERCENT_NORMALIZED)
-      .setDescription("External envelope control for lightning fade");
-
-  public final CompoundParameter thickness = new CompoundParameter("Thickness", 1, 0.5, 3)
-      .setDescription("Base thickness of lightning bolts");
-
-  public final CompoundParameter startX = new CompoundParameter("Start X", 0.5, 0, 1)
-      .setUnits(CompoundParameter.Units.PERCENT_NORMALIZED)
-      .setDescription("Starting X position across the top (0=left, 1=right)");
-
-  public final CompoundParameter startSpread = new CompoundParameter("Start Spread", 0.5, 0, 1)
-      .setUnits(CompoundParameter.Units.PERCENT_NORMALIZED)
-      .setDescription("How spread out lightning start points are across the top");
-
-  public final CompoundParameter endSpread = new CompoundParameter("End Spread", 0.5, 0, 1)
-      .setUnits(CompoundParameter.Units.PERCENT_NORMALIZED)
-      .setDescription("How spread out lightning end points are across the bottom");
-
-  public final CompoundParameter branchDistance = new CompoundParameter("Branch Dist", 0.5, 0.1, 2)
-      .setDescription("Maximum distance branches can extend from main bolt");
-
-=======
   public enum Algorithm {
     MIDPOINT("Midpoint"),
     L_SYSTEM("L-System"),
@@ -138,7 +97,6 @@ public class Lightning extends ApotheneumRasterPattern
   public final CompoundParameter branchDistance = new CompoundParameter("Branch Dist", 0.5, 0.1, 2)
       .setDescription("Maximum distance branches can extend from main bolt");
 
->>>>>>> main
   public final CompoundParameter branchAngle = new CompoundParameter("Branch Angle", 0.5, 0, 1)
       .setUnits(CompoundParameter.Units.PERCENT_NORMALIZED)
       .setDescription("How much branches can deviate from the main bolt direction");
