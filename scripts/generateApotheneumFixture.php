@@ -30,12 +30,14 @@ $params = array();
 for ($i = 1; $i <= 20; ++$i) {
   $digit = sprintf("%02d", $i);
   $params []= '"cub'.$digit.'On": { "type": "boolean", "default": true, "label": "CUB '.$digit.'", "description": "CUB-'.$digit.' Enabled" }';
+  $params []= '"cub'.$digit.'Flip": { "type": "boolean", "default": true, "label": "CUB '.$digit.' Flip", "description": "CUB-'.$digit.' Flip" }';
   $params []= '"cub'.$digit.'": { "type": "string", "default": "10.0.1.1'.$digit.'", "label": "CUB '.$digit.' IP", "description": "CUB-'.$digit.' IP address" }';
 }
 for ($i = 1; $i <= 12; ++$i) {
   $digit = sprintf("%02d", $i);
   $ip = sprintf("%02d", 20 + $i);
   $params []= '"cyl'.$digit.'On": { "type": "boolean", "default": true, "label": "CYL '.$digit.'", "description": "CYL-'.$digit.' Enabled" }';
+  $params []= '"cyl'.$digit.'Flip": { "type": "boolean", "default": true, "label": "CYL '.$digit.' Flip", "description": "CYL-'.$digit.' Flip" }';
   $params []= '"cyl'.$digit.'": { "type": "string", "default": "10.0.1.1'.$ip.'", "label": "CYL '.$digit.' IP", "description": "CYL-'.$digit.' IP address" }';
 }
 echo '    '.join(",\n    ", $params)."\n";
@@ -270,6 +272,7 @@ echo '    '.join(",\n    ", $params)."\n";
 <?php
 
 $outputs = array();
+$outputsFlip = array();
 
 // Cube outputs
 for ($i = 0; $i < 20; ++$i) {
@@ -279,7 +282,14 @@ for ($i = 0; $i < 20; ++$i) {
 
   // Exterior cube universe
   $output = '{
-      "enabled": "$cub'.$digit.'On",
+      "enabled": "$cub'.$digit.'On & !$cub'.$digit.'Flip",
+      "protocol": "artnet",
+      "host": "$cub'.$digit.'",
+      "universe": '.$univExt.',
+      "segments": ';
+
+  $outputFlip = '{
+      "enabled": "$cub'.$digit.'On & $cub'.$digit.'Flip",
       "protocol": "artnet",
       "host": "$cub'.$digit.'",
       "universe": '.$univExt.',
@@ -298,13 +308,33 @@ for ($i = 0; $i < 20; ++$i) {
     }';
   $outputs []= $output;
 
+  $segmentsFlip = array();
+  for ($s = 9; $s >= 0; --$s) {
+    $start = $i * 450 + $s * 45;
+    $num = ($i % 5 == 2) ? 34 : 45;
+    $reverse = ($s % 2 == 0) ? ', "reverse": true' : '';
+    $segmentsFlip []= '{ "start": '.$start.', "num": '.$num.$reverse.' }';
+  }
+  $outputFlip .= "[\n        ".join(",\n        ", $segmentsFlip);
+  $outputFlip .= '
+      ]
+    }';
+  $outputsFlip []= $outputFlip;
+  
   // Interior cube universe
   $output = '{
-      "enabled": "$cub'.$digit.'On",
+      "enabled": "$cub'.$digit.'On & !$cub'.$digit.'Flip",
       "protocol": "artnet",
       "host": "$cub'.$digit.'",
       "universe": '.$univInt.',
       "segments": ';
+  $outputFlip = '{
+      "enabled": "$cub'.$digit.'On & $cub'.$digit.'Flip",
+      "protocol": "artnet",
+      "host": "$cub'.$digit.'",
+      "universe": '.$univInt.',
+      "segments": ';
+      
   $segments = array();
   for ($s = 0; $s < 10; ++$s) {
     $start = 9000 + $i * 450 + $s * 45;
@@ -317,6 +347,19 @@ for ($i = 0; $i < 20; ++$i) {
       ]
     }';
   $outputs []= $output;
+  
+  $segmentsFlip = array();
+  for ($s = 9; $s >= 0; --$s) {
+    $start = 9000 + $i * 450 + $s * 45;
+    $num = ($i % 5 == 2) ? 34 : 45;
+    $reverse = ($s % 2 == 0) ? ', "reverse": true' : '';
+    $segmentsFlip []= '{ "start": '.$start.', "num": '.$num.$reverse.' }';
+  }
+  $outputFlip .= "[\n        ".join(",\n        ", $segmentsFlip);
+  $outputFlip .= '
+      ]
+    }';
+  $outputsFlip []= $outputFlip;
 }
 
 // Cylinder outputs
@@ -332,7 +375,14 @@ for ($i = 0; $i < 12; ++$i) {
 
   // Exterior cube universe
   $output = '{
-      "enabled": "$cyl'.$digit.'On",
+      "enabled": "$cyl'.$digit.'On & !$cyl'.$digit.'Flip",
+      "protocol": "artnet",
+      "host": "$cyl'.$digit.'",
+      "universe": '.$univExt.',
+      "segments": ';
+
+  $outputFlip = '{
+      "enabled": "$cyl'.$digit.'On & $cyl'.$digit.'Flip",
       "protocol": "artnet",
       "host": "$cyl'.$digit.'",
       "universe": '.$univExt.',
@@ -350,14 +400,35 @@ for ($i = 0; $i < 12; ++$i) {
       ]
     }';
   $outputs []= $output;
+  
+  $segmentsFlip = array();
+  for ($s = 9; $s >= 0; --$s) {
+    $start = 18000 + $i * 430 + $s * 43;
+    $num = ($d % 3 == 2) ? 32 : 43;
+    $reverse = ($s % 2 == 0) ? ', "reverse": true' : '';
+    $segmentsFlip []= '{ "start": '.$start.', "num": '.$num.$reverse.' }';
+  }
+  $outputFlip .= "[\n        ".join(",\n        ", $segmentsFlip);
+  $outputFlip .= '
+      ]
+    }';
+  $outputsFlip []= $outputFlip;
 
   // Interior cube universe
   $output = '{
-      "enabled": "$cyl'.$digit.'On",
+      "enabled": "$cyl'.$digit.'On & !$cyl'.$digit.'Flip",
       "protocol": "artnet",
       "host": "$cyl'.$digit.'",
       "universe": '.$univInt.',
       "segments": ';
+      
+  $outputFlip = '{
+      "enabled": "$cyl'.$digit.'On & $cyl'.$digit.'Flip",
+      "protocol": "artnet",
+      "host": "$cyl'.$digit.'",
+      "universe": '.$univInt.',
+      "segments": ';
+      
   $segments = array();
   for ($s = 0; $s < 10; ++$s) {
     $start = 23160 + $i * 430 + $s * 43;
@@ -370,9 +441,23 @@ for ($i = 0; $i < 12; ++$i) {
       ]
     }';
   $outputs []= $output;
+  
+  $segmentsFlip = array();
+  for ($s = 9; $s >= 0; --$s) {
+    $start = 23160 + $i * 430 + $s * 43;
+    $num = ($d % 3 == 2) ? 32 : 43;
+    $reverse = ($s % 2 == 1) ? ', "reverse": true' : '';
+    $segmentsFlip []= '{ "start": '.$start.', "num": '.$num.$reverse.' }';
+  }
+  $outputFlip .= "[\n        ".join(",\n        ", $segmentsFlip);
+  $outputFlip .= '
+      ]
+    }';
+  $outputsFlip []= $outputFlip;
 }
 
-echo '    '.join(",\n    ", $outputs)."\n";
+echo '    '.join(",\n    ", $outputs).",\n";
+echo '    '.join(",\n    ", $outputsFlip)."\n";
 ?>
   ]
 }
