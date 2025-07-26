@@ -11,6 +11,7 @@ import apotheneum.ApotheneumPattern;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 @LXCategory("Apotheneum/thesilveresa")
 @LXComponentName("Alhambra Memory")
@@ -37,9 +38,9 @@ public class AlhambraMemory extends ApotheneumPattern {
     try {
       tileImage = ImageIO.read(getClass().getResourceAsStream("/images/alhambra_tile.jpg"));
       imageLoaded = true;
-    } catch (Exception x) {
-      LX.error(x, "Failed to load Alhambra tile image.");
-      lx.pushError(x, "Could not find the Alhambra Tile image");
+    } catch (IOException | NullPointerException e) {
+      System.err.println("Failed to load Alhambra tile image.");
+      e.printStackTrace();
     }
   }
 
