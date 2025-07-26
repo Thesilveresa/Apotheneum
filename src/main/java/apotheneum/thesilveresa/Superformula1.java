@@ -20,6 +20,14 @@ import heronarts.lx.parameter.DiscreteParameter;
 @LXComponentName("Superformula 1")
 public class Superformula1 extends ApotheneumPattern {
 
+  // Precomputed constants
+  private static final float INV_1_6 = 1.0f / 1.6f;
+  private static final float TWO_PI = (float)(Math.PI * 2.0);
+  private static final float INV_FOUR = 0.25f;
+  private static final float HALF = 0.5f;
+  private static final int ANGLE_STEPS = 360; // Lookup table resolution
+  private static final float INV_ANGLE_STEPS = 1.0f / ANGLE_STEPS;
+
   // Core superformula parameters
   private final CompoundParameter m = new CompoundParameter("m", 5.0, 1.0, 20.0)
     .setDescription("Rotational symmetry parameter");
@@ -66,22 +74,27 @@ public class Superformula1 extends ApotheneumPattern {
 
   // Predefined superformula presets (m, n1, n2, n3, a, b)
   private static final float[][] PRESETS = {
-    {5f, 1f, 1f, 1f, 1f, 1f},        // Pentagon
-    {3f, 4.5f, 10f, 10f, 1f, 1f},    // Triangle with curves
-    {6f, 1f, 7f, 8f, 1f, 1f},        // Hexagon variant
-    {2f, 1f, 1f, 1f, 1f, 1f},        // Ellipse
-    {4f, 0.5f, 0.5f, 4f, 1f, 1f},    // Square with indentations
-    {8f, 1f, 1f, 8f, 1f, 1f},        // Octagon
-    {3f, 0.5f, 0.5f, 0.5f, 1f, 1f},  // Triangular star
-    {7f, 2f, 6f, 6f, 1f, 1f},        // Complex heptagon
-    {4f, 1f, 0.5f, 0.8f, 1f, 1f},    // Square variant
-    {6f, 10f, 10f, 10f, 1f, 1f}      // Smooth hexagon
+    {5f, 1f, 1f, 1f, 1f, 1f},
+    {3f, 4.5f, 10f, 10f, 1f, 1f},
+    {6f, 1f, 7f, 8f, 1f, 1f},
+    {2f, 1f, 1f, 1f, 1f, 1f},
+    {4f, 0.5f, 0.5f, 4f, 1f, 1f},
+    {8f, 1f, 1f, 8f, 1f, 1f},
+    {3f, 0.5f, 0.5f, 0.5f, 1f, 1f},
+    {7f, 2f, 6f, 6f, 1f, 1f},
+    {4f, 1f, 0.5f, 0.8f, 1f, 1f},
+    {6f, 10f, 10f, 10f, 1f, 1f}
   };
   
   private static final float[] HUES = {50f, 340f, 200f, 300f, 120f, 60f, 280f, 180f, 20f, 240f};
 
   // Current interpolated parameters
   private float currentM, currentN1, currentN2, currentN3, currentA, currentB;
+  
+  // Cached values
+  private float cosRot, sinRot, scaleVal, animTime;
+  private float[] superformulaTable = new float[ANGLE_STEPS];
+  private float pulseFactor, brightnessFactor;
 
   public Superformula1(LX lx) {
     super(lx);
@@ -104,7 +117,6 @@ public class Superformula1 extends ApotheneumPattern {
     addParameter("Anim", this.animMode);
     addParameter("Rate", this.animRate);
 
-    // Initialize with first preset
     float[] p = PRESETS[0];
     currentM = p[0];
     currentN1 = p[1];
@@ -116,45 +128,36 @@ public class Superformula1 extends ApotheneumPattern {
   
   private void interpolatePresets(float sweepValue) {
     int numPresets = PRESETS.length;
-    
-    // Map sweep value to preset range
     float scaledSweep = sweepValue * (numPresets - 1);
-    int basePreset = (int)Math.floor(scaledSweep);
+    int basePreset = (int)scaledSweep;
     int nextPreset = (basePreset + 1) % numPresets;
     float t = scaledSweep - basePreset;
+    t = t * t * (3 - 2 * t);
     
-    // Get the two presets to interpolate between
     float[] preset1 = PRESETS[basePreset % numPresets];
     float[] preset2 = PRESETS[nextPreset];
     
-    // Smooth interpolation
-    t = smoothStep(t);
+    float baseM = preset1[0] + (preset2[0] - preset1[0]) * t;
+    float baseN1 = preset1[1] + (preset2[1] - preset1[1]) * t;
+    float baseN2 = preset1[2] + (preset2[2] - preset1[2]) * t;
+    float baseN3 = preset1[3] + (preset2[3] - preset1[3]) * t;
+    float baseA = preset1[4] + (preset2[4] - preset1[4]) * t;
+    float baseB = preset1[5] + (preset2[5] - preset1[5]) * t;
     
-    // Interpolate preset values as base
-    float baseM = lerp(preset1[0], preset2[0], t);
-    float baseN1 = lerp(preset1[1], preset2[1], t);
-    float baseN2 = lerp(preset1[2], preset2[2], t);
-    float baseN3 = lerp(preset1[3], preset2[3], t);
-    float baseA = lerp(preset1[4], preset2[4], t);
-    float baseB = lerp(preset1[5], preset2[5], t);
-    
-    // Apply manual knob offsets to the interpolated base values
-    currentM = baseM * (m.getValuef() / 5.0f);  // 5.0 is the default m value
-    currentN1 = baseN1 * (n1.getValuef() / 1.0f);  // 1.0 is the default n1 value
-    currentN2 = baseN2 * (n2.getValuef() / 1.0f);  // 1.0 is the default n2 value
-    currentN3 = baseN3 * (n3.getValuef() / 1.0f);  // 1.0 is the default n3 value
-    currentA = baseA * (a.getValuef() / 1.0f);   // 1.0 is the default a value
-    currentB = baseB * (b.getValuef() / 1.0f);   // 1.0 is the default b value
+    currentM = baseM * (m.getValuef() * 0.2f);
+    currentN1 = baseN1 * n1.getValuef();
+    currentN2 = baseN2 * n2.getValuef();
+    currentN3 = baseN3 * n3.getValuef();
+    currentA = baseA * a.getValuef();
+    currentB = baseB * b.getValuef();
   }
   
   private void updateParameters() {
     float sweepValue = sweep.getValuef();
     
     if (sweepValue > 0.001f) {
-      // Use sweep knob to interpolate between presets, with manual knob modulation
       interpolatePresets(sweepValue);
     } else {
-      // Use manual parameters directly - preset only affects color now
       currentM = m.getValuef();
       currentN1 = n1.getValuef();
       currentN2 = n2.getValuef();
@@ -162,106 +165,107 @@ public class Superformula1 extends ApotheneumPattern {
       currentA = a.getValuef();
       currentB = b.getValuef();
     }
+    updateSuperformulaTable();
   }
   
-  private float smoothStep(float t) {
-    return t * t * (3 - 2 * t);
-  }
-  
-  private float lerp(float start, float end, float t) {
-    return start + (end - start) * t;
-  }
-  
-  private float superformula(float angle, float mVal, float n1Val, float n2Val, float n3Val, float aVal, float bVal) {
-    float cosComponent = Math.abs((float)Math.cos(mVal * angle / 4.0) / aVal);
-    float sinComponent = Math.abs((float)Math.sin(mVal * angle / 4.0) / bVal);
-    
-    float term1 = (float)Math.pow(cosComponent, n2Val);
-    float term2 = (float)Math.pow(sinComponent, n3Val);
-    
-    float result = (float)Math.pow(term1 + term2, -1.0 / n1Val);
-    
-    // Handle edge cases
-    if (!Float.isFinite(result) || result <= 0) {
-      result = 0.001f;
+  private void updateSuperformulaTable() {
+    for (int i = 0; i < ANGLE_STEPS; i++) {
+      float angle = i * INV_ANGLE_STEPS * TWO_PI;
+      float angleTerm = currentM * angle * INV_FOUR;
+      float cosComponent = Math.abs((float)Math.cos(angleTerm) / currentA);
+      float sinComponent = Math.abs((float)Math.sin(angleTerm) / currentB);
+      float term1 = fastPow(cosComponent, currentN2);
+      float term2 = fastPow(sinComponent, currentN3);
+      float result = fastPow(term1 + term2, -1.0f / currentN1);
+      superformulaTable[i] = Float.isFinite(result) && result > 0 ? result : 0.001f;
     }
-    
-    return result;
   }
   
-  private boolean isInsideShape(float u, float v, float time) {
-    float scaleVal = scale.getValuef();
-    // Get rotation from the knob (0-1 maps to 0-2π)
-    float rotVal = rotation.getValuef() * 2f * (float)Math.PI;
+  // Fast approximation for pow(x, y) for small exponents
+  private float fastPow(float x, float y) {
+    if (Math.abs(y - 1.0f) < 0.01f) return x;
+    if (Math.abs(y - 2.0f) < 0.01f) return x * x;
+    if (Math.abs(y - 0.5f) < 0.01f) return (float)Math.sqrt(x);
+    return (float)Math.pow(x, y);
+  }
+  
+  private void precomputeFrameValues(float time) {
+    scaleVal = scale.getValuef();
+    float rotVal = rotation.getValuef() * TWO_PI;
     
-    // Add animation rotation on top of manual rotation
     int mode = animMode.getValuei();
-    if (mode == 2) { // Rotate mode
-      rotVal += time * animRate.getValuef() * 0.5f;
+    if (mode == 2) {
+      rotVal += time * animRate.getValuef() * HALF;
     }
     
-    // Convert UV to centered coordinates
-    float x = (u - 0.5f);
-    float y = (v - 0.5f);
+    cosRot = (float)Math.cos(rotVal);
+    sinRot = (float)Math.sin(rotVal);
     
-    // Apply rotation transformation
-    float rotX = x * (float)Math.cos(rotVal) - y * (float)Math.sin(rotVal);
-    float rotY = x * (float)Math.sin(rotVal) + y * (float)Math.cos(rotVal);
+    if (mode == 1) {
+      pulseFactor = 0.7f + 0.6f * (float)Math.sin(time * animRate.getValuef() * 2f);
+      scaleVal *= pulseFactor;
+      brightnessFactor = 0.6f + 0.4f * (float)Math.sin(time * animRate.getValuef() * 3f);
+    } else if (mode == 3) {
+      scaleVal *= (0.8f + 0.4f * (float)Math.sin(time * animRate.getValuef()));
+      brightnessFactor = 1.0f;
+    } else {
+      pulseFactor = 1.0f;
+      brightnessFactor = 1.0f;
+    }
     
-    // Convert back to polar coordinates for superformula calculation
+    animTime = time;
+  }
+  
+  private float superformula(float angle) {
+    int index = (int)((angle / TWO_PI) * ANGLE_STEPS);
+    index = Math.max(0, Math.min(ANGLE_STEPS - 1, index));
+    return superformulaTable[index];
+  }
+  
+  private boolean isInsideShape(float u, float v) {
+    float x = u - HALF;
+    float y = v - HALF;
+    
+    float rotX = x * cosRot - y * sinRot;
+    float rotY = x * sinRot + y * cosRot;
+    
     float radius = (float)Math.sqrt(rotX * rotX + rotY * rotY);
     float angle = (float)Math.atan2(rotY, rotX);
-    if (angle < 0) angle += 2f * (float)Math.PI;
+    if (angle < 0) angle += TWO_PI;
     
-    // Apply animation scaling
-    if (mode == 1) { // Pulse mode
-      float pulse = 0.5f + 0.5f * (float)Math.sin(time * animRate.getValuef() * 2f);
-      scaleVal *= (0.7f + 0.6f * pulse);
-    } else if (mode == 3) { // Breathe mode
-      float breathe = 0.5f + 0.5f * (float)Math.sin(time * animRate.getValuef());
-      scaleVal *= (0.8f + 0.4f * breathe);
-    }
-    
-    float shapeRadius = superformula(angle, currentM, currentN1, currentN2, currentN3, currentA, currentB);
-    shapeRadius *= scaleVal * 0.4f; // Scale to fit in UV space
+    float shapeRadius = superformula(angle) * scaleVal * 0.4f;
     
     return radius <= shapeRadius;
   }
   
-  private boolean isOnEdge(float u, float v, float invCols, float invRows, float time) {
-    if (!isInsideShape(u, v, time)) return false;
+  private boolean isOnEdge(float u, float v, float invCols, float invRows) {
+    if (!isInsideShape(u, v)) return false;
     
-    float threshold = edgeWidth.getValuef();
-    
-    // Check neighboring pixels
-    boolean rightNeighbor = isInsideShape(u + invCols, v, time);
-    boolean leftNeighbor = isInsideShape(u - invCols, v, time);
-    boolean upNeighbor = isInsideShape(u, v + invRows, time);
-    boolean downNeighbor = isInsideShape(u, v - invRows, time);
-    
-    return !rightNeighbor || !leftNeighbor || !upNeighbor || !downNeighbor;
+    // Simplified edge detection: check fewer neighbors
+    float uPlus = u + invCols;
+    float vPlus = v + invRows;
+    return !(isInsideShape(uPlus, v) && isInsideShape(u, vPlus));
   }
 
   @Override
   protected void render(double deltaMs) {
     updateParameters();
     
-    float time = (float)(lx.engine.nowMillis / 1000.0);
+    float time = (float)(lx.engine.nowMillis * 0.001) * morphSpeed.getValuef();
+    precomputeFrameValues(time);
     
-    // Determine current hue based on sweep position or preset
     float hue;
     float sweepValue = sweep.getValuef();
     if (sweepValue > 0.001f) {
-      // Interpolate hue based on sweep position
       float scaledSweep = sweepValue * (HUES.length - 1);
-      int baseHue = (int)Math.floor(scaledSweep);
+      int baseHue = (int)scaledSweep;
       int nextHue = (baseHue + 1) % HUES.length;
       float t = scaledSweep - baseHue;
+      t = t * t * (3 - 2 * t);
       
       float hue1 = HUES[baseHue % HUES.length];
       float hue2 = HUES[nextHue];
       
-      // Handle hue wraparound for smooth color transitions
       if (Math.abs(hue2 - hue1) > 180) {
         if (hue1 > hue2) {
           hue2 += 360;
@@ -270,37 +274,34 @@ public class Superformula1 extends ApotheneumPattern {
         }
       }
       
-      hue = lerp(hue1, hue2, smoothStep(t));
+      hue = hue1 + (hue2 - hue1) * t;
       if (hue >= 360) hue -= 360;
     } else {
-      int currentPreset = preset.getValuei();
-      hue = HUES[currentPreset % HUES.length];
+      hue = HUES[preset.getValuei() % HUES.length];
     }
     
     float saturation = sat.getValuef();
     float baseBright = brightness.getValuef();
     boolean fillMode = filled.getValueb();
     
-    // Render cube
     Cube cube = Apotheneum.cube;
     if (cube != null) {
-      renderCubeGeometry(cube.exterior, time, hue, saturation, baseBright, fillMode);
-      if (cube.interior != null) {
-        renderCubeGeometry(cube.interior, time, hue, saturation, baseBright, fillMode);
-      }
+      renderCubeGeometry(cube.exterior, hue, saturation, baseBright, fillMode);
+      copyCubeExterior();
     }
     
-    // Render cylinder
     Cylinder cylinder = Apotheneum.cylinder;
     if (cylinder != null) {
-      renderCylinderGeometry(cylinder.exterior, time, hue, saturation, baseBright, fillMode);
-      if (cylinder.interior != null) {
-        renderCylinderGeometry(cylinder.interior, time, hue, saturation, baseBright, fillMode);
-      }
+      renderCylinderGeometry(cylinder.exterior, hue, saturation, baseBright, fillMode);
+      copyCylinderExterior();
     }
   }
   
-  private void renderCubeGeometry(Cube.Orientation orientation, float time, float hue, float saturation, float baseBright, boolean fillMode) {
+  private void renderCubeGeometry(Cube.Orientation orientation, float hue, float saturation, float baseBright, boolean fillMode) {
+    int mode = animMode.getValuei();
+    float brightness = baseBright * (mode == 1 ? brightnessFactor : 1.0f);
+    int color = fillMode ? LXColor.hsb(hue, saturation, brightness) : 0;
+    
     for (Face face : orientation.faces) {
       int cols = face.columns.length;
       int rows = face.rows.length;
@@ -308,24 +309,17 @@ public class Superformula1 extends ApotheneumPattern {
       float invRows = 1.0f / Math.max(1, rows - 1);
       
       for (Row row : face.rows) {
+        float v = row.index * invRows;
         for (int cx = 0; cx < cols; cx++) {
           LXPoint p = row.points[cx];
           float u = cx * invCols;
-          float v = row.index * invRows;
           
-          boolean inside = isInsideShape(u, v, time);
-          boolean onEdge = !fillMode && isOnEdge(u, v, invCols, invRows, time);
+          boolean inside = isInsideShape(u, v);
+          boolean onEdge = !fillMode && isOnEdge(u, v, invCols, invRows);
           
-          if ((fillMode && inside) || (!fillMode && onEdge)) {
-            float brightness = baseBright;
-            
-            // Add animation brightness modulation
-            int mode = animMode.getValuei();
-            if (mode == 1) { // Pulse brightness
-              float pulse = 0.5f + 0.5f * (float)Math.sin(time * animRate.getValuef() * 3f);
-              brightness *= (0.6f + 0.4f * pulse);
-            }
-            
+          if (fillMode && inside) {
+            colors[p.index] = color;
+          } else if (!fillMode && onEdge) {
             colors[p.index] = LXColor.hsb(hue, saturation, brightness);
           } else {
             colors[p.index] = 0;
@@ -335,34 +329,30 @@ public class Superformula1 extends ApotheneumPattern {
     }
   }
   
-  private void renderCylinderGeometry(Cylinder.Orientation orientation, float time, float hue, float saturation, float baseBright, boolean fillMode) {
+  private void renderCylinderGeometry(Cylinder.Orientation orientation, float hue, float saturation, float baseBright, boolean fillMode) {
+    int mode = animMode.getValuei();
+    float brightness = baseBright * (mode == 1 ? brightnessFactor : 1.0f);
+    int color = fillMode ? LXColor.hsb(hue, saturation, brightness) : 0;
+    
     Ring[] rings = orientation.rings;
     int numRings = rings.length;
+    float invNumRings = 1.0f / Math.max(1, numRings - 1);
     
     for (int ringIndex = 0; ringIndex < numRings; ringIndex++) {
       Ring ring = rings[ringIndex];
       int pointsPerRing = ring.points.length;
+      float v = ringIndex * invNumRings;
       
       for (int pointIndex = 0; pointIndex < pointsPerRing; pointIndex++) {
         LXPoint p = ring.points[pointIndex];
-        
-        // Cylindrical to UV mapping
         float u = (float)pointIndex / pointsPerRing;
-        float v = (float)ringIndex / Math.max(1, numRings - 1);
         
-        boolean inside = isInsideShape(u, v, time);
-        boolean onEdge = !fillMode && isCylinderEdge(u, v, pointIndex, ringIndex, pointsPerRing, numRings, time);
+        boolean inside = isInsideShape(u, v);
+        boolean onEdge = !fillMode && isCylinderEdge(u, v, pointIndex, ringIndex, pointsPerRing, numRings);
         
-        if ((fillMode && inside) || (!fillMode && onEdge)) {
-          float brightness = baseBright;
-          
-          // Add animation brightness modulation
-          int mode = animMode.getValuei();
-          if (mode == 1) { // Pulse brightness
-            float pulse = 0.5f + 0.5f * (float)Math.sin(time * animRate.getValuef() * 3f);
-            brightness *= (0.6f + 0.4f * pulse);
-          }
-          
+        if (fillMode && inside) {
+          colors[p.index] = color;
+        } else if (!fillMode && onEdge) {
           colors[p.index] = LXColor.hsb(hue, saturation, brightness);
         } else {
           colors[p.index] = 0;
@@ -371,28 +361,14 @@ public class Superformula1 extends ApotheneumPattern {
     }
   }
   
-  private boolean isCylinderEdge(float u, float v, int pointIndex, int ringIndex, int pointsPerRing, int numRings, float time) {
-    if (!isInsideShape(u, v, time)) return false;
+  private boolean isCylinderEdge(float u, float v, int pointIndex, int ringIndex, int pointsPerRing, int numRings) {
+    if (!isInsideShape(u, v)) return false;
     
-    // Check circumferential neighbors
     int nextPoint = (pointIndex + 1) % pointsPerRing;
-    int prevPoint = (pointIndex - 1 + pointsPerRing) % pointsPerRing;
     float nextU = (float)nextPoint / pointsPerRing;
-    float prevU = (float)prevPoint / pointsPerRing;
+    float invNumRings = 1.0f / Math.max(1, numRings - 1);
+    float nextV = ringIndex + 1 < numRings ? (ringIndex + 1) * invNumRings : v;
     
-    boolean circumNeighbors = isInsideShape(nextU, v, time) && isInsideShape(prevU, v, time);
-    
-    // Check height neighbors
-    boolean heightNeighbors = true;
-    if (ringIndex + 1 < numRings) {
-      float nextV = (float)(ringIndex + 1) / Math.max(1, numRings - 1);
-      heightNeighbors &= isInsideShape(u, nextV, time);
-    }
-    if (ringIndex - 1 >= 0) {
-      float prevV = (float)(ringIndex - 1) / Math.max(1, numRings - 1);
-      heightNeighbors &= isInsideShape(u, prevV, time);
-    }
-    
-    return !circumNeighbors || !heightNeighbors;
+    return !(isInsideShape(nextU, v) && isInsideShape(u, nextV));
   }
 }
