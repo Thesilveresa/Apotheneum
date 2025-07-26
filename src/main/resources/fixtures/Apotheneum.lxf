@@ -26,68 +26,100 @@
     "starsEnabled": { "type": "boolean", "default": true, "label": "Stars UI", "description": "Whether the stars are rendered" },
     "peopleEnabled": { "type": "boolean", "default": true, "label": "People UI", "description": "Whether people are rendered" },
     "cub01On": { "type": "boolean", "default": true, "label": "CUB 01", "description": "CUB-01 Enabled" },
+    "cub01Flip": { "type": "boolean", "default": true, "label": "CUB 01 Flip", "description": "CUB-01 Flip" },
     "cub01": { "type": "string", "default": "10.0.1.101", "label": "CUB 01 IP", "description": "CUB-01 IP address" },
     "cub02On": { "type": "boolean", "default": true, "label": "CUB 02", "description": "CUB-02 Enabled" },
+    "cub02Flip": { "type": "boolean", "default": true, "label": "CUB 02 Flip", "description": "CUB-02 Flip" },
     "cub02": { "type": "string", "default": "10.0.1.102", "label": "CUB 02 IP", "description": "CUB-02 IP address" },
     "cub03On": { "type": "boolean", "default": true, "label": "CUB 03", "description": "CUB-03 Enabled" },
+    "cub03Flip": { "type": "boolean", "default": true, "label": "CUB 03 Flip", "description": "CUB-03 Flip" },
     "cub03": { "type": "string", "default": "10.0.1.103", "label": "CUB 03 IP", "description": "CUB-03 IP address" },
     "cub04On": { "type": "boolean", "default": true, "label": "CUB 04", "description": "CUB-04 Enabled" },
+    "cub04Flip": { "type": "boolean", "default": true, "label": "CUB 04 Flip", "description": "CUB-04 Flip" },
     "cub04": { "type": "string", "default": "10.0.1.104", "label": "CUB 04 IP", "description": "CUB-04 IP address" },
     "cub05On": { "type": "boolean", "default": true, "label": "CUB 05", "description": "CUB-05 Enabled" },
+    "cub05Flip": { "type": "boolean", "default": true, "label": "CUB 05 Flip", "description": "CUB-05 Flip" },
     "cub05": { "type": "string", "default": "10.0.1.105", "label": "CUB 05 IP", "description": "CUB-05 IP address" },
     "cub06On": { "type": "boolean", "default": true, "label": "CUB 06", "description": "CUB-06 Enabled" },
+    "cub06Flip": { "type": "boolean", "default": true, "label": "CUB 06 Flip", "description": "CUB-06 Flip" },
     "cub06": { "type": "string", "default": "10.0.1.106", "label": "CUB 06 IP", "description": "CUB-06 IP address" },
     "cub07On": { "type": "boolean", "default": true, "label": "CUB 07", "description": "CUB-07 Enabled" },
+    "cub07Flip": { "type": "boolean", "default": true, "label": "CUB 07 Flip", "description": "CUB-07 Flip" },
     "cub07": { "type": "string", "default": "10.0.1.107", "label": "CUB 07 IP", "description": "CUB-07 IP address" },
     "cub08On": { "type": "boolean", "default": true, "label": "CUB 08", "description": "CUB-08 Enabled" },
+    "cub08Flip": { "type": "boolean", "default": true, "label": "CUB 08 Flip", "description": "CUB-08 Flip" },
     "cub08": { "type": "string", "default": "10.0.1.108", "label": "CUB 08 IP", "description": "CUB-08 IP address" },
     "cub09On": { "type": "boolean", "default": true, "label": "CUB 09", "description": "CUB-09 Enabled" },
+    "cub09Flip": { "type": "boolean", "default": true, "label": "CUB 09 Flip", "description": "CUB-09 Flip" },
     "cub09": { "type": "string", "default": "10.0.1.109", "label": "CUB 09 IP", "description": "CUB-09 IP address" },
     "cub10On": { "type": "boolean", "default": true, "label": "CUB 10", "description": "CUB-10 Enabled" },
+    "cub10Flip": { "type": "boolean", "default": true, "label": "CUB 10 Flip", "description": "CUB-10 Flip" },
     "cub10": { "type": "string", "default": "10.0.1.110", "label": "CUB 10 IP", "description": "CUB-10 IP address" },
     "cub11On": { "type": "boolean", "default": true, "label": "CUB 11", "description": "CUB-11 Enabled" },
+    "cub11Flip": { "type": "boolean", "default": true, "label": "CUB 11 Flip", "description": "CUB-11 Flip" },
     "cub11": { "type": "string", "default": "10.0.1.111", "label": "CUB 11 IP", "description": "CUB-11 IP address" },
     "cub12On": { "type": "boolean", "default": true, "label": "CUB 12", "description": "CUB-12 Enabled" },
+    "cub12Flip": { "type": "boolean", "default": true, "label": "CUB 12 Flip", "description": "CUB-12 Flip" },
     "cub12": { "type": "string", "default": "10.0.1.112", "label": "CUB 12 IP", "description": "CUB-12 IP address" },
     "cub13On": { "type": "boolean", "default": true, "label": "CUB 13", "description": "CUB-13 Enabled" },
+    "cub13Flip": { "type": "boolean", "default": true, "label": "CUB 13 Flip", "description": "CUB-13 Flip" },
     "cub13": { "type": "string", "default": "10.0.1.113", "label": "CUB 13 IP", "description": "CUB-13 IP address" },
     "cub14On": { "type": "boolean", "default": true, "label": "CUB 14", "description": "CUB-14 Enabled" },
+    "cub14Flip": { "type": "boolean", "default": true, "label": "CUB 14 Flip", "description": "CUB-14 Flip" },
     "cub14": { "type": "string", "default": "10.0.1.114", "label": "CUB 14 IP", "description": "CUB-14 IP address" },
     "cub15On": { "type": "boolean", "default": true, "label": "CUB 15", "description": "CUB-15 Enabled" },
+    "cub15Flip": { "type": "boolean", "default": true, "label": "CUB 15 Flip", "description": "CUB-15 Flip" },
     "cub15": { "type": "string", "default": "10.0.1.115", "label": "CUB 15 IP", "description": "CUB-15 IP address" },
     "cub16On": { "type": "boolean", "default": true, "label": "CUB 16", "description": "CUB-16 Enabled" },
+    "cub16Flip": { "type": "boolean", "default": true, "label": "CUB 16 Flip", "description": "CUB-16 Flip" },
     "cub16": { "type": "string", "default": "10.0.1.116", "label": "CUB 16 IP", "description": "CUB-16 IP address" },
     "cub17On": { "type": "boolean", "default": true, "label": "CUB 17", "description": "CUB-17 Enabled" },
+    "cub17Flip": { "type": "boolean", "default": true, "label": "CUB 17 Flip", "description": "CUB-17 Flip" },
     "cub17": { "type": "string", "default": "10.0.1.117", "label": "CUB 17 IP", "description": "CUB-17 IP address" },
     "cub18On": { "type": "boolean", "default": true, "label": "CUB 18", "description": "CUB-18 Enabled" },
+    "cub18Flip": { "type": "boolean", "default": true, "label": "CUB 18 Flip", "description": "CUB-18 Flip" },
     "cub18": { "type": "string", "default": "10.0.1.118", "label": "CUB 18 IP", "description": "CUB-18 IP address" },
     "cub19On": { "type": "boolean", "default": true, "label": "CUB 19", "description": "CUB-19 Enabled" },
+    "cub19Flip": { "type": "boolean", "default": true, "label": "CUB 19 Flip", "description": "CUB-19 Flip" },
     "cub19": { "type": "string", "default": "10.0.1.119", "label": "CUB 19 IP", "description": "CUB-19 IP address" },
     "cub20On": { "type": "boolean", "default": true, "label": "CUB 20", "description": "CUB-20 Enabled" },
+    "cub20Flip": { "type": "boolean", "default": true, "label": "CUB 20 Flip", "description": "CUB-20 Flip" },
     "cub20": { "type": "string", "default": "10.0.1.120", "label": "CUB 20 IP", "description": "CUB-20 IP address" },
     "cyl01On": { "type": "boolean", "default": true, "label": "CYL 01", "description": "CYL-01 Enabled" },
+    "cyl01Flip": { "type": "boolean", "default": true, "label": "CYL 01 Flip", "description": "CYL-01 Flip" },
     "cyl01": { "type": "string", "default": "10.0.1.121", "label": "CYL 01 IP", "description": "CYL-01 IP address" },
     "cyl02On": { "type": "boolean", "default": true, "label": "CYL 02", "description": "CYL-02 Enabled" },
+    "cyl02Flip": { "type": "boolean", "default": true, "label": "CYL 02 Flip", "description": "CYL-02 Flip" },
     "cyl02": { "type": "string", "default": "10.0.1.122", "label": "CYL 02 IP", "description": "CYL-02 IP address" },
     "cyl03On": { "type": "boolean", "default": true, "label": "CYL 03", "description": "CYL-03 Enabled" },
+    "cyl03Flip": { "type": "boolean", "default": true, "label": "CYL 03 Flip", "description": "CYL-03 Flip" },
     "cyl03": { "type": "string", "default": "10.0.1.123", "label": "CYL 03 IP", "description": "CYL-03 IP address" },
     "cyl04On": { "type": "boolean", "default": true, "label": "CYL 04", "description": "CYL-04 Enabled" },
+    "cyl04Flip": { "type": "boolean", "default": true, "label": "CYL 04 Flip", "description": "CYL-04 Flip" },
     "cyl04": { "type": "string", "default": "10.0.1.124", "label": "CYL 04 IP", "description": "CYL-04 IP address" },
     "cyl05On": { "type": "boolean", "default": true, "label": "CYL 05", "description": "CYL-05 Enabled" },
+    "cyl05Flip": { "type": "boolean", "default": true, "label": "CYL 05 Flip", "description": "CYL-05 Flip" },
     "cyl05": { "type": "string", "default": "10.0.1.125", "label": "CYL 05 IP", "description": "CYL-05 IP address" },
     "cyl06On": { "type": "boolean", "default": true, "label": "CYL 06", "description": "CYL-06 Enabled" },
+    "cyl06Flip": { "type": "boolean", "default": true, "label": "CYL 06 Flip", "description": "CYL-06 Flip" },
     "cyl06": { "type": "string", "default": "10.0.1.126", "label": "CYL 06 IP", "description": "CYL-06 IP address" },
     "cyl07On": { "type": "boolean", "default": true, "label": "CYL 07", "description": "CYL-07 Enabled" },
+    "cyl07Flip": { "type": "boolean", "default": true, "label": "CYL 07 Flip", "description": "CYL-07 Flip" },
     "cyl07": { "type": "string", "default": "10.0.1.127", "label": "CYL 07 IP", "description": "CYL-07 IP address" },
     "cyl08On": { "type": "boolean", "default": true, "label": "CYL 08", "description": "CYL-08 Enabled" },
+    "cyl08Flip": { "type": "boolean", "default": true, "label": "CYL 08 Flip", "description": "CYL-08 Flip" },
     "cyl08": { "type": "string", "default": "10.0.1.128", "label": "CYL 08 IP", "description": "CYL-08 IP address" },
     "cyl09On": { "type": "boolean", "default": true, "label": "CYL 09", "description": "CYL-09 Enabled" },
+    "cyl09Flip": { "type": "boolean", "default": true, "label": "CYL 09 Flip", "description": "CYL-09 Flip" },
     "cyl09": { "type": "string", "default": "10.0.1.129", "label": "CYL 09 IP", "description": "CYL-09 IP address" },
     "cyl10On": { "type": "boolean", "default": true, "label": "CYL 10", "description": "CYL-10 Enabled" },
+    "cyl10Flip": { "type": "boolean", "default": true, "label": "CYL 10 Flip", "description": "CYL-10 Flip" },
     "cyl10": { "type": "string", "default": "10.0.1.130", "label": "CYL 10 IP", "description": "CYL-10 IP address" },
     "cyl11On": { "type": "boolean", "default": true, "label": "CYL 11", "description": "CYL-11 Enabled" },
+    "cyl11Flip": { "type": "boolean", "default": true, "label": "CYL 11 Flip", "description": "CYL-11 Flip" },
     "cyl11": { "type": "string", "default": "10.0.1.131", "label": "CYL 11 IP", "description": "CYL-11 IP address" },
     "cyl12On": { "type": "boolean", "default": true, "label": "CYL 12", "description": "CYL-12 Enabled" },
+    "cyl12Flip": { "type": "boolean", "default": true, "label": "CYL 12 Flip", "description": "CYL-12 Flip" },
     "cyl12": { "type": "string", "default": "10.0.1.132", "label": "CYL 12 IP", "description": "CYL-12 IP address" }
   },
 
@@ -317,7 +349,7 @@
   
   "outputs": [
     {
-      "enabled": "$cub01On",
+      "enabled": "$cub01On & !$cub01Flip",
       "protocol": "artnet",
       "host": "$cub01",
       "universe": 0,
@@ -335,7 +367,7 @@
       ]
     },
     {
-      "enabled": "$cub01On",
+      "enabled": "$cub01On & !$cub01Flip",
       "protocol": "artnet",
       "host": "$cub01",
       "universe": 3,
@@ -353,7 +385,7 @@
       ]
     },
     {
-      "enabled": "$cub02On",
+      "enabled": "$cub02On & !$cub02Flip",
       "protocol": "artnet",
       "host": "$cub02",
       "universe": 6,
@@ -371,7 +403,7 @@
       ]
     },
     {
-      "enabled": "$cub02On",
+      "enabled": "$cub02On & !$cub02Flip",
       "protocol": "artnet",
       "host": "$cub02",
       "universe": 9,
@@ -389,7 +421,7 @@
       ]
     },
     {
-      "enabled": "$cub03On",
+      "enabled": "$cub03On & !$cub03Flip",
       "protocol": "artnet",
       "host": "$cub03",
       "universe": 12,
@@ -407,7 +439,7 @@
       ]
     },
     {
-      "enabled": "$cub03On",
+      "enabled": "$cub03On & !$cub03Flip",
       "protocol": "artnet",
       "host": "$cub03",
       "universe": 15,
@@ -425,7 +457,7 @@
       ]
     },
     {
-      "enabled": "$cub04On",
+      "enabled": "$cub04On & !$cub04Flip",
       "protocol": "artnet",
       "host": "$cub04",
       "universe": 18,
@@ -443,7 +475,7 @@
       ]
     },
     {
-      "enabled": "$cub04On",
+      "enabled": "$cub04On & !$cub04Flip",
       "protocol": "artnet",
       "host": "$cub04",
       "universe": 21,
@@ -461,7 +493,7 @@
       ]
     },
     {
-      "enabled": "$cub05On",
+      "enabled": "$cub05On & !$cub05Flip",
       "protocol": "artnet",
       "host": "$cub05",
       "universe": 24,
@@ -479,7 +511,7 @@
       ]
     },
     {
-      "enabled": "$cub05On",
+      "enabled": "$cub05On & !$cub05Flip",
       "protocol": "artnet",
       "host": "$cub05",
       "universe": 27,
@@ -497,7 +529,7 @@
       ]
     },
     {
-      "enabled": "$cub06On",
+      "enabled": "$cub06On & !$cub06Flip",
       "protocol": "artnet",
       "host": "$cub06",
       "universe": 30,
@@ -515,7 +547,7 @@
       ]
     },
     {
-      "enabled": "$cub06On",
+      "enabled": "$cub06On & !$cub06Flip",
       "protocol": "artnet",
       "host": "$cub06",
       "universe": 33,
@@ -533,7 +565,7 @@
       ]
     },
     {
-      "enabled": "$cub07On",
+      "enabled": "$cub07On & !$cub07Flip",
       "protocol": "artnet",
       "host": "$cub07",
       "universe": 36,
@@ -551,7 +583,7 @@
       ]
     },
     {
-      "enabled": "$cub07On",
+      "enabled": "$cub07On & !$cub07Flip",
       "protocol": "artnet",
       "host": "$cub07",
       "universe": 39,
@@ -569,7 +601,7 @@
       ]
     },
     {
-      "enabled": "$cub08On",
+      "enabled": "$cub08On & !$cub08Flip",
       "protocol": "artnet",
       "host": "$cub08",
       "universe": 42,
@@ -587,7 +619,7 @@
       ]
     },
     {
-      "enabled": "$cub08On",
+      "enabled": "$cub08On & !$cub08Flip",
       "protocol": "artnet",
       "host": "$cub08",
       "universe": 45,
@@ -605,7 +637,7 @@
       ]
     },
     {
-      "enabled": "$cub09On",
+      "enabled": "$cub09On & !$cub09Flip",
       "protocol": "artnet",
       "host": "$cub09",
       "universe": 48,
@@ -623,7 +655,7 @@
       ]
     },
     {
-      "enabled": "$cub09On",
+      "enabled": "$cub09On & !$cub09Flip",
       "protocol": "artnet",
       "host": "$cub09",
       "universe": 51,
@@ -641,7 +673,7 @@
       ]
     },
     {
-      "enabled": "$cub10On",
+      "enabled": "$cub10On & !$cub10Flip",
       "protocol": "artnet",
       "host": "$cub10",
       "universe": 54,
@@ -659,7 +691,7 @@
       ]
     },
     {
-      "enabled": "$cub10On",
+      "enabled": "$cub10On & !$cub10Flip",
       "protocol": "artnet",
       "host": "$cub10",
       "universe": 57,
@@ -677,7 +709,7 @@
       ]
     },
     {
-      "enabled": "$cub11On",
+      "enabled": "$cub11On & !$cub11Flip",
       "protocol": "artnet",
       "host": "$cub11",
       "universe": 60,
@@ -695,7 +727,7 @@
       ]
     },
     {
-      "enabled": "$cub11On",
+      "enabled": "$cub11On & !$cub11Flip",
       "protocol": "artnet",
       "host": "$cub11",
       "universe": 63,
@@ -713,7 +745,7 @@
       ]
     },
     {
-      "enabled": "$cub12On",
+      "enabled": "$cub12On & !$cub12Flip",
       "protocol": "artnet",
       "host": "$cub12",
       "universe": 66,
@@ -731,7 +763,7 @@
       ]
     },
     {
-      "enabled": "$cub12On",
+      "enabled": "$cub12On & !$cub12Flip",
       "protocol": "artnet",
       "host": "$cub12",
       "universe": 69,
@@ -749,7 +781,7 @@
       ]
     },
     {
-      "enabled": "$cub13On",
+      "enabled": "$cub13On & !$cub13Flip",
       "protocol": "artnet",
       "host": "$cub13",
       "universe": 72,
@@ -767,7 +799,7 @@
       ]
     },
     {
-      "enabled": "$cub13On",
+      "enabled": "$cub13On & !$cub13Flip",
       "protocol": "artnet",
       "host": "$cub13",
       "universe": 75,
@@ -785,7 +817,7 @@
       ]
     },
     {
-      "enabled": "$cub14On",
+      "enabled": "$cub14On & !$cub14Flip",
       "protocol": "artnet",
       "host": "$cub14",
       "universe": 78,
@@ -803,7 +835,7 @@
       ]
     },
     {
-      "enabled": "$cub14On",
+      "enabled": "$cub14On & !$cub14Flip",
       "protocol": "artnet",
       "host": "$cub14",
       "universe": 81,
@@ -821,7 +853,7 @@
       ]
     },
     {
-      "enabled": "$cub15On",
+      "enabled": "$cub15On & !$cub15Flip",
       "protocol": "artnet",
       "host": "$cub15",
       "universe": 84,
@@ -839,7 +871,7 @@
       ]
     },
     {
-      "enabled": "$cub15On",
+      "enabled": "$cub15On & !$cub15Flip",
       "protocol": "artnet",
       "host": "$cub15",
       "universe": 87,
@@ -857,7 +889,7 @@
       ]
     },
     {
-      "enabled": "$cub16On",
+      "enabled": "$cub16On & !$cub16Flip",
       "protocol": "artnet",
       "host": "$cub16",
       "universe": 90,
@@ -875,7 +907,7 @@
       ]
     },
     {
-      "enabled": "$cub16On",
+      "enabled": "$cub16On & !$cub16Flip",
       "protocol": "artnet",
       "host": "$cub16",
       "universe": 93,
@@ -893,7 +925,7 @@
       ]
     },
     {
-      "enabled": "$cub17On",
+      "enabled": "$cub17On & !$cub17Flip",
       "protocol": "artnet",
       "host": "$cub17",
       "universe": 96,
@@ -911,7 +943,7 @@
       ]
     },
     {
-      "enabled": "$cub17On",
+      "enabled": "$cub17On & !$cub17Flip",
       "protocol": "artnet",
       "host": "$cub17",
       "universe": 99,
@@ -929,7 +961,7 @@
       ]
     },
     {
-      "enabled": "$cub18On",
+      "enabled": "$cub18On & !$cub18Flip",
       "protocol": "artnet",
       "host": "$cub18",
       "universe": 102,
@@ -947,7 +979,7 @@
       ]
     },
     {
-      "enabled": "$cub18On",
+      "enabled": "$cub18On & !$cub18Flip",
       "protocol": "artnet",
       "host": "$cub18",
       "universe": 105,
@@ -965,7 +997,7 @@
       ]
     },
     {
-      "enabled": "$cub19On",
+      "enabled": "$cub19On & !$cub19Flip",
       "protocol": "artnet",
       "host": "$cub19",
       "universe": 108,
@@ -983,7 +1015,7 @@
       ]
     },
     {
-      "enabled": "$cub19On",
+      "enabled": "$cub19On & !$cub19Flip",
       "protocol": "artnet",
       "host": "$cub19",
       "universe": 111,
@@ -1001,7 +1033,7 @@
       ]
     },
     {
-      "enabled": "$cub20On",
+      "enabled": "$cub20On & !$cub20Flip",
       "protocol": "artnet",
       "host": "$cub20",
       "universe": 114,
@@ -1019,7 +1051,7 @@
       ]
     },
     {
-      "enabled": "$cub20On",
+      "enabled": "$cub20On & !$cub20Flip",
       "protocol": "artnet",
       "host": "$cub20",
       "universe": 117,
@@ -1037,7 +1069,7 @@
       ]
     },
     {
-      "enabled": "$cyl02On",
+      "enabled": "$cyl02On & !$cyl02Flip",
       "protocol": "artnet",
       "host": "$cyl02",
       "universe": 126,
@@ -1055,7 +1087,7 @@
       ]
     },
     {
-      "enabled": "$cyl02On",
+      "enabled": "$cyl02On & !$cyl02Flip",
       "protocol": "artnet",
       "host": "$cyl02",
       "universe": 129,
@@ -1073,7 +1105,7 @@
       ]
     },
     {
-      "enabled": "$cyl03On",
+      "enabled": "$cyl03On & !$cyl03Flip",
       "protocol": "artnet",
       "host": "$cyl03",
       "universe": 132,
@@ -1091,7 +1123,7 @@
       ]
     },
     {
-      "enabled": "$cyl03On",
+      "enabled": "$cyl03On & !$cyl03Flip",
       "protocol": "artnet",
       "host": "$cyl03",
       "universe": 135,
@@ -1109,7 +1141,7 @@
       ]
     },
     {
-      "enabled": "$cyl04On",
+      "enabled": "$cyl04On & !$cyl04Flip",
       "protocol": "artnet",
       "host": "$cyl04",
       "universe": 138,
@@ -1127,7 +1159,7 @@
       ]
     },
     {
-      "enabled": "$cyl04On",
+      "enabled": "$cyl04On & !$cyl04Flip",
       "protocol": "artnet",
       "host": "$cyl04",
       "universe": 141,
@@ -1145,7 +1177,7 @@
       ]
     },
     {
-      "enabled": "$cyl05On",
+      "enabled": "$cyl05On & !$cyl05Flip",
       "protocol": "artnet",
       "host": "$cyl05",
       "universe": 144,
@@ -1163,7 +1195,7 @@
       ]
     },
     {
-      "enabled": "$cyl05On",
+      "enabled": "$cyl05On & !$cyl05Flip",
       "protocol": "artnet",
       "host": "$cyl05",
       "universe": 147,
@@ -1181,7 +1213,7 @@
       ]
     },
     {
-      "enabled": "$cyl06On",
+      "enabled": "$cyl06On & !$cyl06Flip",
       "protocol": "artnet",
       "host": "$cyl06",
       "universe": 150,
@@ -1199,7 +1231,7 @@
       ]
     },
     {
-      "enabled": "$cyl06On",
+      "enabled": "$cyl06On & !$cyl06Flip",
       "protocol": "artnet",
       "host": "$cyl06",
       "universe": 153,
@@ -1217,7 +1249,7 @@
       ]
     },
     {
-      "enabled": "$cyl07On",
+      "enabled": "$cyl07On & !$cyl07Flip",
       "protocol": "artnet",
       "host": "$cyl07",
       "universe": 156,
@@ -1235,7 +1267,7 @@
       ]
     },
     {
-      "enabled": "$cyl07On",
+      "enabled": "$cyl07On & !$cyl07Flip",
       "protocol": "artnet",
       "host": "$cyl07",
       "universe": 159,
@@ -1253,7 +1285,7 @@
       ]
     },
     {
-      "enabled": "$cyl08On",
+      "enabled": "$cyl08On & !$cyl08Flip",
       "protocol": "artnet",
       "host": "$cyl08",
       "universe": 162,
@@ -1271,7 +1303,7 @@
       ]
     },
     {
-      "enabled": "$cyl08On",
+      "enabled": "$cyl08On & !$cyl08Flip",
       "protocol": "artnet",
       "host": "$cyl08",
       "universe": 165,
@@ -1289,7 +1321,7 @@
       ]
     },
     {
-      "enabled": "$cyl09On",
+      "enabled": "$cyl09On & !$cyl09Flip",
       "protocol": "artnet",
       "host": "$cyl09",
       "universe": 168,
@@ -1307,7 +1339,7 @@
       ]
     },
     {
-      "enabled": "$cyl09On",
+      "enabled": "$cyl09On & !$cyl09Flip",
       "protocol": "artnet",
       "host": "$cyl09",
       "universe": 171,
@@ -1325,7 +1357,7 @@
       ]
     },
     {
-      "enabled": "$cyl10On",
+      "enabled": "$cyl10On & !$cyl10Flip",
       "protocol": "artnet",
       "host": "$cyl10",
       "universe": 174,
@@ -1343,7 +1375,7 @@
       ]
     },
     {
-      "enabled": "$cyl10On",
+      "enabled": "$cyl10On & !$cyl10Flip",
       "protocol": "artnet",
       "host": "$cyl10",
       "universe": 177,
@@ -1361,7 +1393,7 @@
       ]
     },
     {
-      "enabled": "$cyl11On",
+      "enabled": "$cyl11On & !$cyl11Flip",
       "protocol": "artnet",
       "host": "$cyl11",
       "universe": 180,
@@ -1379,7 +1411,7 @@
       ]
     },
     {
-      "enabled": "$cyl11On",
+      "enabled": "$cyl11On & !$cyl11Flip",
       "protocol": "artnet",
       "host": "$cyl11",
       "universe": 183,
@@ -1397,7 +1429,7 @@
       ]
     },
     {
-      "enabled": "$cyl12On",
+      "enabled": "$cyl12On & !$cyl12Flip",
       "protocol": "artnet",
       "host": "$cyl12",
       "universe": 186,
@@ -1415,7 +1447,7 @@
       ]
     },
     {
-      "enabled": "$cyl12On",
+      "enabled": "$cyl12On & !$cyl12Flip",
       "protocol": "artnet",
       "host": "$cyl12",
       "universe": 189,
@@ -1433,7 +1465,7 @@
       ]
     },
     {
-      "enabled": "$cyl01On",
+      "enabled": "$cyl01On & !$cyl01Flip",
       "protocol": "artnet",
       "host": "$cyl01",
       "universe": 120,
@@ -1451,7 +1483,7 @@
       ]
     },
     {
-      "enabled": "$cyl01On",
+      "enabled": "$cyl01On & !$cyl01Flip",
       "protocol": "artnet",
       "host": "$cyl01",
       "universe": 123,
@@ -1466,6 +1498,1158 @@
         { "start": 28191, "num": 43, "reverse": true },
         { "start": 28234, "num": 43 },
         { "start": 28277, "num": 43, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub01On & $cub01Flip",
+      "protocol": "artnet",
+      "host": "$cub01",
+      "universe": 0,
+      "segments": [
+        { "start": 405, "num": 45 },
+        { "start": 360, "num": 45, "reverse": true },
+        { "start": 315, "num": 45 },
+        { "start": 270, "num": 45, "reverse": true },
+        { "start": 225, "num": 45 },
+        { "start": 180, "num": 45, "reverse": true },
+        { "start": 135, "num": 45 },
+        { "start": 90, "num": 45, "reverse": true },
+        { "start": 45, "num": 45 },
+        { "start": 0, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub01On & $cub01Flip",
+      "protocol": "artnet",
+      "host": "$cub01",
+      "universe": 3,
+      "segments": [
+        { "start": 9405, "num": 45 },
+        { "start": 9360, "num": 45, "reverse": true },
+        { "start": 9315, "num": 45 },
+        { "start": 9270, "num": 45, "reverse": true },
+        { "start": 9225, "num": 45 },
+        { "start": 9180, "num": 45, "reverse": true },
+        { "start": 9135, "num": 45 },
+        { "start": 9090, "num": 45, "reverse": true },
+        { "start": 9045, "num": 45 },
+        { "start": 9000, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub02On & $cub02Flip",
+      "protocol": "artnet",
+      "host": "$cub02",
+      "universe": 6,
+      "segments": [
+        { "start": 855, "num": 45 },
+        { "start": 810, "num": 45, "reverse": true },
+        { "start": 765, "num": 45 },
+        { "start": 720, "num": 45, "reverse": true },
+        { "start": 675, "num": 45 },
+        { "start": 630, "num": 45, "reverse": true },
+        { "start": 585, "num": 45 },
+        { "start": 540, "num": 45, "reverse": true },
+        { "start": 495, "num": 45 },
+        { "start": 450, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub02On & $cub02Flip",
+      "protocol": "artnet",
+      "host": "$cub02",
+      "universe": 9,
+      "segments": [
+        { "start": 9855, "num": 45 },
+        { "start": 9810, "num": 45, "reverse": true },
+        { "start": 9765, "num": 45 },
+        { "start": 9720, "num": 45, "reverse": true },
+        { "start": 9675, "num": 45 },
+        { "start": 9630, "num": 45, "reverse": true },
+        { "start": 9585, "num": 45 },
+        { "start": 9540, "num": 45, "reverse": true },
+        { "start": 9495, "num": 45 },
+        { "start": 9450, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub03On & $cub03Flip",
+      "protocol": "artnet",
+      "host": "$cub03",
+      "universe": 12,
+      "segments": [
+        { "start": 1305, "num": 34 },
+        { "start": 1260, "num": 34, "reverse": true },
+        { "start": 1215, "num": 34 },
+        { "start": 1170, "num": 34, "reverse": true },
+        { "start": 1125, "num": 34 },
+        { "start": 1080, "num": 34, "reverse": true },
+        { "start": 1035, "num": 34 },
+        { "start": 990, "num": 34, "reverse": true },
+        { "start": 945, "num": 34 },
+        { "start": 900, "num": 34, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub03On & $cub03Flip",
+      "protocol": "artnet",
+      "host": "$cub03",
+      "universe": 15,
+      "segments": [
+        { "start": 10305, "num": 34 },
+        { "start": 10260, "num": 34, "reverse": true },
+        { "start": 10215, "num": 34 },
+        { "start": 10170, "num": 34, "reverse": true },
+        { "start": 10125, "num": 34 },
+        { "start": 10080, "num": 34, "reverse": true },
+        { "start": 10035, "num": 34 },
+        { "start": 9990, "num": 34, "reverse": true },
+        { "start": 9945, "num": 34 },
+        { "start": 9900, "num": 34, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub04On & $cub04Flip",
+      "protocol": "artnet",
+      "host": "$cub04",
+      "universe": 18,
+      "segments": [
+        { "start": 1755, "num": 45 },
+        { "start": 1710, "num": 45, "reverse": true },
+        { "start": 1665, "num": 45 },
+        { "start": 1620, "num": 45, "reverse": true },
+        { "start": 1575, "num": 45 },
+        { "start": 1530, "num": 45, "reverse": true },
+        { "start": 1485, "num": 45 },
+        { "start": 1440, "num": 45, "reverse": true },
+        { "start": 1395, "num": 45 },
+        { "start": 1350, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub04On & $cub04Flip",
+      "protocol": "artnet",
+      "host": "$cub04",
+      "universe": 21,
+      "segments": [
+        { "start": 10755, "num": 45 },
+        { "start": 10710, "num": 45, "reverse": true },
+        { "start": 10665, "num": 45 },
+        { "start": 10620, "num": 45, "reverse": true },
+        { "start": 10575, "num": 45 },
+        { "start": 10530, "num": 45, "reverse": true },
+        { "start": 10485, "num": 45 },
+        { "start": 10440, "num": 45, "reverse": true },
+        { "start": 10395, "num": 45 },
+        { "start": 10350, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub05On & $cub05Flip",
+      "protocol": "artnet",
+      "host": "$cub05",
+      "universe": 24,
+      "segments": [
+        { "start": 2205, "num": 45 },
+        { "start": 2160, "num": 45, "reverse": true },
+        { "start": 2115, "num": 45 },
+        { "start": 2070, "num": 45, "reverse": true },
+        { "start": 2025, "num": 45 },
+        { "start": 1980, "num": 45, "reverse": true },
+        { "start": 1935, "num": 45 },
+        { "start": 1890, "num": 45, "reverse": true },
+        { "start": 1845, "num": 45 },
+        { "start": 1800, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub05On & $cub05Flip",
+      "protocol": "artnet",
+      "host": "$cub05",
+      "universe": 27,
+      "segments": [
+        { "start": 11205, "num": 45 },
+        { "start": 11160, "num": 45, "reverse": true },
+        { "start": 11115, "num": 45 },
+        { "start": 11070, "num": 45, "reverse": true },
+        { "start": 11025, "num": 45 },
+        { "start": 10980, "num": 45, "reverse": true },
+        { "start": 10935, "num": 45 },
+        { "start": 10890, "num": 45, "reverse": true },
+        { "start": 10845, "num": 45 },
+        { "start": 10800, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub06On & $cub06Flip",
+      "protocol": "artnet",
+      "host": "$cub06",
+      "universe": 30,
+      "segments": [
+        { "start": 2655, "num": 45 },
+        { "start": 2610, "num": 45, "reverse": true },
+        { "start": 2565, "num": 45 },
+        { "start": 2520, "num": 45, "reverse": true },
+        { "start": 2475, "num": 45 },
+        { "start": 2430, "num": 45, "reverse": true },
+        { "start": 2385, "num": 45 },
+        { "start": 2340, "num": 45, "reverse": true },
+        { "start": 2295, "num": 45 },
+        { "start": 2250, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub06On & $cub06Flip",
+      "protocol": "artnet",
+      "host": "$cub06",
+      "universe": 33,
+      "segments": [
+        { "start": 11655, "num": 45 },
+        { "start": 11610, "num": 45, "reverse": true },
+        { "start": 11565, "num": 45 },
+        { "start": 11520, "num": 45, "reverse": true },
+        { "start": 11475, "num": 45 },
+        { "start": 11430, "num": 45, "reverse": true },
+        { "start": 11385, "num": 45 },
+        { "start": 11340, "num": 45, "reverse": true },
+        { "start": 11295, "num": 45 },
+        { "start": 11250, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub07On & $cub07Flip",
+      "protocol": "artnet",
+      "host": "$cub07",
+      "universe": 36,
+      "segments": [
+        { "start": 3105, "num": 45 },
+        { "start": 3060, "num": 45, "reverse": true },
+        { "start": 3015, "num": 45 },
+        { "start": 2970, "num": 45, "reverse": true },
+        { "start": 2925, "num": 45 },
+        { "start": 2880, "num": 45, "reverse": true },
+        { "start": 2835, "num": 45 },
+        { "start": 2790, "num": 45, "reverse": true },
+        { "start": 2745, "num": 45 },
+        { "start": 2700, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub07On & $cub07Flip",
+      "protocol": "artnet",
+      "host": "$cub07",
+      "universe": 39,
+      "segments": [
+        { "start": 12105, "num": 45 },
+        { "start": 12060, "num": 45, "reverse": true },
+        { "start": 12015, "num": 45 },
+        { "start": 11970, "num": 45, "reverse": true },
+        { "start": 11925, "num": 45 },
+        { "start": 11880, "num": 45, "reverse": true },
+        { "start": 11835, "num": 45 },
+        { "start": 11790, "num": 45, "reverse": true },
+        { "start": 11745, "num": 45 },
+        { "start": 11700, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub08On & $cub08Flip",
+      "protocol": "artnet",
+      "host": "$cub08",
+      "universe": 42,
+      "segments": [
+        { "start": 3555, "num": 34 },
+        { "start": 3510, "num": 34, "reverse": true },
+        { "start": 3465, "num": 34 },
+        { "start": 3420, "num": 34, "reverse": true },
+        { "start": 3375, "num": 34 },
+        { "start": 3330, "num": 34, "reverse": true },
+        { "start": 3285, "num": 34 },
+        { "start": 3240, "num": 34, "reverse": true },
+        { "start": 3195, "num": 34 },
+        { "start": 3150, "num": 34, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub08On & $cub08Flip",
+      "protocol": "artnet",
+      "host": "$cub08",
+      "universe": 45,
+      "segments": [
+        { "start": 12555, "num": 34 },
+        { "start": 12510, "num": 34, "reverse": true },
+        { "start": 12465, "num": 34 },
+        { "start": 12420, "num": 34, "reverse": true },
+        { "start": 12375, "num": 34 },
+        { "start": 12330, "num": 34, "reverse": true },
+        { "start": 12285, "num": 34 },
+        { "start": 12240, "num": 34, "reverse": true },
+        { "start": 12195, "num": 34 },
+        { "start": 12150, "num": 34, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub09On & $cub09Flip",
+      "protocol": "artnet",
+      "host": "$cub09",
+      "universe": 48,
+      "segments": [
+        { "start": 4005, "num": 45 },
+        { "start": 3960, "num": 45, "reverse": true },
+        { "start": 3915, "num": 45 },
+        { "start": 3870, "num": 45, "reverse": true },
+        { "start": 3825, "num": 45 },
+        { "start": 3780, "num": 45, "reverse": true },
+        { "start": 3735, "num": 45 },
+        { "start": 3690, "num": 45, "reverse": true },
+        { "start": 3645, "num": 45 },
+        { "start": 3600, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub09On & $cub09Flip",
+      "protocol": "artnet",
+      "host": "$cub09",
+      "universe": 51,
+      "segments": [
+        { "start": 13005, "num": 45 },
+        { "start": 12960, "num": 45, "reverse": true },
+        { "start": 12915, "num": 45 },
+        { "start": 12870, "num": 45, "reverse": true },
+        { "start": 12825, "num": 45 },
+        { "start": 12780, "num": 45, "reverse": true },
+        { "start": 12735, "num": 45 },
+        { "start": 12690, "num": 45, "reverse": true },
+        { "start": 12645, "num": 45 },
+        { "start": 12600, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub10On & $cub10Flip",
+      "protocol": "artnet",
+      "host": "$cub10",
+      "universe": 54,
+      "segments": [
+        { "start": 4455, "num": 45 },
+        { "start": 4410, "num": 45, "reverse": true },
+        { "start": 4365, "num": 45 },
+        { "start": 4320, "num": 45, "reverse": true },
+        { "start": 4275, "num": 45 },
+        { "start": 4230, "num": 45, "reverse": true },
+        { "start": 4185, "num": 45 },
+        { "start": 4140, "num": 45, "reverse": true },
+        { "start": 4095, "num": 45 },
+        { "start": 4050, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub10On & $cub10Flip",
+      "protocol": "artnet",
+      "host": "$cub10",
+      "universe": 57,
+      "segments": [
+        { "start": 13455, "num": 45 },
+        { "start": 13410, "num": 45, "reverse": true },
+        { "start": 13365, "num": 45 },
+        { "start": 13320, "num": 45, "reverse": true },
+        { "start": 13275, "num": 45 },
+        { "start": 13230, "num": 45, "reverse": true },
+        { "start": 13185, "num": 45 },
+        { "start": 13140, "num": 45, "reverse": true },
+        { "start": 13095, "num": 45 },
+        { "start": 13050, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub11On & $cub11Flip",
+      "protocol": "artnet",
+      "host": "$cub11",
+      "universe": 60,
+      "segments": [
+        { "start": 4905, "num": 45 },
+        { "start": 4860, "num": 45, "reverse": true },
+        { "start": 4815, "num": 45 },
+        { "start": 4770, "num": 45, "reverse": true },
+        { "start": 4725, "num": 45 },
+        { "start": 4680, "num": 45, "reverse": true },
+        { "start": 4635, "num": 45 },
+        { "start": 4590, "num": 45, "reverse": true },
+        { "start": 4545, "num": 45 },
+        { "start": 4500, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub11On & $cub11Flip",
+      "protocol": "artnet",
+      "host": "$cub11",
+      "universe": 63,
+      "segments": [
+        { "start": 13905, "num": 45 },
+        { "start": 13860, "num": 45, "reverse": true },
+        { "start": 13815, "num": 45 },
+        { "start": 13770, "num": 45, "reverse": true },
+        { "start": 13725, "num": 45 },
+        { "start": 13680, "num": 45, "reverse": true },
+        { "start": 13635, "num": 45 },
+        { "start": 13590, "num": 45, "reverse": true },
+        { "start": 13545, "num": 45 },
+        { "start": 13500, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub12On & $cub12Flip",
+      "protocol": "artnet",
+      "host": "$cub12",
+      "universe": 66,
+      "segments": [
+        { "start": 5355, "num": 45 },
+        { "start": 5310, "num": 45, "reverse": true },
+        { "start": 5265, "num": 45 },
+        { "start": 5220, "num": 45, "reverse": true },
+        { "start": 5175, "num": 45 },
+        { "start": 5130, "num": 45, "reverse": true },
+        { "start": 5085, "num": 45 },
+        { "start": 5040, "num": 45, "reverse": true },
+        { "start": 4995, "num": 45 },
+        { "start": 4950, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub12On & $cub12Flip",
+      "protocol": "artnet",
+      "host": "$cub12",
+      "universe": 69,
+      "segments": [
+        { "start": 14355, "num": 45 },
+        { "start": 14310, "num": 45, "reverse": true },
+        { "start": 14265, "num": 45 },
+        { "start": 14220, "num": 45, "reverse": true },
+        { "start": 14175, "num": 45 },
+        { "start": 14130, "num": 45, "reverse": true },
+        { "start": 14085, "num": 45 },
+        { "start": 14040, "num": 45, "reverse": true },
+        { "start": 13995, "num": 45 },
+        { "start": 13950, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub13On & $cub13Flip",
+      "protocol": "artnet",
+      "host": "$cub13",
+      "universe": 72,
+      "segments": [
+        { "start": 5805, "num": 34 },
+        { "start": 5760, "num": 34, "reverse": true },
+        { "start": 5715, "num": 34 },
+        { "start": 5670, "num": 34, "reverse": true },
+        { "start": 5625, "num": 34 },
+        { "start": 5580, "num": 34, "reverse": true },
+        { "start": 5535, "num": 34 },
+        { "start": 5490, "num": 34, "reverse": true },
+        { "start": 5445, "num": 34 },
+        { "start": 5400, "num": 34, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub13On & $cub13Flip",
+      "protocol": "artnet",
+      "host": "$cub13",
+      "universe": 75,
+      "segments": [
+        { "start": 14805, "num": 34 },
+        { "start": 14760, "num": 34, "reverse": true },
+        { "start": 14715, "num": 34 },
+        { "start": 14670, "num": 34, "reverse": true },
+        { "start": 14625, "num": 34 },
+        { "start": 14580, "num": 34, "reverse": true },
+        { "start": 14535, "num": 34 },
+        { "start": 14490, "num": 34, "reverse": true },
+        { "start": 14445, "num": 34 },
+        { "start": 14400, "num": 34, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub14On & $cub14Flip",
+      "protocol": "artnet",
+      "host": "$cub14",
+      "universe": 78,
+      "segments": [
+        { "start": 6255, "num": 45 },
+        { "start": 6210, "num": 45, "reverse": true },
+        { "start": 6165, "num": 45 },
+        { "start": 6120, "num": 45, "reverse": true },
+        { "start": 6075, "num": 45 },
+        { "start": 6030, "num": 45, "reverse": true },
+        { "start": 5985, "num": 45 },
+        { "start": 5940, "num": 45, "reverse": true },
+        { "start": 5895, "num": 45 },
+        { "start": 5850, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub14On & $cub14Flip",
+      "protocol": "artnet",
+      "host": "$cub14",
+      "universe": 81,
+      "segments": [
+        { "start": 15255, "num": 45 },
+        { "start": 15210, "num": 45, "reverse": true },
+        { "start": 15165, "num": 45 },
+        { "start": 15120, "num": 45, "reverse": true },
+        { "start": 15075, "num": 45 },
+        { "start": 15030, "num": 45, "reverse": true },
+        { "start": 14985, "num": 45 },
+        { "start": 14940, "num": 45, "reverse": true },
+        { "start": 14895, "num": 45 },
+        { "start": 14850, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub15On & $cub15Flip",
+      "protocol": "artnet",
+      "host": "$cub15",
+      "universe": 84,
+      "segments": [
+        { "start": 6705, "num": 45 },
+        { "start": 6660, "num": 45, "reverse": true },
+        { "start": 6615, "num": 45 },
+        { "start": 6570, "num": 45, "reverse": true },
+        { "start": 6525, "num": 45 },
+        { "start": 6480, "num": 45, "reverse": true },
+        { "start": 6435, "num": 45 },
+        { "start": 6390, "num": 45, "reverse": true },
+        { "start": 6345, "num": 45 },
+        { "start": 6300, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub15On & $cub15Flip",
+      "protocol": "artnet",
+      "host": "$cub15",
+      "universe": 87,
+      "segments": [
+        { "start": 15705, "num": 45 },
+        { "start": 15660, "num": 45, "reverse": true },
+        { "start": 15615, "num": 45 },
+        { "start": 15570, "num": 45, "reverse": true },
+        { "start": 15525, "num": 45 },
+        { "start": 15480, "num": 45, "reverse": true },
+        { "start": 15435, "num": 45 },
+        { "start": 15390, "num": 45, "reverse": true },
+        { "start": 15345, "num": 45 },
+        { "start": 15300, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub16On & $cub16Flip",
+      "protocol": "artnet",
+      "host": "$cub16",
+      "universe": 90,
+      "segments": [
+        { "start": 7155, "num": 45 },
+        { "start": 7110, "num": 45, "reverse": true },
+        { "start": 7065, "num": 45 },
+        { "start": 7020, "num": 45, "reverse": true },
+        { "start": 6975, "num": 45 },
+        { "start": 6930, "num": 45, "reverse": true },
+        { "start": 6885, "num": 45 },
+        { "start": 6840, "num": 45, "reverse": true },
+        { "start": 6795, "num": 45 },
+        { "start": 6750, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub16On & $cub16Flip",
+      "protocol": "artnet",
+      "host": "$cub16",
+      "universe": 93,
+      "segments": [
+        { "start": 16155, "num": 45 },
+        { "start": 16110, "num": 45, "reverse": true },
+        { "start": 16065, "num": 45 },
+        { "start": 16020, "num": 45, "reverse": true },
+        { "start": 15975, "num": 45 },
+        { "start": 15930, "num": 45, "reverse": true },
+        { "start": 15885, "num": 45 },
+        { "start": 15840, "num": 45, "reverse": true },
+        { "start": 15795, "num": 45 },
+        { "start": 15750, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub17On & $cub17Flip",
+      "protocol": "artnet",
+      "host": "$cub17",
+      "universe": 96,
+      "segments": [
+        { "start": 7605, "num": 45 },
+        { "start": 7560, "num": 45, "reverse": true },
+        { "start": 7515, "num": 45 },
+        { "start": 7470, "num": 45, "reverse": true },
+        { "start": 7425, "num": 45 },
+        { "start": 7380, "num": 45, "reverse": true },
+        { "start": 7335, "num": 45 },
+        { "start": 7290, "num": 45, "reverse": true },
+        { "start": 7245, "num": 45 },
+        { "start": 7200, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub17On & $cub17Flip",
+      "protocol": "artnet",
+      "host": "$cub17",
+      "universe": 99,
+      "segments": [
+        { "start": 16605, "num": 45 },
+        { "start": 16560, "num": 45, "reverse": true },
+        { "start": 16515, "num": 45 },
+        { "start": 16470, "num": 45, "reverse": true },
+        { "start": 16425, "num": 45 },
+        { "start": 16380, "num": 45, "reverse": true },
+        { "start": 16335, "num": 45 },
+        { "start": 16290, "num": 45, "reverse": true },
+        { "start": 16245, "num": 45 },
+        { "start": 16200, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub18On & $cub18Flip",
+      "protocol": "artnet",
+      "host": "$cub18",
+      "universe": 102,
+      "segments": [
+        { "start": 8055, "num": 34 },
+        { "start": 8010, "num": 34, "reverse": true },
+        { "start": 7965, "num": 34 },
+        { "start": 7920, "num": 34, "reverse": true },
+        { "start": 7875, "num": 34 },
+        { "start": 7830, "num": 34, "reverse": true },
+        { "start": 7785, "num": 34 },
+        { "start": 7740, "num": 34, "reverse": true },
+        { "start": 7695, "num": 34 },
+        { "start": 7650, "num": 34, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub18On & $cub18Flip",
+      "protocol": "artnet",
+      "host": "$cub18",
+      "universe": 105,
+      "segments": [
+        { "start": 17055, "num": 34 },
+        { "start": 17010, "num": 34, "reverse": true },
+        { "start": 16965, "num": 34 },
+        { "start": 16920, "num": 34, "reverse": true },
+        { "start": 16875, "num": 34 },
+        { "start": 16830, "num": 34, "reverse": true },
+        { "start": 16785, "num": 34 },
+        { "start": 16740, "num": 34, "reverse": true },
+        { "start": 16695, "num": 34 },
+        { "start": 16650, "num": 34, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub19On & $cub19Flip",
+      "protocol": "artnet",
+      "host": "$cub19",
+      "universe": 108,
+      "segments": [
+        { "start": 8505, "num": 45 },
+        { "start": 8460, "num": 45, "reverse": true },
+        { "start": 8415, "num": 45 },
+        { "start": 8370, "num": 45, "reverse": true },
+        { "start": 8325, "num": 45 },
+        { "start": 8280, "num": 45, "reverse": true },
+        { "start": 8235, "num": 45 },
+        { "start": 8190, "num": 45, "reverse": true },
+        { "start": 8145, "num": 45 },
+        { "start": 8100, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub19On & $cub19Flip",
+      "protocol": "artnet",
+      "host": "$cub19",
+      "universe": 111,
+      "segments": [
+        { "start": 17505, "num": 45 },
+        { "start": 17460, "num": 45, "reverse": true },
+        { "start": 17415, "num": 45 },
+        { "start": 17370, "num": 45, "reverse": true },
+        { "start": 17325, "num": 45 },
+        { "start": 17280, "num": 45, "reverse": true },
+        { "start": 17235, "num": 45 },
+        { "start": 17190, "num": 45, "reverse": true },
+        { "start": 17145, "num": 45 },
+        { "start": 17100, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub20On & $cub20Flip",
+      "protocol": "artnet",
+      "host": "$cub20",
+      "universe": 114,
+      "segments": [
+        { "start": 8955, "num": 45 },
+        { "start": 8910, "num": 45, "reverse": true },
+        { "start": 8865, "num": 45 },
+        { "start": 8820, "num": 45, "reverse": true },
+        { "start": 8775, "num": 45 },
+        { "start": 8730, "num": 45, "reverse": true },
+        { "start": 8685, "num": 45 },
+        { "start": 8640, "num": 45, "reverse": true },
+        { "start": 8595, "num": 45 },
+        { "start": 8550, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cub20On & $cub20Flip",
+      "protocol": "artnet",
+      "host": "$cub20",
+      "universe": 117,
+      "segments": [
+        { "start": 17955, "num": 45 },
+        { "start": 17910, "num": 45, "reverse": true },
+        { "start": 17865, "num": 45 },
+        { "start": 17820, "num": 45, "reverse": true },
+        { "start": 17775, "num": 45 },
+        { "start": 17730, "num": 45, "reverse": true },
+        { "start": 17685, "num": 45 },
+        { "start": 17640, "num": 45, "reverse": true },
+        { "start": 17595, "num": 45 },
+        { "start": 17550, "num": 45, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cyl02On & $cyl02Flip",
+      "protocol": "artnet",
+      "host": "$cyl02",
+      "universe": 126,
+      "segments": [
+        { "start": 18387, "num": 43 },
+        { "start": 18344, "num": 43, "reverse": true },
+        { "start": 18301, "num": 43 },
+        { "start": 18258, "num": 43, "reverse": true },
+        { "start": 18215, "num": 43 },
+        { "start": 18172, "num": 43, "reverse": true },
+        { "start": 18129, "num": 43 },
+        { "start": 18086, "num": 43, "reverse": true },
+        { "start": 18043, "num": 43 },
+        { "start": 18000, "num": 43, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cyl02On & $cyl02Flip",
+      "protocol": "artnet",
+      "host": "$cyl02",
+      "universe": 129,
+      "segments": [
+        { "start": 23547, "num": 43, "reverse": true },
+        { "start": 23504, "num": 43 },
+        { "start": 23461, "num": 43, "reverse": true },
+        { "start": 23418, "num": 43 },
+        { "start": 23375, "num": 43, "reverse": true },
+        { "start": 23332, "num": 43 },
+        { "start": 23289, "num": 43, "reverse": true },
+        { "start": 23246, "num": 43 },
+        { "start": 23203, "num": 43, "reverse": true },
+        { "start": 23160, "num": 43 }
+      ]
+    },
+    {
+      "enabled": "$cyl03On & $cyl03Flip",
+      "protocol": "artnet",
+      "host": "$cyl03",
+      "universe": 132,
+      "segments": [
+        { "start": 18817, "num": 32 },
+        { "start": 18774, "num": 32, "reverse": true },
+        { "start": 18731, "num": 32 },
+        { "start": 18688, "num": 32, "reverse": true },
+        { "start": 18645, "num": 32 },
+        { "start": 18602, "num": 32, "reverse": true },
+        { "start": 18559, "num": 32 },
+        { "start": 18516, "num": 32, "reverse": true },
+        { "start": 18473, "num": 32 },
+        { "start": 18430, "num": 32, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cyl03On & $cyl03Flip",
+      "protocol": "artnet",
+      "host": "$cyl03",
+      "universe": 135,
+      "segments": [
+        { "start": 23977, "num": 32, "reverse": true },
+        { "start": 23934, "num": 32 },
+        { "start": 23891, "num": 32, "reverse": true },
+        { "start": 23848, "num": 32 },
+        { "start": 23805, "num": 32, "reverse": true },
+        { "start": 23762, "num": 32 },
+        { "start": 23719, "num": 32, "reverse": true },
+        { "start": 23676, "num": 32 },
+        { "start": 23633, "num": 32, "reverse": true },
+        { "start": 23590, "num": 32 }
+      ]
+    },
+    {
+      "enabled": "$cyl04On & $cyl04Flip",
+      "protocol": "artnet",
+      "host": "$cyl04",
+      "universe": 138,
+      "segments": [
+        { "start": 19247, "num": 43 },
+        { "start": 19204, "num": 43, "reverse": true },
+        { "start": 19161, "num": 43 },
+        { "start": 19118, "num": 43, "reverse": true },
+        { "start": 19075, "num": 43 },
+        { "start": 19032, "num": 43, "reverse": true },
+        { "start": 18989, "num": 43 },
+        { "start": 18946, "num": 43, "reverse": true },
+        { "start": 18903, "num": 43 },
+        { "start": 18860, "num": 43, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cyl04On & $cyl04Flip",
+      "protocol": "artnet",
+      "host": "$cyl04",
+      "universe": 141,
+      "segments": [
+        { "start": 24407, "num": 43, "reverse": true },
+        { "start": 24364, "num": 43 },
+        { "start": 24321, "num": 43, "reverse": true },
+        { "start": 24278, "num": 43 },
+        { "start": 24235, "num": 43, "reverse": true },
+        { "start": 24192, "num": 43 },
+        { "start": 24149, "num": 43, "reverse": true },
+        { "start": 24106, "num": 43 },
+        { "start": 24063, "num": 43, "reverse": true },
+        { "start": 24020, "num": 43 }
+      ]
+    },
+    {
+      "enabled": "$cyl05On & $cyl05Flip",
+      "protocol": "artnet",
+      "host": "$cyl05",
+      "universe": 144,
+      "segments": [
+        { "start": 19677, "num": 43 },
+        { "start": 19634, "num": 43, "reverse": true },
+        { "start": 19591, "num": 43 },
+        { "start": 19548, "num": 43, "reverse": true },
+        { "start": 19505, "num": 43 },
+        { "start": 19462, "num": 43, "reverse": true },
+        { "start": 19419, "num": 43 },
+        { "start": 19376, "num": 43, "reverse": true },
+        { "start": 19333, "num": 43 },
+        { "start": 19290, "num": 43, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cyl05On & $cyl05Flip",
+      "protocol": "artnet",
+      "host": "$cyl05",
+      "universe": 147,
+      "segments": [
+        { "start": 24837, "num": 43, "reverse": true },
+        { "start": 24794, "num": 43 },
+        { "start": 24751, "num": 43, "reverse": true },
+        { "start": 24708, "num": 43 },
+        { "start": 24665, "num": 43, "reverse": true },
+        { "start": 24622, "num": 43 },
+        { "start": 24579, "num": 43, "reverse": true },
+        { "start": 24536, "num": 43 },
+        { "start": 24493, "num": 43, "reverse": true },
+        { "start": 24450, "num": 43 }
+      ]
+    },
+    {
+      "enabled": "$cyl06On & $cyl06Flip",
+      "protocol": "artnet",
+      "host": "$cyl06",
+      "universe": 150,
+      "segments": [
+        { "start": 20107, "num": 32 },
+        { "start": 20064, "num": 32, "reverse": true },
+        { "start": 20021, "num": 32 },
+        { "start": 19978, "num": 32, "reverse": true },
+        { "start": 19935, "num": 32 },
+        { "start": 19892, "num": 32, "reverse": true },
+        { "start": 19849, "num": 32 },
+        { "start": 19806, "num": 32, "reverse": true },
+        { "start": 19763, "num": 32 },
+        { "start": 19720, "num": 32, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cyl06On & $cyl06Flip",
+      "protocol": "artnet",
+      "host": "$cyl06",
+      "universe": 153,
+      "segments": [
+        { "start": 25267, "num": 32, "reverse": true },
+        { "start": 25224, "num": 32 },
+        { "start": 25181, "num": 32, "reverse": true },
+        { "start": 25138, "num": 32 },
+        { "start": 25095, "num": 32, "reverse": true },
+        { "start": 25052, "num": 32 },
+        { "start": 25009, "num": 32, "reverse": true },
+        { "start": 24966, "num": 32 },
+        { "start": 24923, "num": 32, "reverse": true },
+        { "start": 24880, "num": 32 }
+      ]
+    },
+    {
+      "enabled": "$cyl07On & $cyl07Flip",
+      "protocol": "artnet",
+      "host": "$cyl07",
+      "universe": 156,
+      "segments": [
+        { "start": 20537, "num": 43 },
+        { "start": 20494, "num": 43, "reverse": true },
+        { "start": 20451, "num": 43 },
+        { "start": 20408, "num": 43, "reverse": true },
+        { "start": 20365, "num": 43 },
+        { "start": 20322, "num": 43, "reverse": true },
+        { "start": 20279, "num": 43 },
+        { "start": 20236, "num": 43, "reverse": true },
+        { "start": 20193, "num": 43 },
+        { "start": 20150, "num": 43, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cyl07On & $cyl07Flip",
+      "protocol": "artnet",
+      "host": "$cyl07",
+      "universe": 159,
+      "segments": [
+        { "start": 25697, "num": 43, "reverse": true },
+        { "start": 25654, "num": 43 },
+        { "start": 25611, "num": 43, "reverse": true },
+        { "start": 25568, "num": 43 },
+        { "start": 25525, "num": 43, "reverse": true },
+        { "start": 25482, "num": 43 },
+        { "start": 25439, "num": 43, "reverse": true },
+        { "start": 25396, "num": 43 },
+        { "start": 25353, "num": 43, "reverse": true },
+        { "start": 25310, "num": 43 }
+      ]
+    },
+    {
+      "enabled": "$cyl08On & $cyl08Flip",
+      "protocol": "artnet",
+      "host": "$cyl08",
+      "universe": 162,
+      "segments": [
+        { "start": 20967, "num": 43 },
+        { "start": 20924, "num": 43, "reverse": true },
+        { "start": 20881, "num": 43 },
+        { "start": 20838, "num": 43, "reverse": true },
+        { "start": 20795, "num": 43 },
+        { "start": 20752, "num": 43, "reverse": true },
+        { "start": 20709, "num": 43 },
+        { "start": 20666, "num": 43, "reverse": true },
+        { "start": 20623, "num": 43 },
+        { "start": 20580, "num": 43, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cyl08On & $cyl08Flip",
+      "protocol": "artnet",
+      "host": "$cyl08",
+      "universe": 165,
+      "segments": [
+        { "start": 26127, "num": 43, "reverse": true },
+        { "start": 26084, "num": 43 },
+        { "start": 26041, "num": 43, "reverse": true },
+        { "start": 25998, "num": 43 },
+        { "start": 25955, "num": 43, "reverse": true },
+        { "start": 25912, "num": 43 },
+        { "start": 25869, "num": 43, "reverse": true },
+        { "start": 25826, "num": 43 },
+        { "start": 25783, "num": 43, "reverse": true },
+        { "start": 25740, "num": 43 }
+      ]
+    },
+    {
+      "enabled": "$cyl09On & $cyl09Flip",
+      "protocol": "artnet",
+      "host": "$cyl09",
+      "universe": 168,
+      "segments": [
+        { "start": 21397, "num": 32 },
+        { "start": 21354, "num": 32, "reverse": true },
+        { "start": 21311, "num": 32 },
+        { "start": 21268, "num": 32, "reverse": true },
+        { "start": 21225, "num": 32 },
+        { "start": 21182, "num": 32, "reverse": true },
+        { "start": 21139, "num": 32 },
+        { "start": 21096, "num": 32, "reverse": true },
+        { "start": 21053, "num": 32 },
+        { "start": 21010, "num": 32, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cyl09On & $cyl09Flip",
+      "protocol": "artnet",
+      "host": "$cyl09",
+      "universe": 171,
+      "segments": [
+        { "start": 26557, "num": 32, "reverse": true },
+        { "start": 26514, "num": 32 },
+        { "start": 26471, "num": 32, "reverse": true },
+        { "start": 26428, "num": 32 },
+        { "start": 26385, "num": 32, "reverse": true },
+        { "start": 26342, "num": 32 },
+        { "start": 26299, "num": 32, "reverse": true },
+        { "start": 26256, "num": 32 },
+        { "start": 26213, "num": 32, "reverse": true },
+        { "start": 26170, "num": 32 }
+      ]
+    },
+    {
+      "enabled": "$cyl10On & $cyl10Flip",
+      "protocol": "artnet",
+      "host": "$cyl10",
+      "universe": 174,
+      "segments": [
+        { "start": 21827, "num": 43 },
+        { "start": 21784, "num": 43, "reverse": true },
+        { "start": 21741, "num": 43 },
+        { "start": 21698, "num": 43, "reverse": true },
+        { "start": 21655, "num": 43 },
+        { "start": 21612, "num": 43, "reverse": true },
+        { "start": 21569, "num": 43 },
+        { "start": 21526, "num": 43, "reverse": true },
+        { "start": 21483, "num": 43 },
+        { "start": 21440, "num": 43, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cyl10On & $cyl10Flip",
+      "protocol": "artnet",
+      "host": "$cyl10",
+      "universe": 177,
+      "segments": [
+        { "start": 26987, "num": 43, "reverse": true },
+        { "start": 26944, "num": 43 },
+        { "start": 26901, "num": 43, "reverse": true },
+        { "start": 26858, "num": 43 },
+        { "start": 26815, "num": 43, "reverse": true },
+        { "start": 26772, "num": 43 },
+        { "start": 26729, "num": 43, "reverse": true },
+        { "start": 26686, "num": 43 },
+        { "start": 26643, "num": 43, "reverse": true },
+        { "start": 26600, "num": 43 }
+      ]
+    },
+    {
+      "enabled": "$cyl11On & $cyl11Flip",
+      "protocol": "artnet",
+      "host": "$cyl11",
+      "universe": 180,
+      "segments": [
+        { "start": 22257, "num": 43 },
+        { "start": 22214, "num": 43, "reverse": true },
+        { "start": 22171, "num": 43 },
+        { "start": 22128, "num": 43, "reverse": true },
+        { "start": 22085, "num": 43 },
+        { "start": 22042, "num": 43, "reverse": true },
+        { "start": 21999, "num": 43 },
+        { "start": 21956, "num": 43, "reverse": true },
+        { "start": 21913, "num": 43 },
+        { "start": 21870, "num": 43, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cyl11On & $cyl11Flip",
+      "protocol": "artnet",
+      "host": "$cyl11",
+      "universe": 183,
+      "segments": [
+        { "start": 27417, "num": 43, "reverse": true },
+        { "start": 27374, "num": 43 },
+        { "start": 27331, "num": 43, "reverse": true },
+        { "start": 27288, "num": 43 },
+        { "start": 27245, "num": 43, "reverse": true },
+        { "start": 27202, "num": 43 },
+        { "start": 27159, "num": 43, "reverse": true },
+        { "start": 27116, "num": 43 },
+        { "start": 27073, "num": 43, "reverse": true },
+        { "start": 27030, "num": 43 }
+      ]
+    },
+    {
+      "enabled": "$cyl12On & $cyl12Flip",
+      "protocol": "artnet",
+      "host": "$cyl12",
+      "universe": 186,
+      "segments": [
+        { "start": 22687, "num": 32 },
+        { "start": 22644, "num": 32, "reverse": true },
+        { "start": 22601, "num": 32 },
+        { "start": 22558, "num": 32, "reverse": true },
+        { "start": 22515, "num": 32 },
+        { "start": 22472, "num": 32, "reverse": true },
+        { "start": 22429, "num": 32 },
+        { "start": 22386, "num": 32, "reverse": true },
+        { "start": 22343, "num": 32 },
+        { "start": 22300, "num": 32, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cyl12On & $cyl12Flip",
+      "protocol": "artnet",
+      "host": "$cyl12",
+      "universe": 189,
+      "segments": [
+        { "start": 27847, "num": 32, "reverse": true },
+        { "start": 27804, "num": 32 },
+        { "start": 27761, "num": 32, "reverse": true },
+        { "start": 27718, "num": 32 },
+        { "start": 27675, "num": 32, "reverse": true },
+        { "start": 27632, "num": 32 },
+        { "start": 27589, "num": 32, "reverse": true },
+        { "start": 27546, "num": 32 },
+        { "start": 27503, "num": 32, "reverse": true },
+        { "start": 27460, "num": 32 }
+      ]
+    },
+    {
+      "enabled": "$cyl01On & $cyl01Flip",
+      "protocol": "artnet",
+      "host": "$cyl01",
+      "universe": 120,
+      "segments": [
+        { "start": 23117, "num": 43 },
+        { "start": 23074, "num": 43, "reverse": true },
+        { "start": 23031, "num": 43 },
+        { "start": 22988, "num": 43, "reverse": true },
+        { "start": 22945, "num": 43 },
+        { "start": 22902, "num": 43, "reverse": true },
+        { "start": 22859, "num": 43 },
+        { "start": 22816, "num": 43, "reverse": true },
+        { "start": 22773, "num": 43 },
+        { "start": 22730, "num": 43, "reverse": true }
+      ]
+    },
+    {
+      "enabled": "$cyl01On & $cyl01Flip",
+      "protocol": "artnet",
+      "host": "$cyl01",
+      "universe": 123,
+      "segments": [
+        { "start": 28277, "num": 43, "reverse": true },
+        { "start": 28234, "num": 43 },
+        { "start": 28191, "num": 43, "reverse": true },
+        { "start": 28148, "num": 43 },
+        { "start": 28105, "num": 43, "reverse": true },
+        { "start": 28062, "num": 43 },
+        { "start": 28019, "num": 43, "reverse": true },
+        { "start": 27976, "num": 43 },
+        { "start": 27933, "num": 43, "reverse": true },
+        { "start": 27890, "num": 43 }
       ]
     }
   ]
