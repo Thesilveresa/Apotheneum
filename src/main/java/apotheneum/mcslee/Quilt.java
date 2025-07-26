@@ -128,7 +128,7 @@ public class Quilt extends ApotheneumPattern implements UIDeviceControls<Quilt> 
 
     @Override
     public int getStripeColor(double b) {
-      return LXColor.hsb(vHue, vSaturation, b);
+      return LXColor.hsb(vHue, vSaturation, b * vBrightness);
     }
 
     @Override
@@ -145,7 +145,7 @@ public class Quilt extends ApotheneumPattern implements UIDeviceControls<Quilt> 
 
     @Override
     public int getStripeColor(double b) {
-      return LXColor.hsb(hHue, hSaturation, b);
+      return LXColor.hsb(hHue, hSaturation, b * hBrightness);
     }
 
     @Override
@@ -187,7 +187,7 @@ public class Quilt extends ApotheneumPattern implements UIDeviceControls<Quilt> 
     }
   }
 
-  private double hHue, hSaturation, vHue, vSaturation;
+  private double hHue, hSaturation, hBrightness, vHue, vSaturation, vBrightness;
 
   @Override
   public void render(double deltaMs) {
@@ -201,6 +201,8 @@ public class Quilt extends ApotheneumPattern implements UIDeviceControls<Quilt> 
     this.vHue = this.vColor.hue.getValue();
     this.hSaturation = this.hColor.saturation.getValue();
     this.vSaturation = this.vColor.saturation.getValue();
+    this.hBrightness = this.hColor.brightness.getNormalized();
+    this.vBrightness = this.vColor.brightness.getNormalized();
 
     this.vStripes.forEach(vStripe -> vStripe.render(deltaMs));
     this.hStripes.forEach(hStripe -> hStripe.render(deltaMs));
