@@ -25,6 +25,7 @@
     "haloScale": { "type": "float", "min": 1, "default": 3200, "label": "Halo Scale", "description": "Size of light halo on groud" },
     "starsEnabled": { "type": "boolean", "default": true, "label": "Stars UI", "description": "Whether the stars are rendered" },
     "peopleEnabled": { "type": "boolean", "default": true, "label": "People UI", "description": "Whether people are rendered" },
+    "hackCub19": { "type": "boolean", "default": true, "label": "Hack Cub19", "description": "Hack fix for net 19 hardware issue" },
 <?php
 $params = array();
 for ($i = 1; $i <= 20; ++$i) {
@@ -280,16 +281,32 @@ for ($i = 0; $i < 20; ++$i) {
   $univExt = 6*$i;
   $univInt = 6*$i + 3;
 
+  $hasHack = false;
+  $not19 = '';
+  $is19 = '';
+  if ($i == 18) {
+    $hasHack = true;
+    $not19 = ' & !$hackCub19';
+    $is19 = ' & $hackCub19';
+  }
+
   // Exterior cube universe
   $output = '{
-      "enabled": "$cub'.$digit.'On & !$cub'.$digit.'Flip",
+      "enabled": "$cub'.$digit.'On & !$cub'.$digit.'Flip'.$not19.'",
       "protocol": "artnet",
       "host": "$cub'.$digit.'",
       "universe": '.$univExt.',
       "segments": ';
 
   $outputFlip = '{
-      "enabled": "$cub'.$digit.'On & $cub'.$digit.'Flip",
+      "enabled": "$cub'.$digit.'On & $cub'.$digit.'Flip'.$not19.'",
+      "protocol": "artnet",
+      "host": "$cub'.$digit.'",
+      "universe": '.$univExt.',
+      "segments": ';
+      
+  $outputHack = '{
+      "enabled": "$cub'.$digit.'On & $cub'.$digit.'Flip'.$is19.'",
       "protocol": "artnet",
       "host": "$cub'.$digit.'",
       "universe": '.$univExt.',
@@ -320,6 +337,26 @@ for ($i = 0; $i < 20; ++$i) {
       ]
     }';
   $outputsFlip []= $outputFlip;
+  
+  if ($hasHack) {
+    $segmentsHack = array();
+    for ($s = 9; $s >= 0; --$s) {
+      $start = $i * 450 + $s * 45;
+      $num = ($i % 5 == 2) ? 34 : 45;
+      if ($s == 9) {
+        ++$start;
+        --$num;
+      }
+      
+      $reverse = ($s % 2 == 0) ? ', "reverse": true' : '';
+      $segmentsHack []= '{ "start": '.$start.', "num": '.$num.$reverse.' }';
+    }
+    $outputHack .= "[\n        ".join(",\n        ", $segmentsHack);
+    $outputHack .= '
+      ]
+    }';
+    $outputsFlip []= $outputHack;
+  }
   
   // Interior cube universe
   $output = '{
