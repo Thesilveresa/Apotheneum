@@ -446,7 +446,7 @@ for ($i = 0; $i < 12; ++$i) {
   for ($s = 9; $s >= 0; --$s) {
     $start = 23160 + $i * 430 + $s * 43;
     $num = ($d % 3 == 2) ? 32 : 43;
-    $reverse = ($s % 2 == 1) ? ', "reverse": true' : '';
+    $reverse = ($s % 2 == 0) ? ', "reverse": true' : '';
     $segmentsFlip []= '{ "start": '.$start.', "num": '.$num.$reverse.' }';
   }
   $outputFlip .= "[\n        ".join(",\n        ", $segmentsFlip);
