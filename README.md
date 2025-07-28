@@ -10,6 +10,12 @@ Learn more on the [Apotheneum Wiki &rarr;](https://github.com/Apotheneum/Apothen
 
 ---
 
+### Copyright Notice
+
+Unless otherwise indicated, all contents in this repository are copyright their original owners (as stated in the or recorded in the version history). Materials here are not under open source license, artworks are the intellecual property of their creators.
+
+---
+
 ### Getting Started
 
 This package currently requires macOS on an Apple Silicon machine. Windows instructions will be added in the future.
