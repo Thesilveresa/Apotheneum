@@ -12,7 +12,7 @@ Learn more on the [Apotheneum Wiki &rarr;](https://github.com/Apotheneum/Apothen
 
 ### Copyright Notice
 
-Unless otherwise indicated, all contents in this repository are copyright their original owners (as stated in the or recorded in the version history). Materials here are not under open source license, artworks are the intellecual property of their creators.
+Unless otherwise indicated, all contents in this repository are copyright their original authors (as stated in the file or recorded by the version history). Materials here are not under open source license, artworks are the intellecual property of their creators.
 
 ---
 
