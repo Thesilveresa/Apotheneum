@@ -31,6 +31,7 @@ import heronarts.lx.color.LXColor;
 import heronarts.lx.midi.MidiNoteOn;
 import heronarts.lx.model.LXModel;
 import heronarts.lx.model.LXPoint;
+import heronarts.lx.parameter.BooleanParameter;
 import heronarts.lx.parameter.CompoundDiscreteParameter;
 import heronarts.lx.parameter.CompoundParameter;
 import heronarts.lx.parameter.EnumParameter;
@@ -69,6 +70,14 @@ public class CubeSparkles extends ApotheneumPattern implements ApotheneumPattern
     new TriggerParameter("Sparkle", this::onSparkle)
     .setDescription("Trigger a sparkle");
 
+  public final BooleanParameter cube =
+    new BooleanParameter("Cube", true)
+    .setDescription("Whether sparkles appear on the cube");
+
+  public final BooleanParameter cylinder =
+    new BooleanParameter("Cylinder", false)
+    .setDescription("Whether sparkles appear on the cylinder");
+
   public final CompoundDiscreteParameter perTrig =
     new CompoundDiscreteParameter("Per Trigger", 1, 1, 64)
     .setDescription("Number of sparkles per trigger");
@@ -101,6 +110,8 @@ public class CubeSparkles extends ApotheneumPattern implements ApotheneumPattern
     super(lx);
     addParameter("sparkle", this.sparkle);
     addParameter("perTrig", this.perTrig);
+    addParameter("cube", this.cube);
+    addParameter("cylinder", this.cylinder);
     addParameter("maxHeight", this.maxHeight);
     addParameter("sparkleTime", this.sparkleTime);
     addParameter("sparkleDistance", this.sparkleDistance);
@@ -121,8 +132,8 @@ public class CubeSparkles extends ApotheneumPattern implements ApotheneumPattern
     private final float basePos;
     private float basis;
 
-    private Sparkle(Apotheneum.Cube.Face face) {
-      this.column = face.columns[LXUtils.randomi(face.columns.length-1)];
+    private Sparkle(LXModel[] columns) {
+      this.column = columns[LXUtils.randomi(columns.length-1)];
       this.basePos = LXUtils.randomf(maxHeight.getValuef());
     }
 
@@ -149,9 +160,16 @@ public class CubeSparkles extends ApotheneumPattern implements ApotheneumPattern
   private void onSparkle() {
     if (Apotheneum.exists) {
       int num = this.perTrig.getValuei();
-      for (int i = 0; i < num; ++i) {
-        for (Apotheneum.Cube.Face face : Apotheneum.cube.exterior.faces) {
-          this.sparkles.add(new Sparkle(face));
+      if (this.cube.isOn()) {
+        for (int i = 0; i < num; ++i) {
+          for (Apotheneum.Cube.Face face : Apotheneum.cube.exterior.faces) {
+            this.sparkles.add(new Sparkle(face.columns));
+          }
+        }
+      }
+      if (this.cylinder.isOn()) {
+        for (int i = 0; i < num; ++i) {
+          this.sparkles.add(new Sparkle(Apotheneum.cylinder.exterior.columns));
         }
       }
     }
@@ -162,6 +180,7 @@ public class CubeSparkles extends ApotheneumPattern implements ApotheneumPattern
   @Override
   protected void render(double deltaMs) {
     setColors(LXColor.BLACK);
+    setApotheneumColor(LXColor.BLACK);
     this.finished.clear();
     for (Sparkle sparkle : this.sparkles) {
       sparkle.render(deltaMs);
@@ -173,7 +192,7 @@ public class CubeSparkles extends ApotheneumPattern implements ApotheneumPattern
       this.sparkles.removeAll(this.finished);
       this.finished.clear();
     }
-    copyCubeExterior();
+    copyExterior();
   }
 
   @Override
