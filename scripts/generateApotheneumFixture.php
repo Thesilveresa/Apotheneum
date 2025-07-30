@@ -25,7 +25,7 @@
     "haloScale": { "type": "float", "min": 1, "default": 3200, "label": "Halo Scale", "description": "Size of light halo on groud" },
     "starsEnabled": { "type": "boolean", "default": true, "label": "Stars UI", "description": "Whether the stars are rendered" },
     "peopleEnabled": { "type": "boolean", "default": true, "label": "People UI", "description": "Whether people are rendered" },
-    "hackCub19": { "type": "boolean", "default": true, "label": "Hack Cub19", "description": "Hack fix for net 19 hardware issue" },
+    "hackCub19": { "type": "boolean", "default": false, "label": "Hack Cub19", "description": "Hack fix for net 19 hardware issue" },
 <?php
 $params = array();
 for ($i = 1; $i <= 20; ++$i) {
