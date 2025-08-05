@@ -76,6 +76,11 @@ public class Raindrops extends ApotheneumPattern implements ApotheneumPattern.Mi
     new CompoundParameter("Tail", 5, 1, 20)
     .setDescription("Tail length");
 
+  public final CompoundParameter startHeight =
+    new CompoundParameter("Start Height", 1)
+    .setUnits(CompoundParameter.Units.PERCENT_NORMALIZED)
+    .setDescription("Starting height of raindrops (0=bottom, 100%=top)");
+
   public final CompoundParameter floor =
     new CompoundParameter("Floor", 0)
     .setUnits(CompoundParameter.Units.PERCENT_NORMALIZED)
@@ -104,7 +109,7 @@ public class Raindrops extends ApotheneumPattern implements ApotheneumPattern.Mi
     private final Apotheneum.Orientation orientation;
     private final LXModel column;
     private final int ringIndex;
-    private double pos = 0;
+    private double pos;
     private double velocity = 0;
     private boolean hasSplashed = false;
     private int splashPoint;
@@ -124,6 +129,10 @@ public class Raindrops extends ApotheneumPattern implements ApotheneumPattern.Mi
       );
       this.ring = this.orientation.ring(this.splashPoint).points;
       this.velocity = LXUtils.lerp(initVelocityMin.getValue(), initVelocityMax.getValue(), Math.random());
+      
+      // Initialize position based on startHeight parameter
+      // startHeight: 1 = top (pos=0), 0 = bottom (pos=splashPoint)
+      this.pos = LXUtils.lerp(this.splashPoint, 0, startHeight.getValue());
     }
 
     @Override
@@ -199,6 +208,7 @@ public class Raindrops extends ApotheneumPattern implements ApotheneumPattern.Mi
     addParameter("trig", this.trig);
     addParameter("perTrig", this.perTrig);
     addParameter("position", this.position);
+    addParameter("startHeight", this.startHeight);
     addParameter("floor", this.floor);
     addParameter("floorRand", this.floorRand);
     addParameter("tailLength", this.tailLength);
@@ -252,7 +262,14 @@ public class Raindrops extends ApotheneumPattern implements ApotheneumPattern.Mi
     addColumn(uiDevice, "Input",
       newButton(raindrops.trig).setTriggerable(true).setBorderRounding(4),
       newIntegerBox(raindrops.perTrig).setTopMargin(-2),
-      newKnob(raindrops.position).setTopMargin(6),
+      newKnob(raindrops.position).setTopMargin(6)
+    ).setChildSpacing(6);
+
+    addVerticalBreak(ui, uiDevice);
+
+    addColumn(uiDevice, "Height",
+      newKnob(raindrops.startHeight),
+      newKnob(raindrops.floor),
       newKnob(raindrops.tailLength)
     ).setChildSpacing(6);
 
@@ -266,11 +283,15 @@ public class Raindrops extends ApotheneumPattern implements ApotheneumPattern.Mi
 
     addVerticalBreak(ui, uiDevice);
 
-    addColumn(uiDevice,
+    addColumn(uiDevice, "Splash",
       newButton(raindrops.splash),
-      newKnob(raindrops.floor),
       newKnob(raindrops.floorRand),
-      newButton(raindrops.linkFloor),
+      newButton(raindrops.linkFloor)
+    ).setChildSpacing(6);
+    
+    addVerticalBreak(ui, uiDevice);
+    
+    addColumn(uiDevice, "OSC",
       newButton(raindrops.sendSplash)
     ).setChildSpacing(6);;
   }
