@@ -93,6 +93,10 @@ public class Raindrops extends ApotheneumPattern implements ApotheneumPattern.Mi
     new BooleanParameter("Link", false)
     .setDescription("Link floor position from Surfacing");
 
+  public final BooleanParameter splash =
+    new BooleanParameter("Splash", true)
+    .setDescription("Whether to do splash effect at the end");
+
   private final OscMessage oscSplash = new OscMessage("/raindrops/splash");
 
   private class Drop extends LXLayer {
@@ -159,6 +163,7 @@ public class Raindrops extends ApotheneumPattern implements ApotheneumPattern.Mi
       }
 
       final double splash = this.pos - this.splashPoint;
+      final boolean renderSplash = Raindrops.this.splash.isOn();
       if (splash > 0) {
         if (!this.hasSplashed) {
           if (sendSplash.isOn()) {
@@ -166,17 +171,19 @@ public class Raindrops extends ApotheneumPattern implements ApotheneumPattern.Mi
           }
           this.hasSplashed = true;
         }
-        final double splashLerp = Math.sqrt(.5 * splash);
-        int ri = 0;
-        for (LXPoint p : this.ring) {
-          double b =
-            LXUtils.lerp(1, 0, splashLerp * .15) -
-            .25 * Math.abs(LXUtils.wrapdistf(this.ringIndex, ri, this.ring.length) - splashLerp);
-          if (b > 0) {
-            colors[p.index] = LXColor.lightest(colors[p.index], LXColor.grayn(b));
-            done = false;
+        if (renderSplash) {
+          final double splashLerp = Math.sqrt(.5 * splash);
+          int ri = 0;
+          for (LXPoint p : this.ring) {
+            double b =
+              LXUtils.lerp(1, 0, splashLerp * .15) -
+              .25 * Math.abs(LXUtils.wrapdistf(this.ringIndex, ri, this.ring.length) - splashLerp);
+            if (b > 0) {
+              colors[p.index] = LXColor.lightest(colors[p.index], LXColor.grayn(b));
+              done = false;
+            }
+            ++ri;
           }
-          ++ri;
         }
       }
 
@@ -198,6 +205,7 @@ public class Raindrops extends ApotheneumPattern implements ApotheneumPattern.Mi
     addParameter("gravity", this.gravity);
     addParameter("initVelocityMin", this.initVelocityMin);
     addParameter("initVelocityMax", this.initVelocityMax);
+    addParameter("splash", this.splash);
     addParameter("sendSplash", this.sendSplash);
     addParameter("linkFloor", this.linkFloor);
   }
@@ -258,7 +266,8 @@ public class Raindrops extends ApotheneumPattern implements ApotheneumPattern.Mi
 
     addVerticalBreak(ui, uiDevice);
 
-    addColumn(uiDevice, "Splash",
+    addColumn(uiDevice,
+      newButton(raindrops.splash),
       newKnob(raindrops.floor),
       newKnob(raindrops.floorRand),
       newButton(raindrops.linkFloor),
