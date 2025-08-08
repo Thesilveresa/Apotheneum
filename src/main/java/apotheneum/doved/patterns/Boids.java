@@ -54,7 +54,7 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
     .setDescription("Number of boids in the flock");
 
   public final CompoundParameter speed =
-    new CompoundParameter("Speed", 8.0, 2.0, 15.0)
+    new CompoundParameter("Speed", 8.0, 1.0, 20.0)
     .setDescription("Base movement speed");
 
   public final CompoundParameter separation =
@@ -93,7 +93,7 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
   private class Boid {
     float x, y;              // Position in ring coordinates
     float velocityX, velocityY;  // Velocity
-    float maxSpeed = 12.0f;
+    float maxSpeed = 20.0f;
     float maxForce = 0.8f;
     boolean isLeader = false;
     
@@ -180,8 +180,9 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
       
       // Update position
       float deltaSeconds = (float)(deltaMs * 0.001);
-      x += velocityX * deltaSeconds;
-      y += velocityY * deltaSeconds;
+      float speedMultiplier = Boids.this.speed.getValuef() / 8.0f; // Scale relative to default
+      x += velocityX * deltaSeconds * speedMultiplier;
+      y += velocityY * deltaSeconds * speedMultiplier;
       
       // Handle boundaries - wrap X, gently redirect Y
       x = (x + getRingLength()) % getRingLength();
