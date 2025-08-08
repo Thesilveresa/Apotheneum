@@ -129,7 +129,7 @@ public class Raindrops extends ApotheneumPattern implements ApotheneumPattern.Mi
       );
       this.ring = this.orientation.ring(this.splashPoint).points;
       this.velocity = LXUtils.lerp(initVelocityMin.getValue(), initVelocityMax.getValue(), Math.random());
-      
+
       // Initialize position based on startHeight parameter
       // startHeight: 1 = top (pos=0), 0 = bottom (pos=splashPoint)
       this.pos = LXUtils.lerp(this.splashPoint, 0, startHeight.getValue());
@@ -283,17 +283,13 @@ public class Raindrops extends ApotheneumPattern implements ApotheneumPattern.Mi
 
     addVerticalBreak(ui, uiDevice);
 
-    addColumn(uiDevice, "Splash",
+    addColumn(uiDevice,
       newButton(raindrops.splash),
       newKnob(raindrops.floorRand),
-      newButton(raindrops.linkFloor)
-    ).setChildSpacing(6);
-    
-    addVerticalBreak(ui, uiDevice);
-    
-    addColumn(uiDevice, "OSC",
+      newButton(raindrops.linkFloor),
+      sectionLabel("OSC"),
       newButton(raindrops.sendSplash)
-    ).setChildSpacing(6);;
+    ).setChildSpacing(6);
   }
 
 }
