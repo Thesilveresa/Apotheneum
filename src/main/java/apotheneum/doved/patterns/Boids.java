@@ -89,6 +89,10 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
     new DiscreteParameter("Shape", new String[]{"Cube", "Cylinder"}, 0)
     .setDescription("Which shape to render on");
 
+  public final CompoundParameter boidRadius =
+    new CompoundParameter("Radius", 1.0, 0.5, 4.0)
+    .setDescription("Size of boid rendering (larger = more pixels)");
+
   // Simple 2D Boid class
   private class Boid {
     float x, y;              // Position in ring coordinates
@@ -109,7 +113,7 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
       // Create cluster centers
       float clusterSpacing = getRingLength() / (float)clusterCount;
       float clusterCenterX = (clusterIndex * clusterSpacing + clusterSpacing * 0.5f) % getRingLength();
-      float clusterCenterY = getRingHeight() * 0.6f; // Start in middle-upper area
+      float clusterCenterY = getRingHeight() * (0.3f + (float)Math.random() * 0.4f); // Start in middle area with variation
       
       // Spawn within very small radius of cluster center for tight flocking
       float clusterRadius = Math.min(6, getRingLength() / (clusterCount * 6));
@@ -118,7 +122,7 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
       
       x = (clusterCenterX + (float)Math.cos(angle) * distance + getRingLength()) % getRingLength();
       y = Math.max(8, Math.min(getRingHeight() - 8, 
-          clusterCenterY + (float)Math.sin(angle) * distance * 0.3f));
+          clusterCenterY + (float)Math.sin(angle) * distance));
       
       // Smaller initial velocity for tighter flocking
       float initAngle = (float)(Math.random() * 2 * Math.PI);
@@ -160,10 +164,10 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
         accelerationY += lead[1] * leaderForce.getValuef() * 1.0f;
       }
       
-      // Add turbulence
+      // Add turbulence with extra vertical bias
       if (turbulence.getValuef() > 0) {
         accelerationX += (Math.random() - 0.5) * turbulence.getValuef() * 1.5f;
-        accelerationY += (Math.random() - 0.5) * turbulence.getValuef() * 1.5f;
+        accelerationY += (Math.random() - 0.5) * turbulence.getValuef() * 2.0f; // More vertical turbulence
       }
       
       // Update velocity
@@ -202,11 +206,11 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
     }
     
     void setNewWanderTarget() {
-      // Leaders wander in very small areas to keep flocks together
-      float wanderRadius = 5; // Very small wander area to keep flock cohesive
+      // Leaders wander with more vertical exploration
+      float wanderRadius = 8; // Larger wander area for more movement
       float angle = (float)(Math.random() * 2 * Math.PI);
-      wanderTargetX = x + (float)Math.cos(angle) * LXUtils.randomf(1, wanderRadius);
-      wanderTargetY = y + (float)Math.sin(angle) * LXUtils.randomf(0.5f, wanderRadius * 0.4f);
+      wanderTargetX = x + (float)Math.cos(angle) * LXUtils.randomf(2, wanderRadius);
+      wanderTargetY = y + (float)Math.sin(angle) * LXUtils.randomf(1.5f, wanderRadius * 0.8f); // More vertical movement
       
       // Keep within bounds
       wanderTargetX = (wanderTargetX + getRingLength()) % getRingLength();
@@ -448,6 +452,7 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
     addParameter("leaderCount", this.leaderCount);
     addParameter("leaderForce", this.leaderForce);
     addParameter("shape", this.shape);
+    addParameter("boidRadius", this.boidRadius);
     
     updateBoidCount();
   }
@@ -512,7 +517,34 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
   private void renderBoid(Boid boid) {
     // Color leaders differently for visual feedback
     int color = boid.isLeader ? LXColor.hsb(60, 80, 100) : LXColor.WHITE; // Leaders are yellow
-    setPixelOnShape(boid.x, boid.y, color);
+    renderBoidWithRadius(boid.x, boid.y, color);
+  }
+  
+  private void renderBoidWithRadius(float centerX, float centerY, int color) {
+    float radius = boidRadius.getValuef();
+    
+    if (radius <= 0.5f) {
+      // Single pixel
+      setPixelOnShape(centerX, centerY, color);
+    } else {
+      // Multiple pixels in circular pattern
+      int radiusInt = (int) Math.ceil(radius);
+      
+      // Render center pixel
+      setPixelOnShape(centerX, centerY, color);
+      
+      // Render surrounding pixels in circular pattern
+      for (int dx = -radiusInt; dx <= radiusInt; dx++) {
+        for (int dy = -radiusInt; dy <= radiusInt; dy++) {
+          if (dx == 0 && dy == 0) continue;
+          
+          float distance = (float) Math.sqrt(dx * dx + dy * dy);
+          if (distance <= radius) {
+            setPixelOnShape(centerX + dx, centerY + dy, color);
+          }
+        }
+      }
+    }
   }
   
   private void setPixelOnShape(float ringX, float ringY, int color) {
@@ -608,7 +640,8 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
     
     addVerticalBreak(ui, uiDevice);
     
-    addColumn(uiDevice, "Shape",
+    addColumn(uiDevice, "Visual",
+      newKnob(boids.boidRadius),
       newDropMenu(boids.shape)
     );
   }
