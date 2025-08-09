@@ -33,7 +33,9 @@ import heronarts.lx.studio.ui.device.UIDeviceControls;
 import heronarts.lx.utils.LXUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @LXCategory("Apotheneum/doved")
 @LXComponentName("Boids")
@@ -48,17 +50,17 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
     return shape.getValuei() == 0 ? Apotheneum.Cube.Ring.LENGTH : Apotheneum.Cylinder.Ring.LENGTH;
   }
 
-  // Parameters - optimized for tight flocking behavior
+  // Parameters - optimized for tight flocking behavior with higher capacity
   public final CompoundDiscreteParameter boidCount =
-    new CompoundDiscreteParameter("Count", 25, 5, 80)
+    new CompoundDiscreteParameter("Count", 25, 5, 300)
     .setDescription("Number of boids in the flock");
 
   public final CompoundParameter speed =
-    new CompoundParameter("Speed", 3.0, 0.5, 8.0)
+    new CompoundParameter("Speed", 3.0, 0.5, 4.0)
     .setDescription("Base movement speed");
 
   public final CompoundParameter separation =
-    new CompoundParameter("Separation", 2.5, 0, 4)
+    new CompoundParameter("Separation", 1.5, 0, 4)
     .setDescription("Strength of separation force (avoid crowding)");
 
   public final CompoundParameter alignment =
@@ -77,13 +79,6 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
     new CompoundParameter("Turbulence", 0.2, 0, 1)
     .setDescription("Random force for organic movement");
 
-  public final CompoundDiscreteParameter leaderCount =
-    new CompoundDiscreteParameter("Leaders", 4, 0, 8)
-    .setDescription("Number of leader boids that others follow");
-
-  public final CompoundParameter leaderForce =
-    new CompoundParameter("Follow", 2.5, 0, 4)
-    .setDescription("Strength of attraction to leader boids");
 
   public final DiscreteParameter shape = 
     new DiscreteParameter("Shape", new String[]{"Cube", "Cylinder"}, 0)
@@ -93,13 +88,13 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
     new CompoundParameter("Radius", 1.0, 0.5, 4.0)
     .setDescription("Size of boid rendering (larger = more pixels)");
 
+
   // Simple 2D Boid class
   private class Boid {
     float x, y;              // Position in ring coordinates
     float velocityX, velocityY;  // Velocity
     float maxSpeed = 15.0f;
     float maxForce = 0.8f;
-    boolean isLeader = false;
     
     // Individual speed variation for more organic movement
     float currentSpeedMultiplier = 1.0f;  // Current speed multiplier (0.7 to 1.3)
@@ -107,76 +102,45 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
     double lastSpeedTargetUpdate = 0;      // Time when we last picked a new target speed
     float speedInterpolationRate = 0.5f;  // How quickly we interpolate to target (0-1, higher = faster)
     
-    // Leader wandering
-    float wanderTargetX, wanderTargetY;
-    double lastWanderUpdate = 0;
     
     Boid() {
-      // Start boids in smaller, clustered areas for better flocking
-      int clusterCount = Math.max(1, leaderCount.getValuei());
-      int clusterIndex = (int)(Math.random() * clusterCount);
+      // Random initial position across the entire space
+      x = (float)Math.random() * getRingLength();
+      y = LXUtils.randomf(8, getRingHeight() - 8); // Stay away from edges
       
-      // Create cluster centers
-      float clusterSpacing = getRingLength() / (float)clusterCount;
-      float clusterCenterX = (clusterIndex * clusterSpacing + clusterSpacing * 0.5f) % getRingLength();
-      float clusterCenterY = getRingHeight() * (0.3f + (float)Math.random() * 0.4f); // Start in middle area with variation
-      
-      // Spawn within very small radius of cluster center for tight flocking
-      float clusterRadius = Math.min(6, getRingLength() / (clusterCount * 6));
-      float angle = (float)(Math.random() * 2 * Math.PI);
-      float distance = LXUtils.randomf(0.5f, clusterRadius);
-      
-      x = (clusterCenterX + (float)Math.cos(angle) * distance + getRingLength()) % getRingLength();
-      y = Math.max(8, Math.min(getRingHeight() - 8, 
-          clusterCenterY + (float)Math.sin(angle) * distance));
-      
-      // Smaller initial velocity for tighter flocking
+      // Random initial velocity for natural movement
       float initAngle = (float)(Math.random() * 2 * Math.PI);
-      velocityX = (float)Math.cos(initAngle) * LXUtils.randomf(0.2f, 0.8f);
-      velocityY = (float)Math.sin(initAngle) * LXUtils.randomf(0.2f, 0.8f);
+      velocityX = (float)Math.cos(initAngle) * LXUtils.randomf(0.5f, 2.0f);
+      velocityY = (float)Math.sin(initAngle) * LXUtils.randomf(0.5f, 2.0f);
       
-      // Initialize individual speed variation
-      currentSpeedMultiplier = LXUtils.randomf(0.85f, 1.15f); // Start with modest variation
+      // Initialize individual speed variation for organic movement
+      currentSpeedMultiplier = LXUtils.randomf(0.85f, 1.15f);
       targetSpeedMultiplier = currentSpeedMultiplier;
       lastSpeedTargetUpdate = 0;
-      
-      // Set initial wander target for leaders
-      setNewWanderTarget();
     }
     
-    void update(double deltaMs, List<Boid> allBoids) {
+    void updateWithSpatialGrid(double deltaMs, SpatialGrid spatialGrid) {
       // Update individual speed variation
       updateSpeedVariation(Boids.this.currentTime);
       
       float accelerationX = 0;
       float accelerationY = 0;
       
-      if (isLeader) {
-        // Leaders wander independently but very gently to keep flock together
-        float[] wander = wander(Boids.this.currentTime);
-        accelerationX += wander[0] * 0.1f;
-        accelerationY += wander[1] * 0.1f;
-        
-        // Leaders still separate from others but maintain good spacing
-        float[] sep = separate(allBoids);
-        accelerationX += sep[0] * separation.getValuef() * 1.0f;
-        accelerationY += sep[1] * separation.getValuef() * 1.0f;
-      } else {
-        // Regular boids flock
-        float[] sep = separate(allBoids);
-        float[] ali = align(allBoids);
-        float[] coh = cohesion(allBoids);
-        float[] lead = followLeaders(allBoids);
-        
-        accelerationX += sep[0] * separation.getValuef() * 1.2f;
-        accelerationY += sep[1] * separation.getValuef() * 1.2f;
-        accelerationX += ali[0] * alignment.getValuef() * 1.0f;
-        accelerationY += ali[1] * alignment.getValuef() * 1.0f;
-        accelerationX += coh[0] * cohesion.getValuef() * 0.8f;
-        accelerationY += coh[1] * cohesion.getValuef() * 0.8f;
-        accelerationX += lead[0] * leaderForce.getValuef() * 1.0f;
-        accelerationY += lead[1] * leaderForce.getValuef() * 1.0f;
-      }
+      // Get nearby boids from spatial grid instead of checking all boids
+      float searchRadius = neighborRadius.getValuef() * 2.0f;
+      List<Boid> nearbyBoids = spatialGrid.getNearbyBoids(x, y, searchRadius);
+      
+      // Classic Boids: Apply the three fundamental forces to all boids
+      float[] sep = separateFromNearby(nearbyBoids);
+      float[] ali = alignWithNearby(nearbyBoids);
+      float[] coh = cohesionWithNearby(nearbyBoids);
+      
+      accelerationX += sep[0] * separation.getValuef();
+      accelerationY += sep[1] * separation.getValuef();
+      accelerationX += ali[0] * alignment.getValuef();
+      accelerationY += ali[1] * alignment.getValuef();
+      accelerationX += coh[0] * cohesion.getValuef();
+      accelerationY += coh[1] * cohesion.getValuef();
       
       // Add turbulence with extra vertical bias
       if (turbulence.getValuef() > 0) {
@@ -187,6 +151,14 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
       // Door avoidance as acceleration force (before velocity update)
       if (isInDoorArea(x, y)) {
         accelerationY += maxForce * 0.5f; // Apply upward force to avoid doors
+      }
+      
+      // Clamp total acceleration to prevent jittery movement at extreme parameter settings
+      float totalAcceleration = (float)Math.sqrt(accelerationX * accelerationX + accelerationY * accelerationY);
+      float maxAcceleration = maxForce * 3.0f; // Allow up to 3x maxForce for total acceleration
+      if (totalAcceleration > maxAcceleration) {
+        accelerationX = (accelerationX / totalAcceleration) * maxAcceleration;
+        accelerationY = (accelerationY / totalAcceleration) * maxAcceleration;
       }
       
       // Update velocity
@@ -246,50 +218,14 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
       currentSpeedMultiplier = Math.max(0.7f, Math.min(1.3f, currentSpeedMultiplier));
     }
     
-    void setNewWanderTarget() {
-      // Leaders wander with more vertical exploration
-      float wanderRadius = 8; // Larger wander area for more movement
-      float angle = (float)(Math.random() * 2 * Math.PI);
-      wanderTargetX = x + (float)Math.cos(angle) * LXUtils.randomf(2, wanderRadius);
-      wanderTargetY = y + (float)Math.sin(angle) * LXUtils.randomf(1.5f, wanderRadius * 0.8f); // More vertical movement
-      
-      // Keep within bounds
-      wanderTargetX = (wanderTargetX + getRingLength()) % getRingLength();
-      wanderTargetY = Math.max(8, Math.min(getRingHeight() - 8, wanderTargetY));
-    }
     
-    float[] wander(double currentTime) {
-      // Update wander target less frequently to maintain direction longer
-      if (currentTime - lastWanderUpdate > 5000) { // Every 5 seconds - slower changes
-        setNewWanderTarget();
-        lastWanderUpdate = currentTime;
-      }
-      
-      // Move toward wander target
-      float dx = wanderTargetX - x;
-      float dy = wanderTargetY - y;
-      
-      // Wrap distance calculation for X
-      if (Math.abs(dx) > getRingLength() / 2) {
-        dx = dx > 0 ? dx - getRingLength() : dx + getRingLength();
-      }
-      
-      float distance = (float)Math.sqrt(dx * dx + dy * dy);
-      if (distance > 0) {
-        // Very gentle wander force to keep leaders near followers
-        dx = (dx / distance) * maxForce * 0.05f;
-        dy = (dy / distance) * maxForce * 0.05f;
-      }
-      
-      return new float[]{dx, dy};
-    }
     
-    float[] separate(List<Boid> boids) {
-      float desiredSeparation = 4.0f; // Increased separation for better spacing
+    float[] separateFromNearby(List<Boid> nearbyBoids) {
+      float desiredSeparation = 6.0f; // Increased separation to prevent clustering
       float steerX = 0, steerY = 0;
       int count = 0;
       
-      for (Boid other : boids) {
+      for (Boid other : nearbyBoids) {
         if (other == this) continue;
         
         float dx = x - other.x;
@@ -332,12 +268,12 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
       return new float[]{steerX, steerY};
     }
     
-    float[] align(List<Boid> boids) {
+    float[] alignWithNearby(List<Boid> nearbyBoids) {
       float neighborDist = neighborRadius.getValuef();
       float sumX = 0, sumY = 0;
       int count = 0;
       
-      for (Boid other : boids) {
+      for (Boid other : nearbyBoids) {
         if (other == this) continue;
         
         float dx = x - other.x;
@@ -380,12 +316,12 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
       return new float[]{0, 0};
     }
     
-    float[] cohesion(List<Boid> boids) {
+    float[] cohesionWithNearby(List<Boid> nearbyBoids) {
       float neighborDist = neighborRadius.getValuef();
       float sumX = 0, sumY = 0;
       int count = 0;
       
-      for (Boid other : boids) {
+      for (Boid other : nearbyBoids) {
         if (other == this) continue;
         
         float dx = x - other.x;
@@ -413,39 +349,6 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
       return new float[]{0, 0};
     }
     
-    float[] followLeaders(List<Boid> boids) {
-      float steerX = 0, steerY = 0;
-      int count = 0;
-      
-      for (Boid other : boids) {
-        if (other.isLeader && other != this) {
-          float dx = x - other.x;
-          float dy = y - other.y;
-          
-          if (Math.abs(dx) > getRingLength() / 2) {
-            dx = dx > 0 ? dx - getRingLength() : dx + getRingLength();
-          }
-          
-          float distance = (float)Math.sqrt(dx * dx + dy * dy);
-          // Followers follow leaders within reasonable range
-          if (distance > 0 && distance < neighborRadius.getValuef() * 2) {
-            float[] seekForce = seek(other.x, other.y);
-            // Stronger influence for closer leaders
-            float influence = Math.max(0.1f, 1.0f / (distance + 1)); // Linear falloff with minimum
-            steerX += seekForce[0] * influence;
-            steerY += seekForce[1] * influence;
-            count++;
-          }
-        }
-      }
-      
-      if (count > 0) {
-        steerX /= count;
-        steerY /= count;
-      }
-      
-      return new float[]{steerX, steerY};
-    }
     
     float[] seek(float targetX, float targetY) {
       float dx = targetX - x;
@@ -477,9 +380,71 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
     }
   }
 
+  // Spatial grid for performance optimization
+  private class SpatialGrid {
+    private final float cellSize;
+    private final int gridWidth;
+    private final int gridHeight;
+    private final Map<Long, List<Boid>> grid;
+    
+    public SpatialGrid(float cellSize) {
+      this.cellSize = cellSize;
+      this.gridWidth = (int) Math.ceil(getRingLength() / cellSize);
+      this.gridHeight = (int) Math.ceil(getRingHeight() / cellSize);
+      this.grid = new HashMap<>();
+    }
+    
+    public void clear() {
+      for (List<Boid> cell : grid.values()) {
+        cell.clear();
+      }
+    }
+    
+    public void addBoid(Boid boid) {
+      long key = getCellKey(boid.x, boid.y);
+      List<Boid> cell = grid.computeIfAbsent(key, k -> new ArrayList<>());
+      cell.add(boid);
+    }
+    
+    public List<Boid> getNearbyBoids(float x, float y, float radius) {
+      List<Boid> nearbyBoids = new ArrayList<>();
+      
+      int minGridX = (int) Math.floor((x - radius) / cellSize);
+      int maxGridX = (int) Math.ceil((x + radius) / cellSize);
+      int minGridY = Math.max(0, (int) Math.floor((y - radius) / cellSize));
+      int maxGridY = Math.min(gridHeight - 1, (int) Math.ceil((y + radius) / cellSize));
+      
+      for (int gx = minGridX; gx <= maxGridX; gx++) {
+        for (int gy = minGridY; gy <= maxGridY; gy++) {
+          // Handle X-axis wrapping for ring coordinates
+          int wrappedGx = ((gx % gridWidth) + gridWidth) % gridWidth;
+          long key = getKey(wrappedGx, gy);
+          
+          List<Boid> cell = grid.get(key);
+          if (cell != null) {
+            nearbyBoids.addAll(cell);
+          }
+        }
+      }
+      
+      return nearbyBoids;
+    }
+    
+    private long getCellKey(float x, float y) {
+      int gx = ((int) Math.floor(x / cellSize) % gridWidth + gridWidth) % gridWidth;
+      int gy = Math.max(0, Math.min(gridHeight - 1, (int) Math.floor(y / cellSize)));
+      return getKey(gx, gy);
+    }
+    
+    private long getKey(int gx, int gy) {
+      return ((long) gx << 32) | (gy & 0xffffffffL);
+    }
+  }
+
   // Boid management
   private List<Boid> boids = new ArrayList<>();
   private double currentTime = 0;
+  private SpatialGrid spatialGrid;
 
   public Boids(LX lx) {
     super(lx);
@@ -490,12 +455,19 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
     addParameter("cohesion", this.cohesion);
     addParameter("neighborRadius", this.neighborRadius);
     addParameter("turbulence", this.turbulence);
-    addParameter("leaderCount", this.leaderCount);
-    addParameter("leaderForce", this.leaderForce);
     addParameter("shape", this.shape);
     addParameter("boidRadius", this.boidRadius);
     
+    // Initialize spatial grid with cell size based on neighbor radius
+    // Use the initial neighborRadius value to set up grid
+    initializeSpatialGrid();
     updateBoidCount();
+  }
+  
+  private void initializeSpatialGrid() {
+    // Use smaller cell size to ensure better spatial resolution for leader detection
+    float cellSize = Math.max(4.0f, neighborRadius.getValuef() * 0.75f);
+    spatialGrid = new SpatialGrid(cellSize);
   }
   
   private void updateBoidCount() {
@@ -506,36 +478,25 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
     while (boids.size() > targetCount) {
       boids.remove(boids.size() - 1);
     }
-    assignLeaders();
   }
   
-  private void assignLeaders() {
-    // Reset all to followers
-    for (Boid boid : boids) {
-      boid.isLeader = false;
-    }
-    
-    // Assign leaders randomly
-    int leaders = Math.min(leaderCount.getValuei(), boids.size());
-    for (int i = 0; i < leaders; i++) {
-      int index = LXUtils.randomi(0, boids.size() - 1);
-      boids.get(index).isLeader = true;
-    }
-  }
   
   @Override
   public void onParameterChanged(heronarts.lx.parameter.LXParameter p) {
     super.onParameterChanged(p);
     if (p == boidCount) {
       updateBoidCount();
-    } else if (p == leaderCount) {
-      assignLeaders();
+    } else if (p == neighborRadius) {
+      // Reinitialize spatial grid when neighbor radius changes
+      initializeSpatialGrid();
     } else if (p == shape) {
       // Regenerate boids when switching shapes for immediate visual feedback
       for (Boid boid : boids) {
         boid.x = boid.x * getRingLength() / (shape.getValuei() == 0 ? Apotheneum.Cylinder.Ring.LENGTH : Apotheneum.Cube.Ring.LENGTH);
         boid.y = boid.y * getRingHeight() / (shape.getValuei() == 0 ? Apotheneum.CYLINDER_HEIGHT : Apotheneum.GRID_HEIGHT);
       }
+      // Also reinitialize grid for new dimensions
+      initializeSpatialGrid();
     }
   }
 
@@ -544,9 +505,15 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
     setApotheneumColor(LXColor.BLACK);
     currentTime += deltaMs;
     
-    // Update all boids
+    // Clear and populate spatial grid with current boid positions
+    spatialGrid.clear();
     for (Boid boid : boids) {
-      boid.update(deltaMs, boids);
+      spatialGrid.addBoid(boid);
+    }
+    
+    // Update all boids using spatial grid for neighbor finding
+    for (Boid boid : boids) {
+      boid.updateWithSpatialGrid(deltaMs, spatialGrid);
     }
     
     // Render all boids
@@ -556,9 +523,8 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
   }
   
   private void renderBoid(Boid boid) {
-    // Color leaders differently for visual feedback
-    int color = boid.isLeader ? LXColor.hsb(60, 80, 100) : LXColor.WHITE; // Leaders are yellow
-    renderBoidWithRadius(boid.x, boid.y, color);
+    // All boids render as white for pure emergent behavior
+    renderBoidWithRadius(boid.x, boid.y, LXColor.WHITE);
   }
   
   private void renderBoidWithRadius(float centerX, float centerY, int color) {
@@ -673,17 +639,13 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
     
     addVerticalBreak(ui, uiDevice);
     
-    addColumn(uiDevice, "Leaders",
-      newIntegerBox(boids.leaderCount),
-      newKnob(boids.leaderForce),
-      newKnob(boids.neighborRadius)
+    addColumn(uiDevice, "Behavior",
+      newKnob(boids.neighborRadius),
+      newKnob(boids.boidRadius),
+      newDropMenu(boids.shape)
     );
     
     addVerticalBreak(ui, uiDevice);
     
-    addColumn(uiDevice, "Visual",
-      newKnob(boids.boidRadius),
-      newDropMenu(boids.shape)
-    );
   }
 }
