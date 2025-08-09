@@ -54,7 +54,7 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
     .setDescription("Number of boids in the flock");
 
   public final CompoundParameter speed =
-    new CompoundParameter("Speed", 8.0, 1.0, 20.0)
+    new CompoundParameter("Speed", 3.0, 0.5, 8.0)
     .setDescription("Base movement speed");
 
   public final CompoundParameter separation =
@@ -97,9 +97,15 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
   private class Boid {
     float x, y;              // Position in ring coordinates
     float velocityX, velocityY;  // Velocity
-    float maxSpeed = 20.0f;
+    float maxSpeed = 15.0f;
     float maxForce = 0.8f;
     boolean isLeader = false;
+    
+    // Individual speed variation for more organic movement
+    float currentSpeedMultiplier = 1.0f;  // Current speed multiplier (0.7 to 1.3)
+    float targetSpeedMultiplier = 1.0f;   // Target speed to interpolate towards
+    double lastSpeedTargetUpdate = 0;      // Time when we last picked a new target speed
+    float speedInterpolationRate = 0.5f;  // How quickly we interpolate to target (0-1, higher = faster)
     
     // Leader wandering
     float wanderTargetX, wanderTargetY;
@@ -129,17 +135,25 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
       velocityX = (float)Math.cos(initAngle) * LXUtils.randomf(0.2f, 0.8f);
       velocityY = (float)Math.sin(initAngle) * LXUtils.randomf(0.2f, 0.8f);
       
+      // Initialize individual speed variation
+      currentSpeedMultiplier = LXUtils.randomf(0.85f, 1.15f); // Start with modest variation
+      targetSpeedMultiplier = currentSpeedMultiplier;
+      lastSpeedTargetUpdate = 0;
+      
       // Set initial wander target for leaders
       setNewWanderTarget();
     }
     
     void update(double deltaMs, List<Boid> allBoids) {
+      // Update individual speed variation
+      updateSpeedVariation(Boids.this.currentTime);
+      
       float accelerationX = 0;
       float accelerationY = 0;
       
       if (isLeader) {
         // Leaders wander independently but very gently to keep flock together
-        float[] wander = wander(deltaMs);
+        float[] wander = wander(Boids.this.currentTime);
         accelerationX += wander[0] * 0.1f;
         accelerationY += wander[1] * 0.1f;
         
@@ -170,21 +184,25 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
         accelerationY += (Math.random() - 0.5) * turbulence.getValuef() * 2.0f; // More vertical turbulence
       }
       
+      // Door avoidance as acceleration force (before velocity update)
+      if (isInDoorArea(x, y)) {
+        accelerationY += maxForce * 0.5f; // Apply upward force to avoid doors
+      }
+      
       // Update velocity
       velocityX += accelerationX;
       velocityY += accelerationY;
       
-      // Limit speed
+      // Limit speed (use base maxSpeed for consistent behavior)
       float speed = (float)Math.sqrt(velocityX * velocityX + velocityY * velocityY);
-      float maxSpeedScaled = maxSpeed * Boids.this.speed.getValuef();
-      if (speed > maxSpeedScaled) {
-        velocityX = (velocityX / speed) * maxSpeedScaled;
-        velocityY = (velocityY / speed) * maxSpeedScaled;
+      if (speed > maxSpeed) {
+        velocityX = (velocityX / speed) * maxSpeed;
+        velocityY = (velocityY / speed) * maxSpeed;
       }
       
-      // Update position
+      // Update position (apply both global speed parameter and individual speed variation)
       float deltaSeconds = (float)(deltaMs * 0.001);
-      float speedMultiplier = Boids.this.speed.getValuef() / 8.0f; // Scale relative to default
+      float speedMultiplier = Boids.this.speed.getValuef() * currentSpeedMultiplier;
       x += velocityX * deltaSeconds * speedMultiplier;
       y += velocityY * deltaSeconds * speedMultiplier;
       
@@ -198,11 +216,34 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
         y = getRingHeight() - 4;
         velocityY = -Math.abs(velocityY) * 0.3f; // Gentle bounce
       }
-      
-      // Avoid door areas
-      if (isInDoorArea(x, y)) {
-        velocityY = Math.abs(velocityY) * 1.5f; // Move up more gently
+    }
+    
+    void updateSpeedVariation(double currentTime) {
+      // Pick a new target speed every 2-5 seconds
+      double timeSinceLastTarget = currentTime - lastSpeedTargetUpdate;
+      if (timeSinceLastTarget > LXUtils.randomf(2000, 5000)) {
+        // Choose a new target speed within range [0.7, 1.3]
+        targetSpeedMultiplier = LXUtils.randomf(0.7f, 1.3f);
+        lastSpeedTargetUpdate = currentTime;
+        
+        // Vary the interpolation rate for different boids (some change speed faster than others)
+        speedInterpolationRate = LXUtils.randomf(0.3f, 0.8f);
       }
+      
+      // Smoothly interpolate current speed towards target
+      float speedDiff = targetSpeedMultiplier - currentSpeedMultiplier;
+      float maxChange = speedInterpolationRate * 0.01f; // Small increments for smooth transitions
+      
+      if (Math.abs(speedDiff) > maxChange) {
+        // Move towards target by maxChange amount
+        currentSpeedMultiplier += Math.signum(speedDiff) * maxChange;
+      } else {
+        // Close enough to target, snap to it
+        currentSpeedMultiplier = targetSpeedMultiplier;
+      }
+      
+      // Ensure we stay within bounds
+      currentSpeedMultiplier = Math.max(0.7f, Math.min(1.3f, currentSpeedMultiplier));
     }
     
     void setNewWanderTarget() {
