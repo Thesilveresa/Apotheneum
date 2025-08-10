@@ -34,6 +34,7 @@ import heronarts.lx.color.LXColor;
 import heronarts.lx.model.LXModel;
 import heronarts.lx.model.LXPoint;
 import heronarts.lx.osc.LXOscComponent;
+import heronarts.lx.parameter.BooleanParameter;
 import heronarts.lx.parameter.CompoundParameter;
 import heronarts.lx.parameter.EnumParameter;
 import heronarts.lx.parameter.LXParameter;
@@ -157,6 +158,18 @@ public class Surfacing extends ApotheneumPattern implements UIDeviceControls<Sur
     new EnumParameter<Fill>("Fill", Fill.SURFACE)
     .setDescription("How to fill the wave");
 
+  public final BooleanParameter cubeOn =
+    new BooleanParameter("Cube", true)
+    .setDescription("Whether cube is on");
+
+  public final BooleanParameter cylinderOn =
+    new BooleanParameter("Cylinder", true)
+    .setDescription("Whether cylinder is on");
+
+  public final CompoundParameter level =
+    new CompoundParameter("Level", 1)
+    .setUnits(CompoundParameter.Units.PERCENT_NORMALIZED);
+
   private final List<Wave> waves = new ArrayList<>();
 
   private final LXParameterizedMatrix transform = new LXParameterizedMatrix();
@@ -170,6 +183,9 @@ public class Surfacing extends ApotheneumPattern implements UIDeviceControls<Sur
     addParameter("size", this.size);
     addParameter("fade", this.fade);
     addParameter("fillMode", this.fillMode);
+    addParameter("level", this.level);
+    addParameter("cubeOn", this.cubeOn);
+    addParameter("cylinderOn", this.cylinderOn);
     addTransformParameter("yaw", this.yaw);
     addTransformParameter("roll", this.roll);
     addArray("wave", this.waves);
@@ -193,17 +209,29 @@ public class Surfacing extends ApotheneumPattern implements UIDeviceControls<Sur
     this.waves.forEach(wave -> wave.update());
 
     setApotheneumColor(LXColor.BLACK);
+
+    final double level = this.level.getValue();
+    if (level <= 0) {
+      return;
+    }
+
     int cylinderIndex = 0;
-    for (LXModel column : Apotheneum.cylinder.exterior.columns) {
-      renderColumn(column, cylinderIndex);
-      ++cylinderIndex;
+    if (this.cylinderOn.isOn()) {
+      for (LXModel column : Apotheneum.cylinder.exterior.columns) {
+        renderColumn(column, cylinderIndex, level);
+        ++cylinderIndex;
+      }
+      copyCylinderExterior();
     }
-    cylinderIndex = -1;
-    for (LXModel column : Apotheneum.cube.exterior.columns) {
-      renderColumn(column, cylinderIndex);
+
+    if (this.cubeOn.isOn()) {
+      cylinderIndex = -1;
+      for (LXModel column : Apotheneum.cube.exterior.columns) {
+        renderColumn(column, cylinderIndex, level);
+      }
+      copyCubeExterior();
     }
-    copyCylinderExterior();
-    copyCubeExterior();
+
   }
 
   private float[] cylinderLevels = new float[Apotheneum.RING_LENGTH];
@@ -212,7 +240,7 @@ public class Surfacing extends ApotheneumPattern implements UIDeviceControls<Sur
     return this.cylinderLevels[cylinderIndex];
   }
 
-  private void renderColumn(LXModel column, int cylinderIndex) {
+  private void renderColumn(LXModel column, int cylinderIndex, double level) {
     final LXPoint c = column.points[0];
 
     final float xn =
@@ -243,7 +271,7 @@ public class Surfacing extends ApotheneumPattern implements UIDeviceControls<Sur
     for (LXPoint p : column.points) {
       float b = .5f - falloff * (function.getDistance(p.yn, pos) - size);
       if (b > 0) {
-        colors[p.index] = LXColor.grayn(LXUtils.min(1, b));
+        colors[p.index] = LXColor.grayn(level * LXUtils.min(1, b));
       }
     }
   }
@@ -271,6 +299,15 @@ public class Surfacing extends ApotheneumPattern implements UIDeviceControls<Sur
   @Override
   public void buildDeviceControls(UI ui, UIDevice uiDevice, Surfacing surfacing) {
     uiDevice.setLayout(UIDevice.Layout.HORIZONTAL, 2);
+
+    addColumn(uiDevice,
+      "Lev",
+      newKnob(surfacing.level),
+      newButton(surfacing.cubeOn),
+      newButton(surfacing.cylinderOn)
+    );
+
+    addVerticalBreak(ui, uiDevice);
 
     addColumn(uiDevice,
       "Pos",
