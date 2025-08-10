@@ -51,9 +51,13 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
   }
 
   // Parameters - optimized for tight flocking behavior with higher capacity
-  public final CompoundDiscreteParameter boidCount =
-    new CompoundDiscreteParameter("Count", 25, 5, 300)
-    .setDescription("Number of boids in the flock");
+  public final CompoundDiscreteParameter maxFlock =
+    new CompoundDiscreteParameter("Max Flock", 100, 5, 300)
+    .setDescription("Maximum number of boids that can exist in the flock");
+  
+  public final CompoundParameter flockDensity =
+    new CompoundParameter("Density", 50, 0, 100)
+    .setDescription("Percentage of max flock that is active (0-100%)");
 
   public final CompoundParameter speed =
     new CompoundParameter("Speed", 3.0, 0.5, 4.0)
@@ -443,12 +447,14 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
 
   // Boid management
   private List<Boid> boids = new ArrayList<>();
+  private int activeBoidCount = 0;  // Number of boids currently active based on density
   private double currentTime = 0;
   private SpatialGrid spatialGrid;
 
   public Boids(LX lx) {
     super(lx);
-    addParameter("boidCount", this.boidCount);
+    addParameter("maxFlock", this.maxFlock);
+    addParameter("flockDensity", this.flockDensity);
     addParameter("speed", this.speed);
     addParameter("separation", this.separation);
     addParameter("alignment", this.alignment);
@@ -462,6 +468,7 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
     // Use the initial neighborRadius value to set up grid
     initializeSpatialGrid();
     updateBoidCount();
+    updateActiveBoidCount();
   }
   
   private void initializeSpatialGrid() {
@@ -471,20 +478,30 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
   }
   
   private void updateBoidCount() {
-    int targetCount = boidCount.getValuei();
+    int targetCount = maxFlock.getValuei();
     while (boids.size() < targetCount) {
       boids.add(new Boid());
     }
     while (boids.size() > targetCount) {
       boids.remove(boids.size() - 1);
     }
+    // After updating max count, also update active count
+    updateActiveBoidCount();
+  }
+  
+  private void updateActiveBoidCount() {
+    // Calculate how many boids should be active based on density percentage
+    float densityPercent = flockDensity.getValuef() / 100.0f;
+    activeBoidCount = Math.round(maxFlock.getValuei() * densityPercent);
+    // Ensure we don't exceed actual boid list size
+    activeBoidCount = Math.min(activeBoidCount, boids.size());
   }
   
   
   @Override
   public void onParameterChanged(heronarts.lx.parameter.LXParameter p) {
     super.onParameterChanged(p);
-    if (p == boidCount) {
+    if (p == maxFlock) {
       updateBoidCount();
     } else if (p == neighborRadius) {
       // Reinitialize spatial grid when neighbor radius changes
@@ -498,6 +515,7 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
       // Also reinitialize grid for new dimensions
       initializeSpatialGrid();
     }
+    // Note: flockDensity changes are now handled in render() method for real-time response
   }
 
   @Override
@@ -505,20 +523,23 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
     setApotheneumColor(LXColor.BLACK);
     currentTime += deltaMs;
     
-    // Clear and populate spatial grid with current boid positions
+    // Recalculate active boid count every frame to respond to density changes immediately
+    updateActiveBoidCount();
+    
+    // Clear and populate spatial grid with only active boid positions
     spatialGrid.clear();
-    for (Boid boid : boids) {
-      spatialGrid.addBoid(boid);
+    for (int i = 0; i < activeBoidCount; i++) {
+      spatialGrid.addBoid(boids.get(i));
     }
     
-    // Update all boids using spatial grid for neighbor finding
-    for (Boid boid : boids) {
-      boid.updateWithSpatialGrid(deltaMs, spatialGrid);
+    // Update only active boids using spatial grid for neighbor finding
+    for (int i = 0; i < activeBoidCount; i++) {
+      boids.get(i).updateWithSpatialGrid(deltaMs, spatialGrid);
     }
     
-    // Render all boids
-    for (Boid boid : boids) {
-      renderBoid(boid);
+    // Render only active boids
+    for (int i = 0; i < activeBoidCount; i++) {
+      renderBoid(boids.get(i));
     }
   }
   
@@ -609,7 +630,7 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
         // Cylinder door detection
         int doorStart = Apotheneum.Cylinder.DOOR_START_COLUMN;
         int doorEnd = doorStart + Apotheneum.DOOR_WIDTH - 1;
-        int posInCycle = wrappedPos % 30;
+        int posInCycle = wrappedPos % (Apotheneum.Cylinder.Ring.LENGTH / 4);
         if (posInCycle >= doorStart && posInCycle <= doorEnd) {
           return true;
         }
@@ -624,9 +645,9 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
     uiDevice.setLayout(UIDevice.Layout.HORIZONTAL);
     
     addColumn(uiDevice, "Flock",
-      newIntegerBox(boids.boidCount),
-      newKnob(boids.speed),
-      newKnob(boids.turbulence)
+      newIntegerBox(boids.maxFlock),
+      newKnob(boids.flockDensity),
+      newKnob(boids.speed)
     );
     
     addVerticalBreak(ui, uiDevice);
@@ -642,6 +663,12 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
     addColumn(uiDevice, "Behavior",
       newKnob(boids.neighborRadius),
       newKnob(boids.boidRadius),
+      newKnob(boids.turbulence)
+    );
+    
+    addVerticalBreak(ui, uiDevice);
+    
+    addColumn(uiDevice, "Display",
       newDropMenu(boids.shape)
     );
     
