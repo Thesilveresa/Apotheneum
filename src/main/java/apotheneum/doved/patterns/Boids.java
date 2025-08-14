@@ -83,14 +83,17 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
     new CompoundParameter("Turbulence", 0.2, 0, 1)
     .setDescription("Random force for organic movement");
 
+  public final CompoundParameter blur =
+    new CompoundParameter("Blur", 0.85, 0, 0.99)
+    .setDescription("Motion blur amount (0=none, 0.99=max)");
+
+  public final CompoundParameter brightness =
+    new CompoundParameter("Brightness", 1.5, 0.5, 4.0)
+    .setDescription("Brightness multiplier for boids (1=normal, 2=double, etc)");
 
   public final DiscreteParameter shape = 
     new DiscreteParameter("Shape", new String[]{"Cube", "Cylinder"}, 0)
     .setDescription("Which shape to render on");
-
-  public final CompoundParameter boidRadius =
-    new CompoundParameter("Radius", 1.0, 0.5, 4.0)
-    .setDescription("Size of boid rendering (larger = more pixels)");
 
 
   // Simple 2D Boid class
@@ -461,8 +464,9 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
     addParameter("cohesion", this.cohesion);
     addParameter("neighborRadius", this.neighborRadius);
     addParameter("turbulence", this.turbulence);
+    addParameter("blur", this.blur);
+    addParameter("brightness", this.brightness);
     addParameter("shape", this.shape);
-    addParameter("boidRadius", this.boidRadius);
     
     // Initialize spatial grid with cell size based on neighbor radius
     // Use the initial neighborRadius value to set up grid
@@ -520,7 +524,30 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
 
   @Override
   protected void render(double deltaMs) {
-    setApotheneumColor(LXColor.BLACK);
+    // Apply motion blur decay based on blur parameter
+    // When blur is 0, clear completely. When blur is 0.99, retain 99% of previous frame
+    float blurAmount = blur.getValuef();
+    
+    // Debug: Print blur value occasionally
+    if ((int)(currentTime / 1000) % 5 == 0 && (int)(currentTime % 1000) < 50) {
+      System.out.println("Blur amount: " + blurAmount);
+    }
+    
+    if (blurAmount > 0.01f) {
+      // Apply decay to create motion blur
+      for (int i = 0; i < colors.length; i++) {
+        int oldColor = colors[i];
+        colors[i] = LXColor.scaleBrightness(colors[i], blurAmount);
+        // Debug: Check if scaling is working on first few pixels
+        if (i < 3 && oldColor != colors[i] && oldColor != LXColor.BLACK) {
+          System.out.println("Pixel " + i + " scaled from " + Integer.toHexString(oldColor) + " to " + Integer.toHexString(colors[i]));
+        }
+      }
+    } else {
+      // No blur - clear the frame completely
+      setApotheneumColor(LXColor.BLACK);
+    }
+    
     currentTime += deltaMs;
     
     // Recalculate active boid count every frame to respond to density changes immediately
@@ -544,33 +571,53 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
   }
   
   private void renderBoid(Boid boid) {
-    // All boids render as white for pure emergent behavior
-    renderBoidWithRadius(boid.x, boid.y, LXColor.WHITE);
+    // Render with anti-aliasing across neighboring pixels
+    // This reduces the jittery appearance by distributing the boid across multiple pixels
+    int baseX = (int) Math.floor(boid.x);
+    int baseY = (int) Math.floor(boid.y);
+    
+    // Get fractional parts for interpolation
+    float fracX = boid.x - baseX;
+    float fracY = boid.y - baseY;
+    
+    // Calculate brightness for each of the 4 neighboring pixels using bilinear interpolation
+    // Top-left pixel
+    float brightness00 = (1 - fracX) * (1 - fracY);
+    // Top-right pixel  
+    float brightness10 = fracX * (1 - fracY);
+    // Bottom-left pixel
+    float brightness01 = (1 - fracX) * fracY;
+    // Bottom-right pixel
+    float brightness11 = fracX * fracY;
+    
+    // Render to 4 neighboring pixels with interpolated brightness (all white, varying intensity)
+    setPixelOnShapeWithBrightness(baseX, baseY, brightness00);
+    setPixelOnShapeWithBrightness(baseX + 1, baseY, brightness10);
+    setPixelOnShapeWithBrightness(baseX, baseY + 1, brightness01);
+    setPixelOnShapeWithBrightness(baseX + 1, baseY + 1, brightness11);
   }
   
-  private void renderBoidWithRadius(float centerX, float centerY, int color) {
-    float radius = boidRadius.getValuef();
+  private void setPixelOnShapeWithBrightness(int ringX, int ringY, float brightness) {
+    // Skip if brightness is too low to be visible
+    if (brightness < 0.01f) return;
     
-    if (radius <= 0.5f) {
-      // Single pixel
-      setPixelOnShape(centerX, centerY, color);
+    // Apply brightness multiplier from parameter
+    float adjustedBrightness = brightness * this.brightness.getValuef();
+    
+    // Create white color with scaled brightness (clamped to 100)
+    int color = LXColor.gray(Math.min(100f, adjustedBrightness * 100));
+    
+    if (shape.getValuei() == 0) {
+      // Cube rendering
+      if (ringY >= 0 && ringY < Apotheneum.GRID_HEIGHT) {
+        setPixelOnRingAdditive(Apotheneum.cube.exterior.ring(ringY), ringX, color);
+        setPixelOnRingAdditive(Apotheneum.cube.interior.ring(ringY), ringX, color);
+      }
     } else {
-      // Multiple pixels in circular pattern
-      int radiusInt = (int) Math.ceil(radius);
-      
-      // Render center pixel
-      setPixelOnShape(centerX, centerY, color);
-      
-      // Render surrounding pixels in circular pattern
-      for (int dx = -radiusInt; dx <= radiusInt; dx++) {
-        for (int dy = -radiusInt; dy <= radiusInt; dy++) {
-          if (dx == 0 && dy == 0) continue;
-          
-          float distance = (float) Math.sqrt(dx * dx + dy * dy);
-          if (distance <= radius) {
-            setPixelOnShape(centerX + dx, centerY + dy, color);
-          }
-        }
+      // Cylinder rendering
+      if (ringY >= 0 && ringY < Apotheneum.CYLINDER_HEIGHT) {
+        setPixelOnRingAdditive(Apotheneum.cylinder.exterior.ring(ringY), ringX, color);
+        setPixelOnRingAdditive(Apotheneum.cylinder.interior.ring(ringY), ringX, color);
       }
     }
   }
@@ -598,6 +645,24 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
     if (ring != null && ring.points.length > 0) {
       int wrappedIndex = ((pointIndex % ring.points.length) + ring.points.length) % ring.points.length;
       colors[ring.points[wrappedIndex].index] = color;
+    }
+  }
+  
+  private void setPixelOnRingAdditive(Apotheneum.Ring ring, int pointIndex, int color) {
+    if (ring != null && ring.points.length > 0) {
+      int wrappedIndex = ((pointIndex % ring.points.length) + ring.points.length) % ring.points.length;
+      int pixelIndex = ring.points[wrappedIndex].index;
+      
+      // Additively blend the new color with existing color
+      int existingColor = colors[pixelIndex];
+      float existingBrightness = LXColor.luminosity(existingColor);
+      float newBrightness = LXColor.luminosity(color);
+      
+      // Add brightnesses and clamp to 100
+      float combinedBrightness = Math.min(100f, existingBrightness + newBrightness);
+      
+      // Set as white with combined brightness
+      colors[pixelIndex] = LXColor.gray(combinedBrightness);
     }
   }
   
@@ -662,13 +727,14 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
     
     addColumn(uiDevice, "Behavior",
       newKnob(boids.neighborRadius),
-      newKnob(boids.boidRadius),
-      newKnob(boids.turbulence)
+      newKnob(boids.turbulence),
+      newKnob(boids.blur)
     );
     
     addVerticalBreak(ui, uiDevice);
     
     addColumn(uiDevice, "Display",
+      newKnob(boids.brightness),
       newDropMenu(boids.shape)
     );
     
