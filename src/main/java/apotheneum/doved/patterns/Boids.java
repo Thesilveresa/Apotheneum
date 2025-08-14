@@ -42,7 +42,13 @@ import java.util.Map;
 public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> {
 
   // Dynamic coordinate system based on shape selection
+  // Extend logical space beyond physical boundaries to prevent edge bunching
   private int getRingHeight() {
+    int physicalHeight = shape.getValuei() == 0 ? Apotheneum.GRID_HEIGHT : Apotheneum.CYLINDER_HEIGHT;
+    return physicalHeight + 20; // Add 10 pixels buffer above and below
+  }
+  
+  private int getPhysicalRingHeight() {
     return shape.getValuei() == 0 ? Apotheneum.GRID_HEIGHT : Apotheneum.CYLINDER_HEIGHT;
   }
 
@@ -111,9 +117,9 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
     
     
     Boid() {
-      // Random initial position across the entire space
+      // Random initial position across the extended logical space
       x = (float)Math.random() * getRingLength();
-      y = LXUtils.randomf(8, getRingHeight() - 8); // Stay away from edges
+      y = LXUtils.randomf(0, getRingHeight()); // Use full extended height
       
       // Random initial velocity for natural movement
       float initAngle = (float)(Math.random() * 2 * Math.PI);
@@ -185,15 +191,17 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
       x += velocityX * deltaSeconds * speedMultiplier;
       y += velocityY * deltaSeconds * speedMultiplier;
       
-      // Handle boundaries - wrap X, gently redirect Y
+      // Handle boundaries - wrap X, keep Y within extended bounds
       x = (x + getRingLength()) % getRingLength();
-      if (y < 3) {
-        y = 3;
-        velocityY = Math.abs(velocityY) * 0.3f; // Gentle bounce
+      
+      // Keep Y within extended bounds with gentle redirection
+      if (y < 0) {
+        y = 0;
+        velocityY = Math.abs(velocityY) * 0.5f;
       }
-      if (y > getRingHeight() - 4) {
-        y = getRingHeight() - 4;
-        velocityY = -Math.abs(velocityY) * 0.3f; // Gentle bounce
+      if (y >= getRingHeight()) {
+        y = getRingHeight() - 1;
+        velocityY = -Math.abs(velocityY) * 0.5f;
       }
     }
     
@@ -225,7 +233,24 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
       currentSpeedMultiplier = Math.max(0.7f, Math.min(1.3f, currentSpeedMultiplier));
     }
     
-    
+    // Helper method for proper wrap-around distance calculation
+    float[] getWrappedOffset(float x1, float y1, float x2, float y2) {
+      float dx = x1 - x2;
+      float dy = y1 - y2;
+      
+      // Handle X wrapping for ring topology - choose shortest path
+      if (Math.abs(dx) > getRingLength() / 2.0f) {
+        if (dx > 0) {
+          dx = dx - getRingLength();
+        } else {
+          dx = dx + getRingLength();
+        }
+      }
+      
+      // Y axis is linear with extended bounds - no wrapping
+      
+      return new float[]{dx, dy};
+    }
     
     float[] separateFromNearby(List<Boid> nearbyBoids) {
       float desiredSeparation = 6.0f; // Increased separation to prevent clustering
@@ -235,13 +260,9 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
       for (Boid other : nearbyBoids) {
         if (other == this) continue;
         
-        float dx = x - other.x;
-        float dy = y - other.y;
-        
-        // Wrap distance for X
-        if (Math.abs(dx) > getRingLength() / 2) {
-          dx = dx > 0 ? dx - getRingLength() : dx + getRingLength();
-        }
+        float[] offset = getWrappedOffset(x, y, other.x, other.y);
+        float dx = offset[0];
+        float dy = offset[1];
         
         float distance = (float)Math.sqrt(dx * dx + dy * dy);
         if (distance > 0 && distance < desiredSeparation) {
@@ -283,12 +304,9 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
       for (Boid other : nearbyBoids) {
         if (other == this) continue;
         
-        float dx = x - other.x;
-        float dy = y - other.y;
-        
-        if (Math.abs(dx) > getRingLength() / 2) {
-          dx = dx > 0 ? dx - getRingLength() : dx + getRingLength();
-        }
+        float[] offset = getWrappedOffset(x, y, other.x, other.y);
+        float dx = offset[0];
+        float dy = offset[1];
         
         float distance = (float)Math.sqrt(dx * dx + dy * dy);
         if (distance > 0 && distance < neighborDist) {
@@ -331,14 +349,9 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
       for (Boid other : nearbyBoids) {
         if (other == this) continue;
         
-        float dx = x - other.x;
-        float dy = y - other.y;
+        float[] offset = getWrappedOffset(x, y, other.x, other.y);
+        float distance = (float)Math.sqrt(offset[0] * offset[0] + offset[1] * offset[1]);
         
-        if (Math.abs(dx) > getRingLength() / 2) {
-          dx = dx > 0 ? dx - getRingLength() : dx + getRingLength();
-        }
-        
-        float distance = (float)Math.sqrt(dx * dx + dy * dy);
         if (distance > 0 && distance < neighborDist) {
           sumX += other.x;
           sumY += other.y;
@@ -358,13 +371,9 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
     
     
     float[] seek(float targetX, float targetY) {
-      float dx = targetX - x;
-      float dy = targetY - y;
-      
-      // Wrap distance for X
-      if (Math.abs(dx) > getRingLength() / 2) {
-        dx = dx > 0 ? dx - getRingLength() : dx + getRingLength();
-      }
+      float[] offset = getWrappedOffset(targetX, targetY, x, y);
+      float dx = offset[0];
+      float dy = offset[1];
       
       float distance = (float)Math.sqrt(dx * dx + dy * dy);
       if (distance > 0) {
@@ -514,7 +523,9 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
       // Regenerate boids when switching shapes for immediate visual feedback
       for (Boid boid : boids) {
         boid.x = boid.x * getRingLength() / (shape.getValuei() == 0 ? Apotheneum.Cylinder.Ring.LENGTH : Apotheneum.Cube.Ring.LENGTH);
-        boid.y = boid.y * getRingHeight() / (shape.getValuei() == 0 ? Apotheneum.CYLINDER_HEIGHT : Apotheneum.GRID_HEIGHT);
+        // Scale Y position maintaining the extended space proportion
+        float oldExtendedHeight = (shape.getValuei() == 0 ? Apotheneum.CYLINDER_HEIGHT : Apotheneum.GRID_HEIGHT) + 20;
+        boid.y = boid.y * getRingHeight() / oldExtendedHeight;
       }
       // Also reinitialize grid for new dimensions
       initializeSpatialGrid();
@@ -601,6 +612,11 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
     // Skip if brightness is too low to be visible
     if (brightness < 0.01f) return;
     
+    // Only render boids within the physical LED boundaries
+    if (ringY < 0 || ringY >= getPhysicalRingHeight()) {
+      return;
+    }
+    
     // Apply brightness multiplier from parameter
     float adjustedBrightness = brightness * this.brightness.getValuef();
     
@@ -609,16 +625,12 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
     
     if (shape.getValuei() == 0) {
       // Cube rendering
-      if (ringY >= 0 && ringY < Apotheneum.GRID_HEIGHT) {
-        setPixelOnRingAdditive(Apotheneum.cube.exterior.ring(ringY), ringX, color);
-        setPixelOnRingAdditive(Apotheneum.cube.interior.ring(ringY), ringX, color);
-      }
+      setPixelOnRingAdditive(Apotheneum.cube.exterior.ring(ringY), ringX, color);
+      setPixelOnRingAdditive(Apotheneum.cube.interior.ring(ringY), ringX, color);
     } else {
       // Cylinder rendering
-      if (ringY >= 0 && ringY < Apotheneum.CYLINDER_HEIGHT) {
-        setPixelOnRingAdditive(Apotheneum.cylinder.exterior.ring(ringY), ringX, color);
-        setPixelOnRingAdditive(Apotheneum.cylinder.interior.ring(ringY), ringX, color);
-      }
+      setPixelOnRingAdditive(Apotheneum.cylinder.exterior.ring(ringY), ringX, color);
+      setPixelOnRingAdditive(Apotheneum.cylinder.interior.ring(ringY), ringX, color);
     }
   }
   
@@ -668,15 +680,15 @@ public class Boids extends ApotheneumPattern implements UIDeviceControls<Boids> 
   
   private boolean isInDoorArea(float ringX, float ringY) {
     int ringIndex = (int) Math.round(ringY);
-    int ringHeight = getRingHeight();
+    int physicalHeight = getPhysicalRingHeight();
     int ringLength = getRingLength();
     
-    if (ringIndex < 0 || ringIndex >= ringHeight) {
+    if (ringIndex < 0 || ringIndex >= physicalHeight) {
       return false;
     }
     
     // Check if at bottom where doors are
-    if (ringIndex >= ringHeight - Apotheneum.DOOR_HEIGHT) {
+    if (ringIndex >= physicalHeight - Apotheneum.DOOR_HEIGHT) {
       int ringPos = (int) Math.round(ringX);
       int wrappedPos = ((ringPos % ringLength) + ringLength) % ringLength;
       
