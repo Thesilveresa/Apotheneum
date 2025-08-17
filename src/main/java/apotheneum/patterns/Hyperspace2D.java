@@ -27,7 +27,12 @@ public class Hyperspace2D extends ApotheneumPattern implements UIDeviceControls<
     int color;            // Star color
     double age;           // Current age in milliseconds
     double lifespan;      // Total lifespan in milliseconds
-    float prevX, prevY;   // Previous position for trail
+    
+    // Trail history for longer trails
+    private static final int TRAIL_HISTORY = 20; // Store last 20 positions for longer trails
+    float[] trailX = new float[TRAIL_HISTORY];
+    float[] trailY = new float[TRAIL_HISTORY];
+    int trailIndex = 0; // Current position in circular buffer
     int currentFace;      // Which face the star is currently on
     int facesVisited;     // How many different faces this star has been on
     float twinklePhase;   // Random phase offset for twinkle oscillation
@@ -45,9 +50,12 @@ public class Hyperspace2D extends ApotheneumPattern implements UIDeviceControls<
       this.x = sourceX + this.vx * spreadDistance;
       this.y = sourceY + this.vy * spreadDistance;
       
-      // Initialize previous position
-      this.prevX = this.x;
-      this.prevY = this.y;
+      // Initialize trail history to current position
+      for (int i = 0; i < TRAIL_HISTORY; i++) {
+        trailX[i] = this.x;
+        trailY[i] = this.y;
+      }
+      trailIndex = 0;
       
       // Initialize face tracking
       this.currentFace = getCurrentFace(this.x, this.y);
@@ -75,9 +83,10 @@ public class Hyperspace2D extends ApotheneumPattern implements UIDeviceControls<
     void update(double deltaMs, float baseSpeed) {
       age += deltaMs;
       
-      // Store previous position for trail
-      prevX = x;
-      prevY = y;
+      // Store current position in trail history before moving
+      trailX[trailIndex] = x;
+      trailY[trailIndex] = y;
+      trailIndex = (trailIndex + 1) % TRAIL_HISTORY;
       
       // Move in straight line - velocity NEVER changes
       float currentSpeed = baseSpeed * speed;
@@ -173,8 +182,11 @@ public class Hyperspace2D extends ApotheneumPattern implements UIDeviceControls<
   public final CompoundParameter brightness = new CompoundParameter("Bright", 1.0, 0.1, 2.0)
     .setDescription("Overall brightness");
     
-  public final CompoundParameter trailLength = new CompoundParameter("Trail", 0.0, 0.0, 10.0)
+  public final CompoundParameter trailLength = new CompoundParameter("Trail", 0.0, 0.0, 50.0)
     .setDescription("Length of star trails");
+    
+  public final CompoundParameter trailBrightness = new CompoundParameter("Trail Bright", 0.7, 0.1, 2.0)
+    .setDescription("Brightness of star trails");
     
   public final CompoundParameter spreadRadius = new CompoundParameter("Spread", 0.1, 0.02, 0.3)
     .setDescription("Random spread distance from source point");
@@ -204,6 +216,7 @@ public class Hyperspace2D extends ApotheneumPattern implements UIDeviceControls<
     addParameter("duration", this.duration);
     addParameter("brightness", this.brightness);
     addParameter("trailLength", this.trailLength);
+    addParameter("trailBrightness", this.trailBrightness);
     addParameter("spreadRadius", this.spreadRadius);
     addParameter("debugSource", this.debugSource);
     addParameter("twinkleIntensity", this.twinkleIntensity);
@@ -277,27 +290,36 @@ public class Hyperspace2D extends ApotheneumPattern implements UIDeviceControls<
       int faceX = (int)(star.x * (ringLength - 1));
       int faceY = (int)(star.y * (ringHeight - 1));
       
-      // Only render if within the actual visible bounds
-      if (faceX >= 0 && faceX < ringLength && faceY >= 0 && faceY < ringHeight) {
+      // Only render if within bounds AND hasn't reached the back wall (third face)
+      if (faceX >= 0 && faceX < ringLength && faceY >= 0 && faceY < ringHeight && star.facesVisited <= 2) {
         // Use twinkle brightness instead of regular brightness
         float starBrightness = star.getTwinkleBrightness(currentTime, twinkleIntensityVal, twinkleSpeedVal) * brightnessMult;
         int starColor = LXColor.scaleBrightness(star.color, starBrightness);
         
         drawStarAtPosition(faceX, faceY, starColor, 0.5f);
         
-        // If trails enabled, also draw a few previous positions for harder trail
+        // If trails enabled, draw historical positions using trail history
         if (trailAmount > 0.01f) {
-          int trailSteps = Math.min(5, (int)(trailAmount * 2)); // Max 5 trail points
+          // Calculate number of trail points to render based on parameter (0-50 maps to 0-20 trail points)
+          int maxTrailPoints = (int)(trailAmount * Star.TRAIL_HISTORY / 50.0f);
+          maxTrailPoints = Math.min(maxTrailPoints, Star.TRAIL_HISTORY);
           
-          for (int i = 1; i <= trailSteps; i++) {
-            float trailMult = (float)i / trailSteps;
-            int trailX = (int)((star.x - star.vx * 0.02f * i) * (ringLength - 1));
-            int trailY = (int)((star.y - star.vy * 0.02f * i) * (ringHeight - 1));
+          // Render each historical position as part of the trail
+          for (int i = 1; i <= maxTrailPoints; i++) {
+            // Get position from trail history (going backwards in time)
+            int historyIndex = (star.trailIndex - i + Star.TRAIL_HISTORY) % Star.TRAIL_HISTORY;
+            float histX = star.trailX[historyIndex];
+            float histY = star.trailY[historyIndex];
+            
+            // Convert to pixel coordinates
+            int trailX = (int)(histX * (ringLength - 1));
+            int trailY = (int)(histY * (ringHeight - 1));
             
             if (trailX >= 0 && trailX < ringLength && trailY >= 0 && trailY < ringHeight) {
-              // Trail uses base brightness (no twinkle on trails)
-              float trailBrightness = star.getBrightness() * brightnessMult * (1.0f - trailMult * 0.8f);
-              int trailColor = LXColor.scaleBrightness(star.color, trailBrightness);
+              // Trail uses base brightness (no twinkle on trails) with new brightness control
+              float fade = 1.0f - ((float)i / maxTrailPoints); // Fade based on age
+              float trailBright = star.getBrightness() * brightnessMult * fade * (float)trailBrightness.getValue();
+              int trailColor = LXColor.scaleBrightness(star.color, trailBright);
               drawStarAtPosition(trailX, trailY, trailColor, 0.5f);
             }
           }
@@ -410,8 +432,15 @@ public class Hyperspace2D extends ApotheneumPattern implements UIDeviceControls<
     // Visual controls
     addColumn(uiDevice, "Visual",
       newKnob(pattern.duration),
-      newKnob(pattern.trailLength),
-      newKnob(pattern.brightness)).setChildSpacing(6);
+      newKnob(pattern.brightness),
+      newKnob(pattern.trailLength)).setChildSpacing(6);
+      
+    addVerticalBreak(ui, uiDevice);
+    
+    // Trail controls  
+    addColumn(uiDevice, "Trail",
+      newKnob(pattern.trailBrightness),
+      newKnob(pattern.spreadRadius)).setChildSpacing(6);
     
     addVerticalBreak(ui, uiDevice);
     
