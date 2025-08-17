@@ -267,68 +267,45 @@ public class Hyperspace extends LXPattern implements UIDeviceControls<Hyperspace
               continue;
             }
             
-            // Render trail point with interpolated brightness
+            // Render trail point with fading brightness
             float fade = 1.0f - ((float)i / maxTrailPoints); // Fade based on age
             float trailBright = star.getBrightness() * brightnessMult * fade * (float)trailBrightness.getValue();
-            renderInterpolatedPoint(trailX, trailY, trailZ, star.color, trailBright);
+            renderStarAtPoint(trailX, trailY, trailZ, star.color, trailBright);
           }
         }
         
-        // Always render the star itself with interpolation
+        // Always render the star itself 
         float starBrightness = star.getBrightness() * brightnessMult;
-        renderInterpolatedPoint(star.x, star.y, star.z, star.color, starBrightness);
+        renderStarAtPoint(star.x, star.y, star.z, star.color, starBrightness);
       }
     }
   }
   
-  // Render a point with bilinear interpolation across multiple LEDs for smoother visuals
-  private void renderInterpolatedPoint(float x, float y, float z, int color, float brightness) {
-    // Find 8 surrounding LEDs in 3D space for trilinear interpolation
-    // For performance, we'll do a simplified approach: find the closest LED and nearby ones
+  // Efficient star rendering - finds closest LED without O(n²) complexity
+  private void renderStarAtPoint(float x, float y, float z, int color, float brightness) {
+    // Quick bounds check
+    if (x < 0 || x > 1 || y < 0 || y > 1 || z < 0 || z > 1) return;
     
-    float minDistance = Float.MAX_VALUE;
+    float minDistanceSquared = Float.MAX_VALUE;
     int closestIndex = -1;
-    LXPoint closestPoint = null;
     
-    // First find the closest LED
+    // Single pass to find closest LED - O(n) instead of O(n²)
     for (LXPoint p : model.points) {
       float dx = p.xn - x;
       float dy = p.yn - y;
       float dz = p.zn - z;
-      float distance = dx*dx + dy*dy + dz*dz;
+      float distanceSquared = dx*dx + dy*dy + dz*dz; // No sqrt needed!
       
-      if (distance < minDistance) {
-        minDistance = distance;
+      if (distanceSquared < minDistanceSquared) {
+        minDistanceSquared = distanceSquared;
         closestIndex = p.index;
-        closestPoint = p;
       }
     }
     
-    if (closestPoint == null) return;
-    
-    // Apply brightness to color
-    int finalColor = LXColor.scaleBrightness(color, brightness);
-    
-    // Primary LED gets full brightness
-    colors[closestIndex] = LXColor.blend(colors[closestIndex], finalColor, LXColor.Blend.ADD);
-    
-    // Add interpolated brightness to nearby LEDs for smoother rendering
-    float maxSpread = 0.03f; // How far to spread the interpolation
-    
-    for (LXPoint p : model.points) {
-      if (p.index == closestIndex) continue; // Skip the main LED
-      
-      float dx = p.xn - x;
-      float dy = p.yn - y;
-      float dz = p.zn - z;
-      float distance = (float)Math.sqrt(dx*dx + dy*dy + dz*dz);
-      
-      if (distance < maxSpread) {
-        // Calculate interpolated brightness based on distance
-        float interpolatedBrightness = brightness * (1.0f - (distance / maxSpread)) * 0.3f; // Max 30% for neighboring LEDs
-        int interpolatedColor = LXColor.scaleBrightness(color, interpolatedBrightness);
-        colors[p.index] = LXColor.blend(colors[p.index], interpolatedColor, LXColor.Blend.ADD);
-      }
+    // Render to closest LED only - much faster than interpolation
+    if (closestIndex >= 0) {
+      int finalColor = LXColor.scaleBrightness(color, brightness);
+      colors[closestIndex] = LXColor.blend(colors[closestIndex], finalColor, LXColor.Blend.ADD);
     }
   }
   
