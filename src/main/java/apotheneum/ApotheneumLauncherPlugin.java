@@ -19,6 +19,8 @@
 package apotheneum;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import heronarts.lx.LX;
@@ -65,21 +67,35 @@ public class ApotheneumLauncherPlugin implements LXPlugin, LXOscListener {
         final String home = System.getProperty("user.home");
         final String liveProject = home + "/" + message.getString();
         new Thread(() -> {
-          try {
-            log("Launching Ableton project: " + liveProject);
-            final Process p = Runtime.getRuntime().exec(new String[] {
-              "osascript", home + "/Desktop/OpenLiveProject.scpt", liveProject }
-            );
-            try (Scanner scanner = new Scanner(p.getInputStream()).useDelimiter("\n")) {
-              scanner.forEachRemaining(ApotheneumLauncherPlugin::log);
-            }
-            try (Scanner scanner = new Scanner(p.getErrorStream()).useDelimiter("\n")) {
-              scanner.forEachRemaining(ApotheneumLauncherPlugin::error);
-            }
-          } catch (Exception x) {
-            error(x, "Error on Apotheneum OSC handler: " + x.getMessage());
-          }
+          log("Launching Ableton project: " + liveProject);
+          launchScript(home, "OpenLiveProject.scpt", liveProject);
         }).start();
+      } else if (message.matches("/apotheneum/quitLive")) {
+        final String home = System.getProperty("user.home");
+        new Thread(() -> {
+          log("Quitting Ableton live");
+          launchScript(home, "QuitLive.scpt", null);
+        }).start();
+      }
+    } catch (Exception x) {
+      error(x, "Error on Apotheneum OSC handler: " + x.getMessage());
+    }
+  }
+
+  private void launchScript(String home, String scriptName, String liveProject) {
+    try {
+      final List<String> args = new ArrayList<>();
+      args.add("osascript");
+      args.add(home + "/Apotheneum/Scripts/" + scriptName);
+      if (liveProject != null) {
+        args.add(liveProject);
+      }
+      final Process p = Runtime.getRuntime().exec(args.toArray(new String[0]));
+      try (Scanner scanner = new Scanner(p.getInputStream()).useDelimiter("\n")) {
+        scanner.forEachRemaining(ApotheneumLauncherPlugin::log);
+      }
+      try (Scanner scanner = new Scanner(p.getErrorStream()).useDelimiter("\n")) {
+        scanner.forEachRemaining(ApotheneumLauncherPlugin::error);
       }
     } catch (Exception x) {
       error(x, "Error on Apotheneum OSC handler: " + x.getMessage());
