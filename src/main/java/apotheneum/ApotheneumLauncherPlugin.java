@@ -102,6 +102,11 @@ public class ApotheneumLauncherPlugin implements LXPlugin, LXOscListener {
     }
   }
 
+  @Override
+  public void dispose() {
+    lx.engine.osc.removeListener(this);
+  }
+
   private static final String PREFIX = "[APOTHENEUM] ";
 
   static void log(String msg) {
